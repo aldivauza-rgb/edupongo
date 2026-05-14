@@ -2,13 +2,13 @@ import { supabase } from './supabase';
 
 // Fallback data kalau Supabase belum terisi
 const FALLBACK = {
-  features: [],
-  testimonials: [],
-  faqs: [],
-  stats: [],
-  why_cards: [],
-  problem_cards: [],
-  site_content: [],
+  edp_features: [],
+  edp_testimonials: [],
+  edp_faqs: [],
+  edp_stats: [],
+  edp_why_cards: [],
+  edp_problem_cards: [],
+  edp_site_content: [],
 };
 
 async function fetchData(table, order = 'sort_order') {
@@ -23,10 +23,10 @@ async function fetchData(table, order = 'sort_order') {
   }
 }
 
-export async function getFeatures()       { return fetchData('features'); }
-export async function getTestimonials()   { return fetchData('testimonials'); }
-export async function getFAQs()           { return fetchData('faqs'); }
-export async function getWhyCards()       { return fetchData('why_cards'); }
-export async function getProblemCards()   { return fetchData('problem_cards'); }
-export async function getStats()          { return fetchData('stats'); }
-export async function getSiteContent()    { return fetchData('site_content'); }
+export async function getFeatures()       { return fetchData('edp_features'); }
+export async function getTestimonials()   { return fetchData('edp_testimonials'); }
+export async function getFAQs()           { return fetchData('edp_faqs'); }
+export async function getWhyCards()       { return fetchData('edp_why_cards'); }
+export async function getProblemCards()   { return fetchData('edp_problem_cards'); }
+export async function getStats()          { return fetchData('edp_stats'); }
+export async function getSiteContent()    { return fetchData('edp_site_content'); }
