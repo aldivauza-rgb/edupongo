@@ -1,6 +1,6 @@
 import { IconX } from '@tabler/icons-react';
 
-export default function ConfirmModal({ title, message, onClose, onConfirm, confirmLabel = 'Ya, Hapus', loading }) {
+export default function ConfirmModal({ title, message, onClose, onConfirm, confirmLabel = 'Ya, Hapus', loading, confirmStyle }) {
   return (
     <div className="admin-modal-overlay" onClick={onClose}>
       <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
@@ -15,7 +15,7 @@ export default function ConfirmModal({ title, message, onClose, onConfirm, confi
           <button className="admin-btn admin-btn-outline" onClick={onClose} disabled={loading}>
             Batal
           </button>
-          <button className="admin-btn admin-btn-primary" onClick={onConfirm} disabled={loading} style={{ background: '#046CF2', color: '#fff' }}>
+          <button className="admin-btn admin-btn-primary" onClick={onConfirm} disabled={loading} style={{ background: '#046CF2', color: '#fff', ...confirmStyle }}>
             {loading ? 'Menghapus...' : confirmLabel}
           </button>
         </div>

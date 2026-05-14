@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { IconPlus, IconFilter, IconEdit, IconTrash, IconTag, IconChevronDown, IconChevronLeft, IconChevronRight, IconSearch, IconArrowLeft, IconUpload } from '@tabler/icons-react';
+import { IconPlus, IconFilter, IconEdit, IconTrash, IconTag, IconChevronDown, IconChevronLeft, IconChevronRight, IconSearch, IconArrowLeft, IconUpload, IconCirclePlus } from '@tabler/icons-react';
 import ConfirmModal from '../components/ConfirmModal';
 import * as api from '../../lib/admin-api';
 
@@ -111,6 +111,104 @@ function BlogForm({ editData, onBack, onSubmit, userName }) {
   );
 }
 
+/* ─── Kategori Manager ──────────────────────────────────────── */
+function KategoriManager({ items, allKategori, extraKategori, setExtraKategori, onBack, showSnack }) {
+  const [inputVal, setInputVal] = useState('');
+  const [hapusModal, setHapusModal] = useState(null);
+
+  const countByKategori = (kat) => {
+    if (kat === 'Semua') return items.length;
+    return items.filter((i) => i.kategori === kat).length;
+  };
+
+  const handleTambah = () => {
+    const v = inputVal.trim();
+    if (!v) return;
+    if (allKategori.some((k) => k.toLowerCase() === v.toLowerCase())) {
+      showSnack?.('warning', 'Gagal', 'Kategori sudah ada');
+      return;
+    }
+    setExtraKategori((prev) => [...prev, v]);
+    setInputVal('');
+    showSnack?.('success', 'Berhasil', 'Kategori berhasil ditambahkan');
+  };
+
+  const handleHapus = () => {
+    if (!hapusModal || hapusModal === 'Semua') return;
+    setExtraKategori((prev) => prev.filter((k) => k !== hapusModal));
+    setHapusModal(null);
+    showSnack?.('success', 'Berhasil', 'Kategori berhasil dihapus');
+  };
+
+  return (
+    <div className="admin-page-wrap">
+      <button onClick={onBack} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Inter, sans-serif', fontSize: 13, color: '#5D6B82', padding: 0, marginBottom: 20 }}>
+        <IconArrowLeft size={16} stroke={1.5} /> Kembali
+      </button>
+
+      <h1 style={{ fontWeight: 700, fontSize: 30, color: '#000', margin: '0 0 4px' }}>Atur Kategori</h1>
+      <p style={{ fontSize: 14, color: '#5D6B82', margin: '0 0 24px' }}>
+        <strong style={{ fontWeight: 700, color: '#010E23' }}>Semua</strong> · {allKategori.length} kategori
+      </p>
+
+      <div style={{ background: '#fff', borderRadius: 14, padding: 24 }}>
+        {/* Tambah Kategori */}
+        <label style={{ fontSize: 12, fontWeight: 500, color: '#354764', display: 'block', marginBottom: 6 }}>Tambah Kategori Baru</label>
+        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+          <input
+            placeholder="Nama kategori baru"
+            value={inputVal}
+            onChange={(e) => setInputVal(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleTambah()}
+            style={{ flex: 1, height: 46, borderRadius: 12, border: '1px solid #E8E9F1', padding: '0 14px', fontSize: 13, outline: 'none', fontFamily: 'Inter, sans-serif', color: '#010E23' }}
+            onFocus={(e) => e.target.style.borderColor = '#046CF2'}
+            onBlur={(e) => e.target.style.borderColor = '#E8E9F1'}
+          />
+          <button onClick={handleTambah} style={{ height: 46, padding: '0 24px', borderRadius: 12, background: '#046CF2', color: '#fff', fontWeight: 500, fontSize: 14, border: 'none', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: 'Inter, sans-serif' }}>
+            <IconCirclePlus size={16} stroke={1.5} /> Tambah
+          </button>
+        </div>
+
+        {/* Daftar Kategori */}
+        <div style={{ fontWeight: 700, fontSize: 14, color: '#010E23', marginTop: 20, marginBottom: 12 }}>
+          Daftar Kategori <span style={{ color: '#5D6B82' }}>·</span> {allKategori.length}
+        </div>
+
+        {allKategori.map((kat) => (
+          <div key={kat} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', borderRadius: 10, border: '1px solid #F1F2F5', background: '#FAFAFA', marginBottom: 8 }}>
+            <div style={{ width: 34, height: 34, borderRadius: 8, background: '#EEF4FF', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <IconTag size={16} stroke={1.5} color="#046CF2" />
+            </div>
+            <span style={{ fontWeight: 500, fontSize: 14, color: '#010E23', flex: 1 }}>{kat}</span>
+            <span style={{ fontSize: 12, color: '#5D6B82' }}>{countByKategori(kat)}</span>
+            {kat === 'Semua' ? (
+              <span style={{ fontSize: 12, color: '#97A2B0', whiteSpace: 'nowrap' }}>Tidak dapat dihapus</span>
+            ) : (
+              <button
+                onClick={() => setHapusModal(kat)}
+                style={{ width: 34, height: 34, borderRadius: 8, border: '1px solid #FFE0E2', background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
+              >
+                <IconTrash size={15} stroke={1.5} color="#E74C3C" />
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {hapusModal && (
+        <ConfirmModal
+          title="Hapus Kategori"
+          message={`Blog dalam kategori ini akan dipindahkan ke kategori Semua. Yakin ingin menghapus?`}
+          onClose={() => setHapusModal(null)}
+          onConfirm={handleHapus}
+          confirmLabel="Ya, Hapus"
+          confirmStyle={{ background: '#E74C3C' }}
+        />
+      )}
+    </div>
+  );
+}
+
 /* ─── List Page ────────────────────────────────────────────── */
 export default function BlogPage({ showSnack, userName }) {
   const [items, setItems] = useState([]);
@@ -119,6 +217,8 @@ export default function BlogPage({ showSnack, userName }) {
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [showForm, setShowForm] = useState(false);
+  const [showKategori, setShowKategori] = useState(false);
+  const [extraKategori, setExtraKategori] = useState([]);
   const [editItem, setEditItem] = useState(null);
   const [deleteModal, setDeleteModal] = useState({ show: false, item: null });
   const [filterOpen, setFilterOpen] = useState(false);
@@ -194,6 +294,14 @@ export default function BlogPage({ showSnack, userName }) {
     setEditItem(null);
   };
 
+  const handleKategoriBack = () => setShowKategori(false);
+
+  const allKategori = ['Semua', ...new Set([...items.map((i) => i.kategori).filter(Boolean), ...extraKategori])];
+
+  if (showKategori) {
+    return <KategoriManager items={items} allKategori={allKategori} extraKategori={extraKategori} setExtraKategori={setExtraKategori} onBack={handleKategoriBack} showSnack={showSnack} />;
+  }
+
   if (showForm) {
     return <BlogForm editData={editItem} onBack={handleBack} onSubmit={handleSave} userName={userName} />;
   }
@@ -208,7 +316,7 @@ export default function BlogPage({ showSnack, userName }) {
           </p>
         </div>
         <div className="admin-page-actions">
-          <button className="admin-btn admin-btn-secondary admin-btn-sm"><IconTag size={16} stroke={1.5} /> Atur Kategori</button>
+          <button className="admin-btn admin-btn-secondary admin-btn-sm" onClick={() => setShowKategori(true)}><IconTag size={16} stroke={1.5} /> Atur Kategori</button>
           <button className="admin-btn admin-btn-primary admin-btn-sm" onClick={() => { setEditItem(null); setShowForm(true); }}><IconPlus size={16} stroke={1.5} /> Tambah Blog</button>
         </div>
       </div>
