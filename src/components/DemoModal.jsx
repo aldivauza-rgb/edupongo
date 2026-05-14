@@ -41,11 +41,11 @@ export default function DemoModal({ open, onClose }) {
               <label>Jumlah Siswa</label>
               <select>
                 <option value="">Pilih Jumlah</option>
-                <option value="<50">< 50</option>
+                <option value="<50">{'<'} 50</option>
                 <option value="50-200">50 – 200</option>
                 <option value="201-500">201 – 500</option>
                 <option value="501-1000">501 – 1.000</option>
-                <option value=">1000">> 1.000</option>
+                <option value=">1000">{'>'} 1.000</option>
               </select>
             </div>
           </div>
