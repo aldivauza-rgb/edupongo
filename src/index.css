@@ -562,8 +562,8 @@ footer { background: var(--black); color: rgba(255,255,255,0.6); padding: 48px 1
 .about-story-text h2 .accent { color: var(--blue); }
 .about-story-text p { font-size: 16px; line-height: 1.7; color: var(--gray-mid); margin-bottom: 16px; }
 .about-story-text p strong { color: var(--black); font-weight: 600; }
-.about-story-visual { background: var(--blue-light); border-radius: 24px; padding: 24px; position: relative; overflow: hidden; }
-.about-story-img { width: 100%; height: auto; border-radius: 16px; display: block; position: relative; z-index: 1; }
+.about-story-visual { position: relative; }
+.about-story-img { width: 100%; height: auto; border-radius: 16px; display: block; }
 
 /* ABOUT EKOSISTEM */
 .about-ekosistem { background: var(--gray-light); padding: 100px; }
@@ -795,7 +795,7 @@ footer { background: var(--black); color: rgba(255,255,255,0.6); padding: 48px 1
   .about-story { padding: 60px 20px !important; }
   .about-story-grid { grid-template-columns: 1fr; gap: 40px; }
   .about-story-text h2 { font-size: 28px; }
-	  .about-story-visual { padding: 16px; }
+
 
   .about-ekosistem { padding: 60px 20px !important; }
   .about-ekosistem-header h2 { font-size: 28px; }
