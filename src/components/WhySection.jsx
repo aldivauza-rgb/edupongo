@@ -22,6 +22,9 @@ export default function WhySection() {
 
     let totalScrollDistance = 0;
     let isActive = false;
+    let targetProgress = 0;
+    let currentProgress = 0;
+    let animId = null;
 
     function setup() {
       if (window.innerWidth <= 768) {
@@ -47,8 +50,7 @@ export default function WhySection() {
       if (!isActive) return;
       const rect = track.getBoundingClientRect();
       const sr = track.offsetHeight - window.innerHeight;
-      let progress = Math.max(0, Math.min(1, -rect.top / sr));
-      grid.style.transform = `translateX(${-progress * totalScrollDistance}px)`;
+      targetProgress = Math.max(0, Math.min(1, -rect.top / sr));
     }
 
     let ticking = false;
@@ -59,6 +61,22 @@ export default function WhySection() {
       }
     }
 
+    function animate() {
+      if (!isActive) {
+        currentProgress = targetProgress;
+      } else {
+        const diff = targetProgress - currentProgress;
+        if (Math.abs(diff) > 0.001) {
+          currentProgress += diff * 0.08;
+          grid.style.transform = `translateX(${-currentProgress * totalScrollDistance}px)`;
+        } else if (currentProgress !== targetProgress) {
+          currentProgress = targetProgress;
+          grid.style.transform = `translateX(${-currentProgress * totalScrollDistance}px)`;
+        }
+      }
+      animId = requestAnimationFrame(animate);
+    }
+
     let rt;
     function onResize() {
       clearTimeout(rt);
@@ -67,9 +85,11 @@ export default function WhySection() {
 
     setup();
     update();
+    animate();
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onResize);
     return () => {
+      cancelAnimationFrame(animId);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onResize);
     };
