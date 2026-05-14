@@ -61,7 +61,6 @@ nav {
   z-index: 100;
   background: rgba(255,255,255,0.96);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
   padding: 0 100px;
   height: 68px;
   display: flex;
@@ -311,8 +310,9 @@ section { padding: 80px 0; }
   margin-right: auto;
 }
 
-.stat-item { padding: 16px 24px; border-right: 1px solid var(--border); text-align: center; }
-.stat-item:last-child { border-right: none; }
+.stat-item { padding: 16px 24px; text-align: center; position: relative; }
+.stat-item::after { content: '·'; position: absolute; right: -4px; top: 50%; transform: translateY(-50%); color: var(--gray-light); font-size: 24px; font-weight: 700; }
+.stat-item:last-child::after { display: none; }
 
 .stat-number {
   font-family: 'Poppins', sans-serif;
@@ -376,7 +376,7 @@ section { padding: 80px 0; }
 .hero-dashboard-img { width: 100%; height: auto; border-radius: 10px; display: block; }
 
 /* TRUST BAR */
-.trust-bar { padding: 80px 100px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); text-align: center; }
+.trust-bar { padding: 80px 100px; text-align: center; }
 .trust-bar-label { font-size: 13px; font-weight: 500; color: var(--gray-mid); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 28px; }
 .trust-logos { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
 .trust-logo-item { background: var(--gray-light); border: 1px solid var(--border); border-radius: 10px; padding: 10px 20px; font-size: 13px; font-weight: 600; color: var(--gray-dark); white-space: nowrap; }
@@ -753,7 +753,8 @@ footer { background: var(--black); color: rgba(255,255,255,0.6); padding: 48px 1
   .cta-section { margin: 60px 20px 40px !important; padding: 60px 24px !important; border-radius: 20px !important; }
 
   .hero-stats { grid-template-columns: repeat(2, 1fr); gap: 16px 8px; max-width: 320px; }
-  .stat-item { padding: 12px 8px; border-right: none; }
+  .stat-item { padding: 12px 8px; }
+  .stat-item::after { display: none; }
   .stat-number { font-size: 26px; }
 
   nav, .hero, .trust-bar, .problem-section, .features-section,
