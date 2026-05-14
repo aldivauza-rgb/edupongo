@@ -15,19 +15,6 @@ export default function AboutTrust() {
           <h2>Mereka yang menjadikan kami partner manajemen sekolahnya</h2>
           <p>Dari SMA negeri hingga pondok pesantren: beragam sekolah dengan kebutuhan unik telah mempercayakan sistem mereka pada Edupongo.</p>
         </div>
-        <div className="about-trust-stats">
-          {[
-            { num: '100+', label: 'Sekolah Aktif', sub: 'se-Indonesia' },
-            { num: '30rb+', label: 'Pengguna Aktif', sub: 'Play & App Store' },
-            { num: '30+', label: 'Kota', sub: 'Tersebar di Indonesia' },
-          ].map((s) => (
-            <div className="about-trust-stat" key={s.label}>
-              <div className="about-trust-stat-num">{s.num}</div>
-              <div className="about-trust-stat-label">{s.label}</div>
-              <div className="about-trust-stat-sub">{s.sub}</div>
-            </div>
-          ))}
-        </div>
         <div className="about-school-list-title">Sekolah Mitra Kami</div>
         <div className="about-school-grid">
           {schools.map((s, i) => (
