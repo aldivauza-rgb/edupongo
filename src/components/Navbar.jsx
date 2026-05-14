@@ -1,11 +1,7 @@
 import { useState } from 'react';
 
-const Logo = ({ dark, size = 28 }) => (
-  <svg width={size} height={size} viewBox="0 0 28 28" fill="none" style={{ flexShrink: 0 }}>
-    <rect width="28" height="28" rx="8" fill={dark ? '#F5C842' : '#1A4FD6'} />
-    <path d="M9 9.5C9 8.67 9.67 8 10.5 8H17.5C18.33 8 19 8.67 19 9.5V11H13.5C12.67 11 12 11.67 12 12.5C12 13.33 12.67 14 13.5 14H17V15.5C17 16.33 16.33 17 15.5 17H10.5C9.67 17 9 16.33 9 15.5V9.5Z" fill={dark ? '#1A4FD6' : '#F5C842'} />
-    <circle cx="19" cy="20" r="2" fill={dark ? '#1A4FD6' : '#F5C842'} />
-  </svg>
+const Logo = () => (
+  <img src="/logo-color.png" alt="Edupongo" style={{ height: 32, width: 'auto', flexShrink: 0 }} />
 );
 
 export default function Navbar({ page, onNavigate }) {
@@ -29,7 +25,6 @@ export default function Navbar({ page, onNavigate }) {
     <nav>
       <a href="#" onClick={(e) => handleClick(e, 'home')} style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
         <Logo />
-        <span style={{ fontFamily: "'Poppins',sans-serif", fontSize: 20, fontWeight: 600, color: '#0D0D0D', letterSpacing: -0.5 }}>edupongo</span>
       </a>
 
       <ul className={`nav-links ${menuOpen ? 'open' : ''}`}>
