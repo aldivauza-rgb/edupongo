@@ -131,19 +131,19 @@ export default function TambahTestimoniPage({ editData, onBack, onSubmit, userNa
           </div>
 
           {/* RIGHT */}
-          <div className="admin-field">
-            <label className="admin-label">Foto (Opsional)</label>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <label className="admin-label" style={{ marginBottom: 6, display: 'block', color: '#354764' }}>Foto (Opsional)</label>
             <div
               onClick={() => fileRef.current?.click()}
               onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
               onDragLeave={() => setDragOver(false)}
               onDrop={handleDrop}
               style={{
-                border: `2px dashed ${dragOver ? '#046CF2' : '#E8E9F1'}`,
+                flex: 1, minHeight: 200, border: `2px dashed ${dragOver ? '#046CF2' : '#E8E9F1'}`,
                 borderRadius: 12, padding: 24,
                 display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                 gap: 12, cursor: 'pointer', transition: 'border-color 0.15s',
-                background: dragOver ? '#EEF4FF' : '#F9FAFB', minHeight: 240,
+                background: dragOver ? '#EEF4FF' : '#F9FAFB',
               }}
             >
               {form.foto ? (

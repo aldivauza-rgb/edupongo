@@ -126,12 +126,12 @@ function PartnerForm({ editData, onBack, onSubmit }) {
           </div>
 
           {/* Right: Upload Logo */}
-          <div style={{ width: 240 }}>
+          <div style={{ width: 240, display: 'flex', flexDirection: 'column' }}>
             <label className="admin-label" style={{ marginBottom: 6, display: 'block', color: '#354764' }}>Logo Sekolah</label>
             <div
               onClick={() => fileRef.current?.click()}
               style={{
-                width: '100%', border: '1.5px dashed #E8E9F1',
+                width: '100%', flex: 1, minHeight: 200, border: '1.5px dashed #E8E9F1',
                 borderRadius: 12, background: '#F9F9F9', cursor: 'pointer',
                 display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10,
                 position: 'relative', overflow: 'hidden', padding: 24,
