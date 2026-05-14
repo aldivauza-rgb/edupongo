@@ -43,11 +43,6 @@ export default function Navbar({ page, onNavigate }) {
             FAQ
           </button>
         </li>
-        <li>
-          <button className="nav-mobile-cta-inline" onClick={() => {}}>
-            Jadwalkan Demo
-          </button>
-        </li>
       </ul>
 
       <div className="nav-cta">
