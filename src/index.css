@@ -61,8 +61,8 @@ nav {
   z-index: 100;
   background: rgba(255,255,255,0.96);
   backdrop-filter: blur(12px);
-  padding: 0 100px;
-  height: 68px;
+  padding: 0 40px;
+  height: 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -73,6 +73,8 @@ nav {
   align-items: center;
   gap: 32px;
   list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .nav-links a, .nav-links button {
@@ -89,14 +91,14 @@ nav {
 
 .nav-links a:hover, .nav-links button:hover { color: var(--blue); }
 
-.nav-cta { display: flex; align-items: center; gap: 12px; }
+.nav-cta { display: flex; align-items: center; gap: 16px; }
 
 .lang-switch { position: relative; }
 
 .lang-trigger {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   background: none;
   border: none;
   font-family: 'Poppins', sans-serif;
@@ -159,7 +161,9 @@ nav {
   cursor: pointer;
   transition: all 0.2s;
   text-decoration: none;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-primary:hover {
