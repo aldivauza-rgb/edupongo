@@ -120,19 +120,23 @@ export default function TambahTestimoniPage({ onBack, onSubmit }) {
               {errors.instansi && <small className="admin-error-text">{errors.instansi}</small>}
             </div>
 
-            {/* Dipublikasikan oleh */}
-            <div className="admin-field">
-              <label className="admin-label">Dipublikasikan oleh</label>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, height: 48, padding: '0 16px', border: '1px solid #E8E9F1', borderRadius: 12, background: '#F1F2F5' }}>
-                <div style={{ width: 24, height: 24, borderRadius: '50%', background: '#046CF2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, fontSize: 11, color: '#fff', flexShrink: 0 }}>A</div>
-                <span style={{ fontSize: 13, color: '#5D6B82' }}>Admin Humas</span>
+            {/* Dipublikasikan oleh + Tanggal — sejajar */}
+            <div style={{ display: 'flex', gap: 16 }}>
+              <div style={{ flex: 1 }}>
+                <div className="admin-field">
+                  <label className="admin-label">Dipublikasikan oleh</label>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, height: 48, padding: '0 16px', border: '1px solid #E8E9F1', borderRadius: 12, background: '#F1F2F5' }}>
+                    <div style={{ width: 24, height: 24, borderRadius: '50%', background: '#046CF2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, fontSize: 11, color: '#fff', flexShrink: 0 }}>A</div>
+                    <span style={{ fontSize: 13, color: '#5D6B82' }}>Admin Humas</span>
+                  </div>
+                </div>
               </div>
-            </div>
-
-            {/* Tanggal */}
-            <div className="admin-field">
-              <label className="admin-label">Tanggal</label>
-              <input type="date" className="admin-input" value={form.date} onChange={(e) => set('date')(e.target.value)} />
+              <div style={{ flex: 1 }}>
+                <div className="admin-field">
+                  <label className="admin-label">Tanggal</label>
+                  <input type="date" className="admin-input" value={form.date} onChange={(e) => set('date')(e.target.value)} />
+                </div>
+              </div>
             </div>
 
             {/* Isi Testimoni */}
