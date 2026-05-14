@@ -131,10 +131,10 @@ function PartnerForm({ editData, onBack, onSubmit }) {
             <div
               onClick={() => fileRef.current?.click()}
               style={{
-                width: '100%', aspectRatio: '1/1', border: '1.5px dashed #E8E9F1',
+                width: '100%', border: '1.5px dashed #E8E9F1',
                 borderRadius: 12, background: '#F9F9F9', cursor: 'pointer',
                 display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                position: 'relative', overflow: 'hidden',
+                position: 'relative', overflow: 'hidden', padding: '32px 20px',
               }}
             >
               {form.foto ? (
