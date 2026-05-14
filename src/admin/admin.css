@@ -88,6 +88,24 @@
 .admin-user-role { font-size: 11px; color: #5D6B82; white-space: nowrap; }
 .admin-user-chevron { margin-left: auto; color: #5D6B82; flex-shrink: 0; }
 
+/* ─── SIDEBAR BOOTSTRAP OVERRIDE ────────────────────────────── */
+aside nav {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+aside nav button {
+  width: 100% !important;
+  height: 46px !important;
+  margin: 0 !important;
+  padding: 0 12px !important;
+  flex-shrink: 0 !important;
+}
+
 /* ─── PAGE HEADER ───────────────────────────────────────────── */
 .admin-page-wrap { padding: 32px 32px 40px; flex: 1; }
 .admin-page-header {

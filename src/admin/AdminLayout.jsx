@@ -86,7 +86,7 @@ export default function AdminLayout({ onLogout }) {
         </div>
 
         {/* Navigation — semua menu di sini, gap 2px */}
-        <nav style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1, background: 'transparent' }}>
+        <nav style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1, background: 'transparent', alignItems: 'stretch', justifyContent: 'flex-start', padding: 0, margin: 0, listStyle: 'none' }}>
           {navBtn('blog', I.newspaper, 'Blog')}
           {navBtn('testimoni', I.messageCircle, 'Testimoni')}
           {navBtn('faq', I.helpCircle, 'FAQ')}
