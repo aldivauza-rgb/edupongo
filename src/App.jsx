@@ -4,12 +4,51 @@ import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import DemoModal from './components/DemoModal';
+import AdminLogin from './admin/AdminLogin';
+import AdminLayout from './admin/AdminLayout';
 
 function App() {
   const [page, setPage] = useState('home');
   const [demoOpen, setDemoOpen] = useState(false);
+  const [adminUser, setAdminUser] = useState(undefined);
 
-  // Scroll ke target section atau ke atas setiap kali page berganti
+  // Cek admin session
+  useEffect(() => {
+    const isAdmin = window.location.pathname.startsWith('/admin');
+    if (!isAdmin) {
+      setAdminUser(null);
+      return;
+    }
+    const stored = sessionStorage.getItem('cms_user');
+    setAdminUser(stored ? {} : null);
+  }, []);
+
+  const handleLoginSuccess = () => {
+    sessionStorage.setItem('cms_user', '1');
+    setAdminUser({});
+    window.history.replaceState(null, '', '/admin');
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('cms_user');
+    setAdminUser(null);
+    window.location.href = '/admin';
+  };
+
+  // Admin routing
+  if (window.location.pathname.startsWith('/admin')) {
+    if (adminUser === undefined) {
+      return (
+        <div className="d-flex align-items-center justify-content-center" style={{ minHeight: '100vh', background: '#E8E9F1', fontFamily: 'Inter, sans-serif' }}>
+          <div className="spinner-border text-primary" role="status" />
+        </div>
+      );
+    }
+    if (!adminUser) return <AdminLogin onLogin={handleLoginSuccess} />;
+    return <AdminLayout onLogout={handleLogout} />;
+  }
+
+  // Scroll effect
   useEffect(() => {
     const hash = window.location.hash;
     if (hash && hash !== '#' && hash !== '#about') {
