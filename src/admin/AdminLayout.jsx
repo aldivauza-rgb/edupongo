@@ -97,7 +97,7 @@ export default function AdminLayout({ onLogout }) {
         background: "#010E23", padding: "28px 16px", display: "flex", flexDirection: "column",
       }}>
         {/* LOGO */}
-        <div style={{ padding: "0 8px", marginBottom: 32, display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
+        <div style={{ padding: "0 8px", marginBottom: 32, display: "flex", alignItems: "center", gap: 12, flexShrink: 0, background: "transparent" }}>
           <div style={{ width: 28, height: 28, borderRadius: "50%", border: "2px solid white", position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <div style={{ width: 14, height: 14, borderRadius: "50%", background: "white", opacity: 0.35 }} />
           </div>
@@ -105,7 +105,7 @@ export default function AdminLayout({ onLogout }) {
         </div>
 
         {/* NAV MENU */}
-        <nav style={{ flex: 1, display: "flex", flexDirection: "column", gap: 3, minHeight: 0 }}>
+        <nav style={{ flex: 1, display: "flex", flexDirection: "column", gap: 3, minHeight: 0, background: "transparent" }}>
           <NavBtn icon={I.chart} label="Analisis Web" disabled />
           <NavBtn icon={I.monitor} label="Slideshow" disabled />
 
@@ -115,7 +115,7 @@ export default function AdminLayout({ onLogout }) {
             chevron={I.chevronR} chevronOpen={profilOpen}
           />
           {profilOpen && (
-            <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 2, background: "transparent" }}>
               {["Sambutan", "Tentang Kami", "Visi & Misi", "Struktur Organisasi", "Akreditasi", "Statistik"].map(s => (
                 <SubItem key={s} label={s} />
               ))}
@@ -128,7 +128,7 @@ export default function AdminLayout({ onLogout }) {
             chevron={I.chevronD} chevronOpen={!infoOpen}
           />
           {infoOpen && (
-            <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 2, background: "transparent" }}>
               {["Berita", "Agenda", "Fasilitas", "Dokumen Rilis", "Majalah"].map(s => (
                 <SubItem key={s} label={s} />
               ))}
@@ -137,13 +137,13 @@ export default function AdminLayout({ onLogout }) {
 
           <NavBtn icon={I.gear} label="Kelola Akun" disabled />
 
-          <div style={{ margin: "16px 8px 8px", display: "flex", flexDirection: "column", gap: 3 }}>
+          <div style={{ margin: "16px 8px 8px", display: "flex", flexDirection: "column", gap: 3, background: "transparent" }}>
             <NavBtn icon={I.inbox} label="Pemberitahuan" badge="2" />
           </div>
         </nav>
 
         {/* BOTTOM — User block (click = logout) */}
-        <div style={{ flexShrink: 0 }}>
+        <div style={{ flexShrink: 0, background: "transparent" }}>
           <div
             onClick={onLogout}
             title="Keluar"
