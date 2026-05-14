@@ -7,6 +7,11 @@ import AboutPage from './pages/AboutPage';
 function App() {
   const [page, setPage] = useState('home');
 
+  // Scroll ke atas setiap kali page berganti
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [page]);
+
   useEffect(() => {
     function routeFromHash() {
       const hash = window.location.hash;
