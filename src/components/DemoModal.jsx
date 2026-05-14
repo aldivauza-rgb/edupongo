@@ -18,6 +18,12 @@ export default function DemoModal({ open, onClose }) {
     setLoading(true);
     setError('');
 
+    if (!supabase) {
+      setError('Database belum terhubung. Hubungi kami langsung via WhatsApp atau Email.');
+      setLoading(false);
+      return;
+    }
+
     const { error: insertError } = await supabase.from('demo_requests').insert({
       name: form.name,
       email: form.email,
