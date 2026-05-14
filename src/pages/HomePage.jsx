@@ -9,10 +9,10 @@ import ClientSection from '../components/ClientSection';
 import FAQSection from '../components/FAQSection';
 import CTASection from '../components/CTASection';
 
-export default function HomePage() {
+export default function HomePage({ onOpenDemo }) {
   return (
     <>
-      <Hero />
+      <Hero onOpenDemo={onOpenDemo} />
       <TrustBar />
       <ProblemSection />
       <FeaturesSection />
@@ -21,7 +21,7 @@ export default function HomePage() {
       <TestimonialSection />
       <ClientSection />
       <FAQSection />
-      <CTASection />
+      <CTASection onOpenDemo={onOpenDemo} />
     </>
   );
 }

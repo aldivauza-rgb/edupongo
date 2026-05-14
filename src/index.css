@@ -651,6 +651,51 @@ footer { background: var(--black); color: rgba(255,255,255,0.6); padding: 48px 1
 .about-contact-card-value:hover { color: var(--yellow); }
 .about-contact-card.full { grid-column: 1 / -1; }
 
+/* ── Demo Modal ── */
+.demo-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+}
+.demo-modal {
+  background: #fff; border-radius: 20px; padding: 40px;
+  width: 100%; max-width: 540px; max-height: 90vh; overflow-y: auto;
+  position: relative; box-shadow: 0 24px 80px rgba(0,0,0,0.2);
+}
+.demo-close {
+  position: absolute; top: 16px; right: 16px; width: 36px; height: 36px;
+  border-radius: 50%; border: none; background: #f5f5f5;
+  font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: #666; transition: all 0.2s;
+}
+.demo-close:hover { background: #e5e5e5; color: #0d0d0d; }
+.demo-header { margin-bottom: 28px; }
+.demo-header h2 { font-size: 28px; font-weight: 600; color: #0d0d0d; margin: 0 0 8px; }
+.demo-header p { font-size: 15px; color: #666; margin: 0; line-height: 1.5; }
+.demo-form { display: flex; flex-direction: column; gap: 18px; }
+.demo-field { display: flex; flex-direction: column; gap: 6px; }
+.demo-field label { font-size: 14px; font-weight: 600; color: #0d0d0d; }
+.demo-field input,
+.demo-field select {
+  padding: 12px 14px; border: 1.5px solid #e0e0e0; border-radius: 10px;
+  font-size: 14px; font-family: 'Poppins', sans-serif; outline: none;
+  transition: border-color 0.2s; background: #fff;
+}
+.demo-field input:focus,
+.demo-field select:focus { border-color: #1A4FD6; }
+.demo-field input::placeholder { color: #aaa; }
+.demo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.demo-submit {
+  width: 100%; padding: 14px; margin-top: 6px;
+  background: #1A4FD6; color: #fff; border: none; border-radius: 10px;
+  font-size: 16px; font-weight: 600; font-family: 'Poppins', sans-serif;
+  cursor: pointer; transition: background 0.2s;
+}
+.demo-submit:hover { background: #143ea8; }
+.demo-submit:active { transform: scale(0.99); }
+
 /* MOBILE */
 @media (max-width: 768px) {
   .burger { display: flex; }

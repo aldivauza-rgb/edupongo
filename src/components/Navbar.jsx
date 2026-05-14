@@ -4,7 +4,7 @@ const Logo = () => (
   <img src="/logo-color.png" alt="Edupongo" style={{ height: 40, width: 'auto', flexShrink: 0 }} />
 );
 
-export default function Navbar({ page, onNavigate }) {
+export default function Navbar({ page, onNavigate, onOpenDemo }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const [lang, setLang] = useState('ID');
@@ -64,7 +64,7 @@ export default function Navbar({ page, onNavigate }) {
             ))}
           </div>
         </div>
-        <a href="#" className="btn-primary" onClick={(e) => e.preventDefault()}>Jadwalkan Demo</a>
+        <a href="#" className="btn-primary" onClick={(e) => { e.preventDefault(); onOpenDemo(); }}>Jadwalkan Demo</a>
       </div>
 
       <button className={`burger ${menuOpen ? 'open' : ''}`} onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu">

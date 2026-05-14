@@ -1,11 +1,11 @@
-export default function AboutContact() {
+export default function AboutContact({ onOpenDemo }) {
   return (
     <section className="about-contact">
       <div className="about-contact-inner">
         <div className="about-contact-left">
           <h2>Mari bicarakan <span className="accent">sekolah Anda</span>.</h2>
           <p>Tim kami siap mendengarkan kebutuhan spesifik sekolah, pesantren, atau yayasan Anda. Konsultasi gratis tanpa komitmen.</p>
-          <a href="#" className="about-contact-cta" onClick={(e) => e.preventDefault()}>Jadwalkan Demo Gratis →</a>
+          <a href="#" className="about-contact-cta" onClick={(e) => { e.preventDefault(); onOpenDemo(); }}>Jadwalkan Demo Gratis →</a>
         </div>
         <div className="about-contact-cards">
           <a href="tel:+6281295802674" className="about-contact-card">

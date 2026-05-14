@@ -1,4 +1,4 @@
-export default function Hero() {
+export default function Hero({ onOpenDemo }) {
   return (
     <section className="hero">
       <div className="hero-badge">
@@ -13,7 +13,7 @@ export default function Hero() {
       </p>
 
       <div className="hero-cta">
-        <a href="#" className="btn-primary btn-primary-lg" onClick={(e) => e.preventDefault()}>Jadwalkan Demo Gratis</a>
+        <a href="#" className="btn-primary btn-primary-lg" onClick={(e) => { e.preventDefault(); onOpenDemo(); }}>Jadwalkan Demo Gratis</a>
         <a href="#" className="btn-outline-lg" onClick={(e) => e.preventDefault()}>Lihat Semua Fitur</a>
       </div>
 

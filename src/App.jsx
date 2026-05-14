@@ -3,9 +3,11 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
+import DemoModal from './components/DemoModal';
 
 function App() {
   const [page, setPage] = useState('home');
+  const [demoOpen, setDemoOpen] = useState(false);
 
   // Scroll ke target section atau ke atas setiap kali page berganti
   useEffect(() => {
@@ -28,6 +30,9 @@ function App() {
     window.addEventListener('hashchange', routeFromHash);
     return () => window.removeEventListener('hashchange', routeFromHash);
   }, []);
+
+  const openDemo = useCallback(() => setDemoOpen(true), []);
+  const closeDemo = useCallback(() => setDemoOpen(false), []);
 
   const navigate = useCallback((target, hash) => {
     if (target === 'about') {
@@ -52,14 +57,15 @@ function App() {
 
   return (
     <>
-      <Navbar page={page} onNavigate={navigate} />
+      <Navbar page={page} onNavigate={navigate} onOpenDemo={openDemo} />
       <div className={`page-view ${page !== 'home' ? 'hidden' : ''}`}>
-        {page === 'home' && <HomePage onNavigate={navigate} />}
+        {page === 'home' && <HomePage onNavigate={navigate} onOpenDemo={openDemo} />}
       </div>
       <div className={`page-view ${page !== 'about' ? 'hidden' : ''}`}>
-        {page === 'about' && <AboutPage />}
+        {page === 'about' && <AboutPage onOpenDemo={openDemo} />}
       </div>
-      <Footer onNavigate={navigate} />
+      <Footer onNavigate={navigate} onOpenDemo={openDemo} />
+      <DemoModal open={demoOpen} onClose={closeDemo} />
     </>
   );
 }

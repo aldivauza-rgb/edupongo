@@ -5,7 +5,7 @@ import AboutMilestone from '../components/AboutMilestone';
 import AboutTrust from '../components/AboutTrust';
 import AboutContact from '../components/AboutContact';
 
-export default function AboutPage() {
+export default function AboutPage({ onOpenDemo }) {
   return (
     <>
       <AboutHero />
@@ -13,7 +13,7 @@ export default function AboutPage() {
       <AboutEkosistem />
       <AboutMilestone />
       <AboutTrust />
-      <AboutContact />
+      <AboutContact onOpenDemo={onOpenDemo} />
     </>
   );
 }
