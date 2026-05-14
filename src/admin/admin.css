@@ -173,7 +173,7 @@ aside nav button {
   white-space: nowrap; font-family: 'Inter', sans-serif;
 }
 .admin-table tbody td {
-  padding: 16px 18px; border-bottom: 1px solid #F3F4F6;
+  padding: 20px 18px; border-bottom: 1px solid #F3F4F6;
   vertical-align: middle; color: var(--adm-text-dark);
   font-family: 'Inter', sans-serif;
 }
