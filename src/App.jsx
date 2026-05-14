@@ -4,10 +4,26 @@ import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import DemoModal from './components/DemoModal';
+import AdminLogin from './admin/AdminLogin';
+import AdminLayout from './admin/AdminLayout';
+import { getSession, logoutAdmin } from './admin/api';
 
 function App() {
   const [page, setPage] = useState('home');
   const [demoOpen, setDemoOpen] = useState(false);
+  const [adminUser, setAdminUser] = useState(undefined); // undefined = loading, null = gak login, object = login
+
+  // Cek admin session
+  useEffect(() => {
+    const isAdminPath = window.location.pathname.startsWith('/admin');
+    if (isAdminPath) {
+      getSession().then(session => {
+        setAdminUser(session?.user || null);
+      });
+    } else {
+      setAdminUser(null);
+    }
+  }, []);
 
   // Scroll ke target section atau ke atas setiap kali page berganti
   useEffect(() => {
@@ -40,7 +56,6 @@ function App() {
     } else if (target === 'home') {
       if (hash) {
         if (page === 'home') {
-          // Langsung smooth scroll + update URL saja (gak pakai location.hash biar gak loncat native)
           const el = document.querySelector(hash);
           if (el) {
             el.scrollIntoView({ behavior: 'smooth' });
@@ -54,6 +69,24 @@ function App() {
       }
     }
   }, [page]);
+
+  const handleLoginSuccess = () => {
+    setAdminUser({});
+    history.replaceState(null, '', '/admin');
+  };
+
+  const handleLogout = async () => {
+    await logoutAdmin();
+    setAdminUser(null);
+    window.location.href = '/admin';
+  };
+
+  // Render admin panel jika path /admin
+  if (window.location.pathname.startsWith('/admin')) {
+    if (adminUser === undefined) return <div className="admin-loading-full">Loading...</div>;
+    if (!adminUser) return <AdminLogin onLogin={handleLoginSuccess} />;
+    return <AdminLayout onLogout={handleLogout} />;
+  }
 
   return (
     <>
