@@ -161,12 +161,25 @@ aside nav button {
 
 .admin-filter-popup {
   position: absolute; top: calc(100% + 8px); right: 0; z-index: 100;
-  width: 280px; background: #fff; border: 1px solid #E5E7EB;
-  border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.12);
-  padding: 20px; display: flex; flex-direction: column; gap: 14px;
+  width: 380px; background: #fff; border: 1px solid #E5E7EB;
+  border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+  padding: 20px;
 }
 .admin-filter-popup label {
   font-size: 12px; font-weight: 600; color: #374151; display: block; margin-bottom: 4px;
+}
+.admin-filter-popup-header {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;
+}
+.admin-filter-popup-header-title {
+  font-weight: 700; font-size: 15px; color: #010E23;
+}
+.admin-filter-popup-header-reset {
+  background: none; border: none; color: #046CF2; font-weight: 500; font-size: 13px;
+  cursor: pointer; font-family: 'Inter', sans-serif; padding: 0;
+}
+.admin-filter-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px;
 }
 .admin-filter-select {
   height: 44px; border-radius: 10px; border: 1px solid #E5E7EB;
@@ -174,11 +187,10 @@ aside nav button {
   width: 100%; cursor: pointer; font-family: 'Inter', sans-serif;
   outline: none; color: #374151;
   appearance: none; -webkit-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235D6B82' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 10px center; background-size: 16px;
 }
 .admin-filter-popup-actions {
-  display: flex; gap: 10px; justify-content: flex-end; margin-top: 4px;
+  display: flex; gap: 8px; justify-content: space-between;
+  margin-top: 16px; padding-top: 16px; border-top: 1px solid #F3F4F6;
 }
 .admin-filter-popup-actions button {
   height: 38px; padding: 0 18px; border-radius: 8px; font-size: 13px;

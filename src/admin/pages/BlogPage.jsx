@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { IconPlus, IconFilter, IconEdit, IconTrash, IconTag, IconChevronLeft, IconChevronRight, IconSearch, IconArrowLeft, IconUpload } from '@tabler/icons-react';
+import { IconPlus, IconFilter, IconEdit, IconTrash, IconTag, IconChevronDown, IconChevronLeft, IconChevronRight, IconSearch, IconArrowLeft, IconUpload } from '@tabler/icons-react';
 import ConfirmModal from '../components/ConfirmModal';
 import * as api from '../../lib/admin-api';
 
@@ -221,35 +221,53 @@ export default function BlogPage({ showSnack, userName }) {
           <button className={`admin-filter-btn${hasFilter ? ' active' : ''}`} onClick={() => setFilterOpen(!filterOpen)}><IconFilter size={16} stroke={1.5} /> Filter</button>
           {filterOpen && (
             <div className="admin-filter-popup" ref={filterRef}>
-              <div>
-                <label>Bulan</label>
-                <select className="admin-filter-select" value={filterVal.bulan} onChange={(e) => setFilterVal((p) => ({ ...p, bulan: e.target.value }))}>
-                  <option value="">Semua Bulan</option>
-                  {['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'].map((m, i) => <option key={i + 1} value={i + 1}>{m}</option>)}
-                </select>
+              <div className="admin-filter-popup-header">
+                <span className="admin-filter-popup-header-title">Filter</span>
+                <button className="admin-filter-popup-header-reset" onClick={() => { setFilterVal({ bulan: '', tahun: '', status: '', kategori: '' }); setPage(1); }}>Reset</button>
               </div>
-              <div>
-                <label>Tahun</label>
-                <select className="admin-filter-select" value={filterVal.tahun} onChange={(e) => setFilterVal((p) => ({ ...p, tahun: e.target.value }))}>
-                  <option value="">Semua Tahun</option>
-                  {[2024,2025,2026].map((y) => <option key={y} value={y}>{y}</option>)}
-                </select>
-              </div>
-              <div>
-                <label>Status</label>
-                <select className="admin-filter-select" value={filterVal.status} onChange={(e) => setFilterVal((p) => ({ ...p, status: e.target.value }))}>
-                  <option value="">Semua Status</option>
-                  <option value="terbit">Terbit</option>
-                  <option value="draf">Draf</option>
-                </select>
-              </div>
-              <div>
-                <label>Kategori</label>
-                <select className="admin-filter-select" value={filterVal.kategori} onChange={(e) => setFilterVal((p) => ({ ...p, kategori: e.target.value }))}>
-                  <option value="">Semua Kategori</option>
-                  <option value="Artikel">Artikel</option>
-                  <option value="Fitur">Fitur</option>
-                </select>
+              <div className="admin-filter-grid">
+                <div>
+                  <label>Bulan</label>
+                  <div style={{ position: 'relative' }}>
+                    <select className="admin-filter-select" value={filterVal.bulan} onChange={(e) => setFilterVal((p) => ({ ...p, bulan: e.target.value }))}>
+                      <option value="">Semua Bulan</option>
+                      {['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'].map((m, i) => <option key={i + 1} value={i + 1}>{m}</option>)}
+                    </select>
+                    <IconChevronDown size={16} stroke={1.5} color="#6B7280" style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
+                  </div>
+                </div>
+                <div>
+                  <label>Tahun</label>
+                  <div style={{ position: 'relative' }}>
+                    <select className="admin-filter-select" value={filterVal.tahun} onChange={(e) => setFilterVal((p) => ({ ...p, tahun: e.target.value }))}>
+                      <option value="">Semua Tahun</option>
+                      {[2024,2025,2026].map((y) => <option key={y} value={y}>{y}</option>)}
+                    </select>
+                    <IconChevronDown size={16} stroke={1.5} color="#6B7280" style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
+                  </div>
+                </div>
+                <div>
+                  <label>Status</label>
+                  <div style={{ position: 'relative' }}>
+                    <select className="admin-filter-select" value={filterVal.status} onChange={(e) => setFilterVal((p) => ({ ...p, status: e.target.value }))}>
+                      <option value="">Semua Status</option>
+                      <option value="terbit">Terbit</option>
+                      <option value="draf">Draf</option>
+                    </select>
+                    <IconChevronDown size={16} stroke={1.5} color="#6B7280" style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
+                  </div>
+                </div>
+                <div>
+                  <label>Kategori</label>
+                  <div style={{ position: 'relative' }}>
+                    <select className="admin-filter-select" value={filterVal.kategori} onChange={(e) => setFilterVal((p) => ({ ...p, kategori: e.target.value }))}>
+                      <option value="">Semua Kategori</option>
+                      <option value="Artikel">Artikel</option>
+                      <option value="Fitur">Fitur</option>
+                    </select>
+                    <IconChevronDown size={16} stroke={1.5} color="#6B7280" style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
+                  </div>
+                </div>
               </div>
               <div className="admin-filter-popup-actions">
                 <button className="admin-filter-btn-reset" onClick={() => { setFilterVal({ bulan: '', tahun: '', status: '', kategori: '' }); setPage(1); }}>Reset All</button>

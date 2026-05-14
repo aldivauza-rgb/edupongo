@@ -80,6 +80,10 @@ export default function LogPage({ showSnack }) {
           </button>
           {filterOpen && (
             <div className="admin-filter-popup" ref={filterRef}>
+              <div className="admin-filter-popup-header">
+                <span className="admin-filter-popup-header-title">Filter</span>
+                <button className="admin-filter-popup-header-reset" onClick={() => { setFilterVal({ aksi: '', halaman: '', bulan: '', tahun: '' }); setPage(1); }}>Reset</button>
+              </div>
               <div className="admin-filter-grid">
                 <div>
                   <label>Tipe Aksi</label>

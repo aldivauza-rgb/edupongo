@@ -122,6 +122,10 @@ export default function TestimoniPage({ showSnack, userName }) {
           </button>
           {filterOpen && (
             <div className="admin-filter-popup" ref={filterRef}>
+              <div className="admin-filter-popup-header">
+                <span className="admin-filter-popup-header-title">Filter</span>
+                <button className="admin-filter-popup-header-reset" onClick={() => { setFilterVal({ bulan: '', tahun: '', status: '' }); setPage(1); }}>Reset</button>
+              </div>
               <div className="admin-filter-grid">
                 <div>
                   <label>Bulan</label>
