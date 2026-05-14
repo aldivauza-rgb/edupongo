@@ -1,13 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getFAQs } from '../lib/api';
 
-const categories = [
-  { key: 'umum', icon: '💡', label: 'Umum', count: 4 },
-  { key: 'fitur', icon: '⚙️', label: 'Fitur & Platform', count: 4 },
-  { key: 'implementasi', icon: '🚀', label: 'Implementasi', count: 3 },
-  { key: 'keamanan', icon: '🔒', label: 'Keamanan & Data', count: 3 },
-];
-
-const faqData = {
+const FALLBACK_DATA = {
   umum: [
     { q: 'Apakah Edupongo cocok untuk pesantren dan boarding school?', a: 'Ya: dan ini justru yang membedakan Edupongo dari platform manajemen sekolah lainnya. Edupongo dirancang dari awal untuk memahami ekosistem pesantren: dari manajemen santri, koordinasi asrama, hingga integrasi yayasan dalam satu sistem. Sudah dipakai oleh beberapa pondok pesantren dan boarding school di Jawa.' },
     { q: 'Jenjang sekolah apa saja yang bisa menggunakan Edupongo?', a: 'Edupongo mendukung semua jenjang: <strong>RA/TK, MI/SD, MTs/SMP, MA/SMA, dan SMK</strong>: baik negeri maupun swasta. Termasuk PKBM dan lembaga pendidikan nonformal lainnya. Satu platform yang sama bisa dipakai oleh seluruh unit di bawah satu yayasan.' },
@@ -32,6 +26,35 @@ const faqData = {
   ],
 };
 
+const CATEGORY_META = {
+  umum: { icon: '💡', label: 'Umum' },
+  fitur: { icon: '⚙️', label: 'Fitur & Platform' },
+  implementasi: { icon: '🚀', label: 'Implementasi' },
+  keamanan: { icon: '🔒', label: 'Keamanan & Data' },
+};
+
+function groupFAQs(items) {
+  const grouped = { umum: [], fitur: [], implementasi: [], keamanan: [] };
+  items.forEach(f => {
+    const cat = f.category || 'umum';
+    if (grouped[cat]) {
+      grouped[cat].push({ q: f.question, a: f.answer });
+    } else {
+      grouped.umum.push({ q: f.question, a: f.answer });
+    }
+  });
+  return grouped;
+}
+
+function buildCategories(data) {
+  return Object.keys(CATEGORY_META).map(key => ({
+    key,
+    icon: CATEGORY_META[key].icon,
+    label: CATEGORY_META[key].label,
+    count: (data[key] || []).length,
+  }));
+}
+
 function FAQItem({ q, a, isOpen, onToggle }) {
   return (
     <div className={`faq-item ${isOpen ? 'open' : ''}`}>
@@ -47,13 +70,21 @@ function FAQItem({ q, a, isOpen, onToggle }) {
 }
 
 export default function FAQSection() {
+  const [faqData, setFaqData] = useState(FALLBACK_DATA);
   const [activeCat, setActiveCat] = useState('umum');
   const [openItems, setOpenItems] = useState({});
+
+  useEffect(() => {
+    getFAQs().then(data => {
+      if (data && data.length) setFaqData(groupFAQs(data));
+    }).catch(() => {});
+  }, []);
+
+  const categories = buildCategories(faqData);
 
   const toggleItem = (cat, idx) => {
     setOpenItems((prev) => {
       const next = {};
-      // Close all in same category
       faqData[cat].forEach((_, i) => { next[`${cat}-${i}`] = false; });
       next[`${cat}-${idx}`] = !prev[`${cat}-${idx}`];
       return next;

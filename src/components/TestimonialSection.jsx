@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
+import { getTestimonials } from '../lib/api';
 
-const testimonials = [
+const FALLBACK = [
   {
     text: 'Proses PPDB yang biasanya memakan waktu berminggu-minggu dan bikin orang tua antre panjang: sekarang bisa selesai lebih cepat, lebih rapi, dan orang tua tidak perlu datang berkali-kali.',
     name: 'Kepala Sekolah: SMP Islam An Nawawiyah',
@@ -22,11 +23,18 @@ const testimonials = [
 ];
 
 export default function TestimonialSection() {
+  const [testimonials, setTestimonials] = useState(FALLBACK);
   const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    getTestimonials().then(data => {
+      if (data && data.length) setTestimonials(data);
+    }).catch(() => {});
+  }, []);
 
   const goTo = useCallback((idx) => {
     setCurrent((idx + testimonials.length) % testimonials.length);
-  }, []);
+  }, [testimonials.length]);
 
   useEffect(() => {
     const timer = setInterval(() => goTo(current + 1), 5000);

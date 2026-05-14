@@ -1,4 +1,25 @@
+import { useState, useEffect } from 'react';
+import { getStats } from '../lib/api';
+
+const FALLBACK_STATS = [
+  { num: '100+', label: 'Sekolah aktif' },
+  { num: '30rb+', label: 'Pengguna aktif' },
+  { num: '10+', label: 'Tahun pengalaman' },
+  { num: 'HaKI', label: 'Terdaftar Kemenkumham' },
+];
+
 export default function Hero({ onOpenDemo }) {
+  const [stats, setStats] = useState(FALLBACK_STATS);
+
+  useEffect(() => {
+    getStats().then(data => {
+      if (data && data.length) {
+        const homeStats = data.filter(s => s.page === 'home');
+        if (homeStats.length) setStats(homeStats);
+      }
+    }).catch(() => {});
+  }, []);
+
   return (
     <section className="hero">
       <div className="hero-badge">
@@ -18,14 +39,9 @@ export default function Hero({ onOpenDemo }) {
       </div>
 
       <div className="hero-stats">
-        {[
-          { num: '100+', label: 'Sekolah aktif' },
-          { num: '30rb+', label: 'Pengguna aktif' },
-          { num: '10+', label: 'Tahun pengalaman' },
-          { num: 'HaKI', label: 'Terdaftar Kemenkumham' },
-        ].map((s, i) => (
+        {stats.map((s, i) => (
           <div className="stat-item" key={i}>
-            <span className="stat-number">{s.num}</span>
+            <span className="stat-number">{s.number || s.num}</span>
             <span className="stat-label">{s.label}</span>
           </div>
         ))}

@@ -1,6 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { getWhyCards } from '../lib/api';
 
-const cards = [
+const FALLBACK = [
   { title: 'Administrasi lebih efisien, data tersimpan rapi', desc: 'Semua data siswa, guru, dan keuangan tersimpan terpusat dan mudah diakses kapanpun: tidak ada lagi data yang berserakan di berbagai file Excel.' },
   { title: 'PPDB tanpa antre: dari mana saja, kapan saja', desc: 'Proses penerimaan siswa baru yang biasanya butuh berminggu-minggu bisa diselesaikan lebih cepat, lebih rapi, dan lebih transparan.' },
   { title: 'Orang tua terhubung langsung dengan sekolah', desc: 'Tidak ada lagi informasi yang telat sampai. Orang tua bisa pantau kehadiran, nilai, dan tagihan anak langsung dari HP mereka.' },
@@ -10,9 +11,16 @@ const cards = [
 ];
 
 export default function WhySection() {
+  const [cards, setCards] = useState(FALLBACK);
   const trackRef = useRef(null);
   const stageRef = useRef(null);
   const gridRef = useRef(null);
+
+  useEffect(() => {
+    getWhyCards().then(data => {
+      if (data && data.length) setCards(data);
+    }).catch(() => {});
+  }, []);
 
   useEffect(() => {
     const track = trackRef.current;
@@ -93,7 +101,7 @@ export default function WhySection() {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onResize);
     };
-  }, []);
+  }, [cards]);
 
   return (
     <section className="why-section">
@@ -109,7 +117,7 @@ export default function WhySection() {
               <div className="why-card" key={i}>
                 <div className="why-check">✅</div>
                 <div className="why-title">{c.title}</div>
-                <div className="why-desc">{c.desc}</div>
+                <div className="why-desc">{c.desc || c.description}</div>
               </div>
             ))}
           </div>
