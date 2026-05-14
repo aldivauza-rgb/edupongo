@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { IconPlus, IconFilter, IconEdit, IconTrash, IconChevronLeft, IconChevronRight, IconSearch } from '@tabler/icons-react';
 import TambahTestimoniPage from './TambahTestimoniPage';
 import ConfirmModal from '../components/ConfirmModal';
@@ -19,15 +19,36 @@ export default function TestimoniPage({ showSnack, userName }) {
   const [showForm, setShowForm] = useState(false);
   const [editItem, setEditItem] = useState(null);
   const [deleteModal, setDeleteModal] = useState({ show: false, item: null });
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [filterVal, setFilterVal] = useState({ bulan: '', tahun: '', status: '' });
+  const filterRef = useRef(null);
 
   useEffect(() => {
     api.getTestimonials().then(data => { setItems(data); setLoading(false); }).catch(() => setLoading(false));
   }, []);
 
-  const filtered = items.filter((i) =>
-    i.name?.toLowerCase().includes(search.toLowerCase()) ||
-    (i.role || '').toLowerCase().includes(search.toLowerCase())
-  );
+  useEffect(() => {
+    if (!filterOpen) return;
+    const handler = (e) => { if (filterRef.current && !filterRef.current.contains(e.target)) setFilterOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [filterOpen]);
+
+  const hasFilter = filterVal.bulan || filterVal.tahun || filterVal.status;
+
+  const filtered = items.filter((i) => {
+    if (search && !i.name?.toLowerCase().includes(search.toLowerCase()) && !(i.role || '').toLowerCase().includes(search.toLowerCase())) return false;
+    if (filterVal.status && i.status !== filterVal.status) return false;
+    if (filterVal.bulan) {
+      const d = new Date(i.date);
+      if (d.getMonth() + 1 !== parseInt(filterVal.bulan)) return false;
+    }
+    if (filterVal.tahun) {
+      const d = new Date(i.date);
+      if (d.getFullYear() !== parseInt(filterVal.tahun)) return false;
+    }
+    return true;
+  });
   const total = filtered.length;
   const start = (page - 1) * perPage;
   const paged = filtered.slice(start, start + perPage);
@@ -95,9 +116,41 @@ export default function TestimoniPage({ showSnack, userName }) {
           </div>
           <input className="admin-search-input" placeholder="Cari testimoni..." value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} />
         </div>
-        <button className="admin-filter-btn">
-          <IconFilter size={16} stroke={1.5} /> Filter
-        </button>
+        <div style={{ position: 'relative' }}>
+          <button className={`admin-filter-btn${hasFilter ? ' active' : ''}`} onClick={() => setFilterOpen(!filterOpen)}>
+            <IconFilter size={16} stroke={1.5} /> Filter
+          </button>
+          {filterOpen && (
+            <div className="admin-filter-popup" ref={filterRef}>
+              <div>
+                <label>Bulan</label>
+                <select className="admin-filter-select" value={filterVal.bulan} onChange={(e) => setFilterVal((p) => ({ ...p, bulan: e.target.value }))}>
+                  <option value="">Semua Bulan</option>
+                  {['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'].map((m, i) => <option key={i + 1} value={i + 1}>{m}</option>)}
+                </select>
+              </div>
+              <div>
+                <label>Tahun</label>
+                <select className="admin-filter-select" value={filterVal.tahun} onChange={(e) => setFilterVal((p) => ({ ...p, tahun: e.target.value }))}>
+                  <option value="">Semua Tahun</option>
+                  {[2024,2025,2026].map((y) => <option key={y} value={y}>{y}</option>)}
+                </select>
+              </div>
+              <div>
+                <label>Status</label>
+                <select className="admin-filter-select" value={filterVal.status} onChange={(e) => setFilterVal((p) => ({ ...p, status: e.target.value }))}>
+                  <option value="">Semua Status</option>
+                  <option value="terbit">Terbit</option>
+                  <option value="draf">Draf</option>
+                </select>
+              </div>
+              <div className="admin-filter-popup-actions">
+                <button className="admin-filter-btn-reset" onClick={() => { setFilterVal({ bulan: '', tahun: '', status: '' }); setPage(1); }}>Reset All</button>
+                <button className="admin-filter-btn-apply" onClick={() => { setFilterOpen(false); setPage(1); }}>Terapkan</button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="admin-table-wrap">

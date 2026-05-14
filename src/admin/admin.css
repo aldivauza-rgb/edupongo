@@ -157,6 +157,42 @@ aside nav button {
   transition: border-color var(--adm-transition); white-space: nowrap;
 }
 .admin-filter-btn:hover { border-color: var(--adm-blue); color: var(--adm-blue); }
+.admin-filter-btn.active { background: #EEF4FF; border-color: #046CF2; color: #046CF2; }
+
+.admin-filter-popup {
+  position: absolute; top: calc(100% + 8px); right: 0; z-index: 100;
+  width: 280px; background: #fff; border: 1px solid #E5E7EB;
+  border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+  padding: 20px; display: flex; flex-direction: column; gap: 14px;
+}
+.admin-filter-popup label {
+  font-size: 12px; font-weight: 600; color: #374151; display: block; margin-bottom: 4px;
+}
+.admin-filter-select {
+  height: 44px; border-radius: 10px; border: 1px solid #E5E7EB;
+  padding: 0 36px 0 12px; font-size: 13px; background: #fff;
+  width: 100%; cursor: pointer; font-family: 'Inter', sans-serif;
+  outline: none; color: #374151;
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235D6B82' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center; background-size: 16px;
+}
+.admin-filter-popup-actions {
+  display: flex; gap: 10px; justify-content: flex-end; margin-top: 4px;
+}
+.admin-filter-popup-actions button {
+  height: 38px; padding: 0 18px; border-radius: 8px; font-size: 13px;
+  font-weight: 500; cursor: pointer; font-family: 'Inter', sans-serif;
+  transition: all 0.15s;
+}
+.admin-filter-btn-reset {
+  background: transparent; color: #374151; border: 1px solid #D1D5DB;
+}
+.admin-filter-btn-reset:hover { border-color: #9CA3AF; }
+.admin-filter-btn-apply { background: #046CF2; color: #fff; border: none; }
+.admin-filter-btn-apply:hover { background: #0357C7; }
+
+.admin-toolbar { position: relative; }
 
 /* ─── TABLE ─────────────────────────────────────────────────── */
 .admin-table-wrap {

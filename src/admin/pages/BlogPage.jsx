@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { IconPlus, IconFilter, IconEdit, IconTrash, IconTag, IconChevronLeft, IconChevronRight, IconSearch, IconArrowLeft, IconUpload } from '@tabler/icons-react';
 import ConfirmModal from '../components/ConfirmModal';
 import * as api from '../../lib/admin-api';
@@ -121,14 +121,37 @@ export default function BlogPage({ showSnack, userName }) {
   const [showForm, setShowForm] = useState(false);
   const [editItem, setEditItem] = useState(null);
   const [deleteModal, setDeleteModal] = useState({ show: false, item: null });
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [filterVal, setFilterVal] = useState({ bulan: '', tahun: '', status: '', kategori: '' });
+  const filterRef = useRef(null);
 
   useEffect(() => {
     api.getBlogs().then(data => { setItems(data); setLoading(false); }).catch(() => setLoading(false));
   }, []);
 
-  const filtered = items.filter((i) =>
-    i.title?.toLowerCase().includes(search.toLowerCase())
-  );
+  useEffect(() => {
+    if (!filterOpen) return;
+    const handler = (e) => { if (filterRef.current && !filterRef.current.contains(e.target)) setFilterOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [filterOpen]);
+
+  const hasFilter = filterVal.bulan || filterVal.tahun || filterVal.status || filterVal.kategori;
+
+  const filtered = items.filter((i) => {
+    if (search && !i.title?.toLowerCase().includes(search.toLowerCase())) return false;
+    if (filterVal.kategori && i.kategori !== filterVal.kategori) return false;
+    if (filterVal.status && i.status !== filterVal.status) return false;
+    if (filterVal.bulan) {
+      const d = new Date(i.date);
+      if (d.getMonth() + 1 !== parseInt(filterVal.bulan)) return false;
+    }
+    if (filterVal.tahun) {
+      const d = new Date(i.date);
+      if (d.getFullYear() !== parseInt(filterVal.tahun)) return false;
+    }
+    return true;
+  });
   const total = filtered.length;
   const start = (page - 1) * perPage;
   const paged = filtered.slice(start, start + perPage);
@@ -194,7 +217,47 @@ export default function BlogPage({ showSnack, userName }) {
           <IconSearch size={16} stroke={1.5} color="#97A2B0" />
           <input style={{ flex: 1, border: 'none', outline: 'none', fontSize: 13, fontFamily: 'Inter, sans-serif', color: '#010E23' }} placeholder="Cari Sesuatu..." value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} />
         </div>
-        <button className="admin-filter-btn"><IconFilter size={16} stroke={1.5} /> Filter</button>
+        <div style={{ position: 'relative' }}>
+          <button className={`admin-filter-btn${hasFilter ? ' active' : ''}`} onClick={() => setFilterOpen(!filterOpen)}><IconFilter size={16} stroke={1.5} /> Filter</button>
+          {filterOpen && (
+            <div className="admin-filter-popup" ref={filterRef}>
+              <div>
+                <label>Bulan</label>
+                <select className="admin-filter-select" value={filterVal.bulan} onChange={(e) => setFilterVal((p) => ({ ...p, bulan: e.target.value }))}>
+                  <option value="">Semua Bulan</option>
+                  {['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'].map((m, i) => <option key={i + 1} value={i + 1}>{m}</option>)}
+                </select>
+              </div>
+              <div>
+                <label>Tahun</label>
+                <select className="admin-filter-select" value={filterVal.tahun} onChange={(e) => setFilterVal((p) => ({ ...p, tahun: e.target.value }))}>
+                  <option value="">Semua Tahun</option>
+                  {[2024,2025,2026].map((y) => <option key={y} value={y}>{y}</option>)}
+                </select>
+              </div>
+              <div>
+                <label>Status</label>
+                <select className="admin-filter-select" value={filterVal.status} onChange={(e) => setFilterVal((p) => ({ ...p, status: e.target.value }))}>
+                  <option value="">Semua Status</option>
+                  <option value="terbit">Terbit</option>
+                  <option value="draf">Draf</option>
+                </select>
+              </div>
+              <div>
+                <label>Kategori</label>
+                <select className="admin-filter-select" value={filterVal.kategori} onChange={(e) => setFilterVal((p) => ({ ...p, kategori: e.target.value }))}>
+                  <option value="">Semua Kategori</option>
+                  <option value="Artikel">Artikel</option>
+                  <option value="Fitur">Fitur</option>
+                </select>
+              </div>
+              <div className="admin-filter-popup-actions">
+                <button className="admin-filter-btn-reset" onClick={() => { setFilterVal({ bulan: '', tahun: '', status: '', kategori: '' }); setPage(1); }}>Reset All</button>
+                <button className="admin-filter-btn-apply" onClick={() => { setFilterOpen(false); setPage(1); }}>Terapkan</button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
       <div className="admin-table-wrap">
         <table className="admin-table">

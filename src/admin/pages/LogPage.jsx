@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { IconSearch, IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
+import { useState, useRef, useEffect } from 'react';
+import { IconSearch, IconFilter, IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 
 const DUMMY = [
   { time: '2026-05-14T21:30', admin: 'admin', aksi: 'Tambah', page: 'Blog', detail: 'Menambah artikel "Kenapa Sekolah Memilih Edupongo?"' },
@@ -25,15 +25,33 @@ function formatTime(d) {
 export default function LogPage({ showSnack }) {
   const [items] = useState(DUMMY);
   const [search, setSearch] = useState('');
-  const [filterAksi, setFilterAksi] = useState('');
-  const [filterPage, setFilterPage] = useState('');
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [filterVal, setFilterVal] = useState({ aksi: '', halaman: '', bulan: '', tahun: '' });
+  const filterRef = useRef(null);
+
+  useEffect(() => {
+    if (!filterOpen) return;
+    const handler = (e) => { if (filterRef.current && !filterRef.current.contains(e.target)) setFilterOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [filterOpen]);
+
+  const hasFilter = filterVal.aksi || filterVal.halaman || filterVal.bulan || filterVal.tahun;
 
   const filtered = items.filter((i) => {
     if (search && !i.detail.toLowerCase().includes(search.toLowerCase())) return false;
-    if (filterAksi && i.aksi !== filterAksi) return false;
-    if (filterPage && i.page !== filterPage) return false;
+    if (filterVal.aksi && i.aksi !== filterVal.aksi) return false;
+    if (filterVal.halaman && i.page !== filterVal.halaman) return false;
+    if (filterVal.bulan) {
+      const d = new Date(i.time);
+      if (d.getMonth() + 1 !== parseInt(filterVal.bulan)) return false;
+    }
+    if (filterVal.tahun) {
+      const d = new Date(i.time);
+      if (d.getFullYear() !== parseInt(filterVal.tahun)) return false;
+    }
     return true;
   });
   const total = filtered.length;
@@ -56,20 +74,53 @@ export default function LogPage({ showSnack }) {
           </div>
           <input className="admin-search-input" placeholder="Cari aktivitas..." value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} />
         </div>
-        <select className="admin-select" value={filterAksi} onChange={(e) => { setFilterAksi(e.target.value); setPage(1); }}>
-          <option value="">Semua Tipe</option>
-          <option value="Tambah">Tambah</option>
-          <option value="Edit">Edit</option>
-          <option value="Hapus">Hapus</option>
-          <option value="Login">Login</option>
-        </select>
-        <select className="admin-select" value={filterPage} onChange={(e) => { setFilterPage(e.target.value); setPage(1); }}>
-          <option value="">Semua Halaman</option>
-          <option value="Blog">Blog</option>
-          <option value="Testimoni">Testimoni</option>
-          <option value="FAQ">FAQ</option>
-          <option value="Sistem">Sistem</option>
-        </select>
+        <div style={{ position: 'relative' }}>
+          <button className={`admin-filter-btn${hasFilter ? ' active' : ''}`} onClick={() => setFilterOpen(!filterOpen)}>
+            <IconFilter size={16} stroke={1.5} /> Filter
+          </button>
+          {filterOpen && (
+            <div className="admin-filter-popup" ref={filterRef}>
+              <div>
+                <label>Tipe Aksi</label>
+                <select className="admin-filter-select" value={filterVal.aksi} onChange={(e) => setFilterVal((p) => ({ ...p, aksi: e.target.value }))}>
+                  <option value="">Semua Aksi</option>
+                  <option value="Tambah">Tambah</option>
+                  <option value="Edit">Edit</option>
+                  <option value="Hapus">Hapus</option>
+                  <option value="Login">Login</option>
+                </select>
+              </div>
+              <div>
+                <label>Halaman</label>
+                <select className="admin-filter-select" value={filterVal.halaman} onChange={(e) => setFilterVal((p) => ({ ...p, halaman: e.target.value }))}>
+                  <option value="">Semua Halaman</option>
+                  <option value="Blog">Blog</option>
+                  <option value="Testimoni">Testimoni</option>
+                  <option value="FAQ">FAQ</option>
+                  <option value="Sistem">Sistem</option>
+                </select>
+              </div>
+              <div>
+                <label>Bulan</label>
+                <select className="admin-filter-select" value={filterVal.bulan} onChange={(e) => setFilterVal((p) => ({ ...p, bulan: e.target.value }))}>
+                  <option value="">Semua Bulan</option>
+                  {['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'].map((m, i) => <option key={i + 1} value={i + 1}>{m}</option>)}
+                </select>
+              </div>
+              <div>
+                <label>Tahun</label>
+                <select className="admin-filter-select" value={filterVal.tahun} onChange={(e) => setFilterVal((p) => ({ ...p, tahun: e.target.value }))}>
+                  <option value="">Semua Tahun</option>
+                  {[2024,2025,2026].map((y) => <option key={y} value={y}>{y}</option>)}
+                </select>
+              </div>
+              <div className="admin-filter-popup-actions">
+                <button className="admin-filter-btn-reset" onClick={() => { setFilterVal({ aksi: '', halaman: '', bulan: '', tahun: '' }); setPage(1); }}>Reset All</button>
+                <button className="admin-filter-btn-apply" onClick={() => { setFilterOpen(false); setPage(1); }}>Terapkan</button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="admin-table-wrap">
