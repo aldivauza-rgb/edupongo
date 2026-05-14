@@ -1,19 +1,22 @@
 import { useState } from 'react';
 import { IconPlus, IconFilter, IconEdit, IconTrash, IconChevronLeft, IconChevronRight, IconSearch } from '@tabler/icons-react';
 import TambahTestimoniPage from './TambahTestimoniPage';
+import ConfirmModal from '../components/ConfirmModal';
 
 const DUMMY = [
-  { id: 1, name: 'Wakil Kepala Sekolah', initial: 'W', bg: '#046CF2', instansi: 'MA Unggulan Wahab Hasbulloh, Jombang, Jawa Timur', status: 'terbit', text: 'Yang paling saya suka adalah orang tua sekarang bisa langsung tahu kalau anaknya tidak hadir. Dulu mereka baru tahu kalau sudah telepon ke sekolah: dan kadang kami sendiri yang kewalahan mengangkat telepon.' },
-  { id: 2, name: 'Kepala Sekolah', initial: 'K', bg: '#007955', instansi: 'SMP Negeri 3 Surabaya, Jawa Timur', status: 'terbit', text: 'Sistem ini benar-benar mengubah cara kami bekerja. Laporan yang dulu butuh waktu berhari-hari sekarang bisa selesai dalam hitungan menit.' },
-  { id: 3, name: 'Guru Senior', initial: 'G', bg: '#E07B00', instansi: 'SMK Telkom Malang, Jawa Timur', status: 'draf', text: 'Fitur presensi GPS sangat membantu kami memantau kehadiran guru di lapangan secara real-time.' },
+  { id: 1, name: 'Wakil Kepala Sekolah', initial: 'W', bg: '#046CF2', instansi: 'MA Unggulan Wahab Hasbulloh, Jombang, Jawa Timur', status: 'terbit', publisher: 'Admin Humas', date: '2026-05-14', text: 'Yang paling saya suka adalah orang tua sekarang bisa langsung tahu kalau anaknya tidak hadir. Dulu mereka baru tahu kalau sudah telepon ke sekolah: dan kadang kami sendiri yang kewalahan mengangkat telepon.' },
+  { id: 2, name: 'Kepala Sekolah', initial: 'K', bg: '#007955', instansi: 'SMP Negeri 3 Surabaya, Jawa Timur', status: 'terbit', publisher: 'Admin Humas', date: '2026-05-10', text: 'Sistem ini benar-benar mengubah cara kami bekerja. Laporan yang dulu butuh waktu berhari-hari sekarang bisa selesai dalam hitungan menit.' },
+  { id: 3, name: 'Guru Senior', initial: 'G', bg: '#E07B00', instansi: 'SMK Telkom Malang, Jawa Timur', status: 'draf', publisher: 'Admin Humas', date: '2026-05-05', text: 'Fitur presensi GPS sangat membantu kami memantau kehadiran guru di lapangan secara real-time.' },
 ];
 
 export default function TestimoniPage({ showSnack }) {
   const [items, setItems] = useState(DUMMY);
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
   const [showForm, setShowForm] = useState(false);
-  const perPage = 10;
+  const [editItem, setEditItem] = useState(null);
+  const [deleteModal, setDeleteModal] = useState({ show: false, item: null });
 
   const filtered = items.filter((i) =>
     i.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -23,15 +26,43 @@ export default function TestimoniPage({ showSnack }) {
   const start = (page - 1) * perPage;
   const paged = filtered.slice(start, start + perPage);
 
-  const handleAddTestimoni = (data) => {
-    const newId = Math.max(...items.map((i) => i.id), 0) + 1;
-    setItems((prev) => [{ id: newId, ...data }, ...prev]);
+  /* ── Delete ── */
+  const openDelete = (item) => setDeleteModal({ show: true, item });
+  const confirmDelete = () => {
+    setItems((prev) => prev.filter((i) => i.id !== deleteModal.item.id));
+    setDeleteModal({ show: false, item: null });
+    showSnack('success', 'Berhasil', 'Testimoni telah dihapus');
+  };
+
+  /* ── Save (add / update) ── */
+  const handleSubmit = (data) => {
+    if (editItem) {
+      setItems((prev) => prev.map((i) => i.id === editItem.id ? { ...i, ...data } : i));
+      if (data.status === 'terbit') {
+        showSnack('success', 'Berhasil', 'Testimoni telah diperbarui');
+      } else {
+        showSnack('success', 'Berhasil', 'Testimoni disimpan sebagai draf');
+      }
+    } else {
+      const newId = Math.max(...items.map((i) => i.id), 0) + 1;
+      setItems((prev) => [{ id: newId, ...data }, ...prev]);
+      if (data.status === 'terbit') {
+        showSnack('success', 'Berhasil', 'Testimoni telah diterbitkan');
+      } else {
+        showSnack('success', 'Berhasil', 'Testimoni disimpan sebagai draf');
+      }
+    }
     setShowForm(false);
-    showSnack?.('success', `Testimoni ${data.status === 'terbit' ? 'diterbitkan' : 'disimpan sebagai draf'}.`);
+    setEditItem(null);
+  };
+
+  const handleBack = () => {
+    setShowForm(false);
+    setEditItem(null);
   };
 
   if (showForm) {
-    return <TambahTestimoniPage onBack={() => setShowForm(false)} onSubmit={handleAddTestimoni} />;
+    return <TambahTestimoniPage editData={editItem} onBack={handleBack} onSubmit={handleSubmit} />;
   }
 
   return (
@@ -42,7 +73,7 @@ export default function TestimoniPage({ showSnack }) {
           <p className="admin-page-subtitle">Kelola testimoni yang tampil di website.</p>
         </div>
         <div className="admin-page-actions">
-          <button className="admin-btn admin-btn-primary admin-btn-sm" onClick={() => setShowForm(true)}>
+          <button className="admin-btn admin-btn-primary admin-btn-sm" onClick={() => { setEditItem(null); setShowForm(true); }}>
             <IconPlus size={16} stroke={1.5} /> Tambah Testimoni
           </button>
         </div>
@@ -95,10 +126,10 @@ export default function TestimoniPage({ showSnack }) {
                 </td>
                 <td>
                   <div className="admin-action-group">
-                    <button className="admin-action-btn admin-action-btn-edit" title="Edit" onClick={() => showSnack?.('info', 'Edit testimoni: ' + item.name)}>
+                    <button className="admin-action-btn admin-action-btn-edit" title="Edit" onClick={() => { setEditItem(item); setShowForm(true); }}>
                       <IconEdit size={15} stroke={1.5} />
                     </button>
-                    <button className="admin-action-btn admin-action-btn-delete" title="Hapus" onClick={() => showSnack?.('info', 'Konfirmasi hapus testimoni')}>
+                    <button className="admin-action-btn admin-action-btn-delete" title="Hapus" onClick={() => openDelete(item)}>
                       <IconTrash size={15} stroke={1.5} />
                     </button>
                   </div>
@@ -112,8 +143,13 @@ export default function TestimoniPage({ showSnack }) {
         </table>
 
         <div className="admin-pagination">
-          <div className="admin-pagination-info">
-            Menampilkan {start + 1}-{Math.min(start + perPage, total)} dari {total}
+          <div className="admin-pagination-left">
+            Show <select value={perPage} onChange={(e) => { setPerPage(Number(e.target.value)); setPage(1); }}>
+              <option value={5}>5</option>
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={50}>50</option>
+            </select> entries &middot; {total > 0 ? start + 1 : 0}-{Math.min(start + perPage, total)} dari {total}
           </div>
           <div className="admin-pagination-controls">
             <button className="admin-page-btn" disabled={page <= 1} onClick={() => setPage(page - 1)}>
@@ -126,6 +162,15 @@ export default function TestimoniPage({ showSnack }) {
           </div>
         </div>
       </div>
+
+      {deleteModal.show && (
+        <ConfirmModal
+          title="Hapus Testimoni"
+          message={`Apakah kamu yakin ingin menghapus "${deleteModal.item?.name}"? Tindakan ini tidak dapat dibatalkan.`}
+          onClose={() => setDeleteModal({ show: false, item: null })}
+          onConfirm={confirmDelete}
+        />
+      )}
     </div>
   );
 }

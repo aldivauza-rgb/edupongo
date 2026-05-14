@@ -28,7 +28,7 @@ export default function LogPage({ showSnack }) {
   const [filterAksi, setFilterAksi] = useState('');
   const [filterPage, setFilterPage] = useState('');
   const [page, setPage] = useState(1);
-  const perPage = 10;
+  const [perPage, setPerPage] = useState(10);
 
   const filtered = items.filter((i) => {
     if (search && !i.detail.toLowerCase().includes(search.toLowerCase())) return false;
@@ -103,8 +103,13 @@ export default function LogPage({ showSnack }) {
         </table>
 
         <div className="admin-pagination">
-          <div className="admin-pagination-info">
-            Menampilkan {start + 1}-{Math.min(start + perPage, total)} dari {total}
+          <div className="admin-pagination-left">
+            Show <select value={perPage} onChange={(e) => { setPerPage(Number(e.target.value)); setPage(1); }}>
+              <option value={5}>5</option>
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={50}>50</option>
+            </select> entries &middot; {total > 0 ? start + 1 : 0}-{Math.min(start + perPage, total)} dari {total}
           </div>
           <div className="admin-pagination-controls">
             <button className="admin-page-btn" disabled={page <= 1} onClick={() => setPage(page - 1)}>

@@ -1,17 +1,19 @@
 import { useState, useRef } from 'react';
 import { IconArrowLeft, IconUpload, IconPhoto } from '@tabler/icons-react';
+import ConfirmModal from '../components/ConfirmModal';
 
 const AVATAR_COLORS = ['#046CF2', '#007955', '#E07B00', '#8B5CF6', '#DC2626', '#0891B2'];
 
-export default function TambahTestimoniPage({ onBack, onSubmit }) {
+export default function TambahTestimoniPage({ editData, onBack, onSubmit }) {
   const [form, setForm] = useState({
-    name: '',
-    instansi: '',
-    date: new Date().toISOString().split('T')[0],
-    text: '',
-    foto: null,
+    name: editData?.name || '',
+    instansi: editData?.instansi || '',
+    date: editData?.date || new Date().toISOString().split('T')[0],
+    text: editData?.text || '',
+    foto: editData?.foto || null,
   });
   const [errors, setErrors] = useState({});
+  const [publishModal, setPublishModal] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const fileRef = useRef(null);
 
@@ -26,11 +28,10 @@ export default function TambahTestimoniPage({ onBack, onSubmit }) {
     return Object.keys(err).length === 0;
   };
 
-  const handleSave = (status) => {
-    if (!validate()) return;
+  const buildPayload = (status) => {
     const initial = form.name.trim().charAt(0).toUpperCase();
     const colorIdx = initial.charCodeAt(0) % AVATAR_COLORS.length;
-    onSubmit({
+    return {
       name: form.name.trim(),
       initial,
       bg: AVATAR_COLORS[colorIdx],
@@ -39,7 +40,22 @@ export default function TambahTestimoniPage({ onBack, onSubmit }) {
       status,
       publisher: 'Admin Humas',
       date: form.date,
-    });
+    };
+  };
+
+  const handleDraft = () => {
+    if (!validate()) return;
+    onSubmit(buildPayload('draf'));
+  };
+
+  const handlePublishClick = () => {
+    if (!validate()) return;
+    setPublishModal(true);
+  };
+
+  const confirmPublish = () => {
+    setPublishModal(false);
+    onSubmit(buildPayload('terbit'));
   };
 
   const handleFile = (file) => {
@@ -75,7 +91,7 @@ export default function TambahTestimoniPage({ onBack, onSubmit }) {
 
       <div style={{ background: '#fff', borderRadius: 12, padding: 28, border: '1px solid #E8E9F1' }}>
         <h2 style={{ fontWeight: 700, fontSize: 22, color: '#010E23', margin: '0 0 28px', fontFamily: 'Inter, sans-serif' }}>
-          Tambah Testimoni
+          {editData ? 'Edit Testimoni' : 'Tambah Testimoni'}
         </h2>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 28 }}>
@@ -156,13 +172,23 @@ export default function TambahTestimoniPage({ onBack, onSubmit }) {
           </div>
           <div style={{ display: 'flex', gap: 10 }}>
             <button className="admin-btn admin-btn-outline admin-btn-sm" onClick={onBack}>Batal</button>
-            <button className="admin-btn admin-btn-outline admin-btn-sm" style={{ borderColor: '#101828', color: '#101828' }} onClick={() => handleSave('draf')}>Simpan sebagai Draf</button>
-            <button className="admin-btn admin-btn-primary admin-btn-sm" onClick={() => handleSave('terbit')}>
-              <IconUpload size={16} stroke={1.5} /> Simpan &amp; Terbitkan
+            <button className="admin-btn admin-btn-outline admin-btn-sm" style={{ borderColor: '#101828', color: '#101828' }} onClick={handleDraft}>Simpan sebagai Draf</button>
+            <button className="admin-btn admin-btn-primary admin-btn-sm" onClick={handlePublishClick}>
+              <IconUpload size={16} stroke={1.5} /> {editData ? 'Perbarui & Terbitkan' : 'Simpan & Terbitkan'}
             </button>
           </div>
         </div>
       </div>
+
+      {publishModal && (
+        <ConfirmModal
+          title="Terbitkan Testimoni"
+          message="Testimoni akan langsung dapat diakses publik di website setelah diterbitkan."
+          onClose={() => setPublishModal(false)}
+          onConfirm={confirmPublish}
+          confirmLabel="Ya, Terbitkan"
+        />
+      )}
     </div>
   );
 }

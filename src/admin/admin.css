@@ -110,7 +110,7 @@ aside nav button {
 .admin-page-wrap { padding: 32px 32px 40px; flex: 1; }
 .admin-page-header {
   display: flex; align-items: flex-start; justify-content: space-between;
-  margin-bottom: 24px; gap: 16px;
+  margin-bottom: 40px; gap: 16px;
 }
 .admin-page-header-left { display: flex; flex-direction: column; gap: 4px; }
 .admin-page-title { font-weight: 700; font-size: 30px; color: var(--adm-navy); margin: 0; }
@@ -119,7 +119,7 @@ aside nav button {
 
 /* ─── TOOLBAR ───────────────────────────────────────────────── */
 .admin-toolbar {
-  display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+  display: flex; align-items: center; gap: 12px; margin-bottom: 40px;
 }
 .admin-search-wrap {
   position: relative; flex: 1; max-width: 500px;
@@ -150,9 +150,9 @@ aside nav button {
 .admin-select:focus { border-color: var(--adm-blue); }
 
 .admin-filter-btn {
-  height: 46px; padding: 0 14px; border: 1px solid var(--adm-border);
-  border-radius: var(--adm-radius); background: var(--adm-surface);
-  display: flex; align-items: center; gap: 8px; font-size: 13px;
+  height: 46px; padding: 0 24px; border: 1px solid var(--adm-border);
+  border-radius: 8px; background: var(--adm-surface);
+  display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500;
   color: var(--adm-text-dark); cursor: pointer; font-family: 'Inter', sans-serif;
   transition: border-color var(--adm-transition); white-space: nowrap;
 }
@@ -166,14 +166,14 @@ aside nav button {
 }
 .admin-table { width: 100%; border-collapse: collapse; font-size: 13px; }
 .admin-table thead th {
-  padding: 14px 16px; background: var(--adm-bg);
-  border-bottom: 1px solid var(--adm-border);
+  padding: 14px 16px; background: #F1F3F9;
+  border-bottom: 2px solid #E2E6F0;
   text-transform: uppercase; font-size: 11px; font-weight: 600;
-  color: var(--adm-text-secondary); letter-spacing: 0.3px;
+  color: #6B7280; letter-spacing: 0.06em;
   white-space: nowrap; font-family: 'Inter', sans-serif;
 }
 .admin-table tbody td {
-  padding: 14px 16px; border-bottom: 1px solid var(--adm-border-light);
+  padding: 16px 18px; border-bottom: 1px solid #F3F4F6;
   vertical-align: middle; color: var(--adm-text-dark);
   font-family: 'Inter', sans-serif;
 }
@@ -221,14 +221,20 @@ aside nav button {
 /* ─── PAGINATION ────────────────────────────────────────────── */
 .admin-pagination {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 16px; border-top: 1px solid var(--adm-border);
+  padding: 12px 16px; border-top: 1px solid var(--adm-border);
 }
-.admin-pagination-info { font-size: 12px; color: var(--adm-text-secondary); }
+.admin-pagination-left { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--adm-text-secondary); }
+.admin-pagination-left select {
+  height: 36px; border: 1px solid #E5E7EB; border-radius: 8px;
+  padding: 0 8px; font-size: 13px; background: #fff; cursor: pointer;
+  font-family: 'Inter', sans-serif; outline: none; color: var(--adm-text-dark);
+}
+.admin-pagination-info { font-size: 13px; color: var(--adm-text-secondary); }
 .admin-pagination-controls { display: flex; align-items: center; gap: 4px; }
 .admin-page-btn {
-  min-width: 32px; height: 32px; border-radius: var(--adm-radius-sm);
+  min-width: 36px; height: 36px; border-radius: 8px;
   border: 1px solid var(--adm-border); background: var(--adm-surface);
-  font-size: 12px; font-weight: 500; cursor: pointer;
+  font-size: 13px; font-weight: 500; cursor: pointer;
   display: inline-flex; align-items: center; justify-content: center;
   color: var(--adm-text-dark); font-family: 'Inter', sans-serif;
   transition: all var(--adm-transition); padding: 0 8px;
@@ -240,8 +246,8 @@ aside nav button {
 /* ─── BUTTONS ───────────────────────────────────────────────── */
 .admin-btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  height: 46px; padding: 0 20px; border-radius: var(--adm-radius);
-  font-size: 13px; font-weight: 500; cursor: pointer; border: none;
+  height: 46px; padding: 0 24px; border-radius: 8px;
+  font-size: 14px; font-weight: 500; cursor: pointer; border: none;
   font-family: 'Inter', sans-serif; transition: all var(--adm-transition);
   white-space: nowrap; line-height: 1; text-decoration: none;
 }
@@ -255,7 +261,7 @@ aside nav button {
   border: 1px solid var(--adm-border);
 }
 .admin-btn-outline:hover { border-color: var(--adm-blue); color: var(--adm-blue); }
-.admin-btn-sm { height: 36px; padding: 0 12px; font-size: 12px; border-radius: var(--adm-radius-sm); }
+.admin-btn-sm { height: 46px; padding: 0 24px; font-size: 14px; border-radius: 8px; }
 .admin-btn-block { width: 100%; }
 
 /* ─── FORM ELEMENTS ─────────────────────────────────────────── */
@@ -368,15 +374,15 @@ aside nav button {
 /* ─── SNACKBAR ──────────────────────────────────────────────── */
 .admin-snackbar {
   position: fixed; top: 24px; right: 24px; z-index: 9999;
-  width: 320px; padding: 13px 15px; border-radius: 10px;
-  display: flex; align-items: flex-start; gap: 10px;
-  font-size: 13px; font-weight: 500; line-height: 1.4;
+  width: 320px; padding: 14px 16px; border-radius: 10px;
+  display: flex; align-items: flex-start; gap: 12px;
+  font-size: 13px; line-height: 1.4;
   box-shadow: 0 8px 24px rgba(5,27,62,0.12);
   animation: admSlideIn 0.25s ease; font-family: 'Inter', sans-serif;
 }
-.admin-snackbar-success { background: var(--adm-green-light-bg); color: var(--adm-success); border: 1px solid #C8E6C9; }
-.admin-snackbar-error { background: var(--adm-red-light-bg); color: var(--adm-error); border: 1px solid #FFCDD2; }
-.admin-snackbar-info { background: var(--adm-blue-light-bg); color: var(--adm-blue); border: 1px solid #B3D4FC; }
+.admin-snackbar-success { background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; }
+.admin-snackbar-error { background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; }
+.admin-snackbar-warning { background: #FFFBEB; color: #92400E; border: 1px solid #FDE68A; }
 .admin-snackbar-close {
   margin-left: auto; background: none; border: none; cursor: pointer;
   padding: 2px; color: inherit; opacity: 0.6; flex-shrink: 0;

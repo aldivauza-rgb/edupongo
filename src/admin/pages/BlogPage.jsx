@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { IconPlus, IconFilter, IconEdit, IconTrash, IconTag, IconChevronLeft, IconChevronRight, IconSearch } from '@tabler/icons-react';
+import { IconPlus, IconFilter, IconEdit, IconTrash, IconTag, IconChevronLeft, IconChevronRight, IconSearch, IconArrowLeft, IconUpload } from '@tabler/icons-react';
+import ConfirmModal from '../components/ConfirmModal';
 
 const DUMMY = [
-  { id: 1, title: 'Kenapa Sekolah Memilih Edupongo?', kategori: 'Artikel', date: '2026-05-10', author: 'Admin Humas', status: 'terbit', img: '' },
-  { id: 2, title: 'Satu-satunya yang Cover Ekosistem Pesantren', kategori: 'Fitur', date: '2026-05-05', author: 'Admin Humas', status: 'terbit', img: '' },
-  { id: 3, title: 'Terpercaya Sejak 2014: Bukan Startup Kemarin Sore', kategori: 'Artikel', date: '2026-05-01', author: 'Admin Humas', status: 'terbit', img: '' },
-  { id: 4, title: 'Presensi Fleksibel: 3 Metode dalam Satu Platform', kategori: 'Fitur', date: '2026-04-28', author: 'Admin Humas', status: 'draf', img: '' },
+  { id: 1, title: 'Kenapa Sekolah Memilih Edupongo?', kategori: 'Artikel', date: '2026-05-10', author: 'Admin Humas', status: 'terbit', content: 'Edupongo hadir sebagai solusi manajemen sekolah terintegrasi.' },
+  { id: 2, title: 'Satu-satunya yang Cover Ekosistem Pesantren', kategori: 'Fitur', date: '2026-05-05', author: 'Admin Humas', status: 'terbit', content: 'Tidak seperti platform lain, Edupongo memahami kebutuhan pesantren.' },
+  { id: 3, title: 'Terpercaya Sejak 2014: Bukan Startup Kemarin Sore', kategori: 'Artikel', date: '2026-05-01', author: 'Admin Humas', status: 'terbit', content: 'Lebih dari 10 tahun mendampingi sekolah-sekolah di Indonesia.' },
+  { id: 4, title: 'Presensi Fleksibel: 3 Metode dalam Satu Platform', kategori: 'Fitur', date: '2026-04-28', author: 'Admin Humas', status: 'draf', content: 'Presensi via web, fingerprint, dan GPS dalam satu platform.' },
 ];
 
 function formatDate(d) {
@@ -14,11 +15,124 @@ function formatDate(d) {
   return `${dt.getDate()} ${full[dt.getMonth()]} ${dt.getFullYear()}`;
 }
 
+/* ─── Inline Form ──────────────────────────────────────────── */
+function BlogForm({ editData, onBack, onSubmit }) {
+  const [form, setForm] = useState({
+    title: editData?.title || '',
+    kategori: editData?.kategori || 'Artikel',
+    date: editData?.date || new Date().toISOString().split('T')[0],
+    author: editData?.author || 'Admin Humas',
+    content: editData?.content || '',
+  });
+  const [errors, setErrors] = useState({});
+  const [publishModal, setPublishModal] = useState(false);
+
+  const set = (f) => (v) => setForm((prev) => ({ ...prev, [f]: v }));
+
+  const validate = () => {
+    const err = {};
+    if (!form.title.trim()) err.title = 'Judul harus diisi';
+    if (!form.content.trim()) err.content = 'Konten harus diisi';
+    setErrors(err);
+    return Object.keys(err).length === 0;
+  };
+
+  const handleDraft = () => {
+    if (!validate()) return;
+    onSubmit({ ...form, title: form.title.trim(), content: form.content.trim(), status: 'draf' });
+  };
+
+  const handlePublishClick = () => {
+    if (!validate()) return;
+    setPublishModal(true);
+  };
+
+  const confirmPublish = () => {
+    setPublishModal(false);
+    onSubmit({ ...form, title: form.title.trim(), content: form.content.trim(), status: 'terbit' });
+  };
+
+  return (
+    <div className="admin-page-wrap">
+      <button onClick={onBack} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Inter, sans-serif', fontSize: 13, color: '#5D6B82', padding: 0, marginBottom: 20 }}>
+        <IconArrowLeft size={16} stroke={1.5} />
+        Kembali
+      </button>
+
+      <div style={{ background: '#fff', borderRadius: 12, padding: 28, border: '1px solid #E8E9F1' }}>
+        <h2 style={{ fontWeight: 700, fontSize: 22, color: '#010E23', margin: '0 0 28px', fontFamily: 'Inter, sans-serif' }}>
+          {editData ? 'Edit Blog' : 'Tambah Blog'}
+        </h2>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 720 }}>
+          <div className="admin-field">
+            <label className="admin-label">Judul <span className="text-danger">*</span></label>
+            <input className={`admin-input${errors.title ? ' admin-input-error' : ''}`} placeholder="Judul artikel" value={form.title} onChange={(e) => { set('title')(e.target.value); if (errors.title) setErrors((p) => ({ ...p, title: null })); }} />
+            {errors.title && <small className="admin-error-text">{errors.title}</small>}
+          </div>
+
+          <div style={{ display: 'flex', gap: 16 }}>
+            <div style={{ flex: 1 }}>
+              <div className="admin-field">
+                <label className="admin-label">Kategori</label>
+                <select className="admin-select" value={form.kategori} onChange={(e) => set('kategori')(e.target.value)} style={{ width: '100%' }}>
+                  <option value="Artikel">Artikel</option>
+                  <option value="Fitur">Fitur</option>
+                </select>
+              </div>
+            </div>
+            <div style={{ flex: 1 }}>
+              <div className="admin-field">
+                <label className="admin-label">Tanggal</label>
+                <input type="date" className="admin-input" value={form.date} onChange={(e) => set('date')(e.target.value)} />
+              </div>
+            </div>
+          </div>
+
+          <div className="admin-field">
+            <label className="admin-label">Penulis</label>
+            <input className="admin-input" value={form.author} onChange={(e) => set('author')(e.target.value)} />
+          </div>
+
+          <div className="admin-field">
+            <label className="admin-label">Konten <span className="text-danger">*</span></label>
+            <textarea className={`admin-textarea${errors.content ? ' admin-input-error' : ''}`} placeholder="Tulis konten blog..." style={{ minHeight: 160, ...(errors.content ? { borderColor: '#B3202F' } : {}) }} value={form.content} onChange={(e) => { set('content')(e.target.value); if (errors.content) setErrors((p) => ({ ...p, content: null })); }} />
+            {errors.content && <small className="admin-error-text">{errors.content}</small>}
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', gap: 10, marginTop: 28, paddingTop: 20, borderTop: '1px solid #E8E9F1' }}>
+          <div style={{ flex: 1 }} />
+          <button className="admin-btn admin-btn-outline admin-btn-sm" onClick={onBack}>Batal</button>
+          <button className="admin-btn admin-btn-outline admin-btn-sm" style={{ borderColor: '#101828', color: '#101828' }} onClick={handleDraft}>Simpan sebagai Draf</button>
+          <button className="admin-btn admin-btn-primary admin-btn-sm" onClick={handlePublishClick}>
+            <IconUpload size={16} stroke={1.5} /> {editData ? 'Perbarui & Terbitkan' : 'Simpan & Terbitkan'}
+          </button>
+        </div>
+      </div>
+
+      {publishModal && (
+        <ConfirmModal
+          title={`Terbitkan Blog`}
+          message="Blog akan langsung dapat diakses publik di website setelah diterbitkan."
+          onClose={() => setPublishModal(false)}
+          onConfirm={confirmPublish}
+          confirmLabel="Ya, Terbitkan"
+        />
+      )}
+    </div>
+  );
+}
+
+/* ─── List Page ────────────────────────────────────────────── */
 export default function BlogPage({ showSnack }) {
-  const [items] = useState(DUMMY);
+  const [items, setItems] = useState(DUMMY);
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
-  const perPage = 10;
+  const [perPage, setPerPage] = useState(10);
+  const [showForm, setShowForm] = useState(false);
+  const [editItem, setEditItem] = useState(null);
+  const [deleteModal, setDeleteModal] = useState({ show: false, item: null });
 
   const filtered = items.filter((i) =>
     i.title.toLowerCase().includes(search.toLowerCase())
@@ -26,6 +140,52 @@ export default function BlogPage({ showSnack }) {
   const total = filtered.length;
   const start = (page - 1) * perPage;
   const paged = filtered.slice(start, start + perPage);
+
+  /* ── Delete ── */
+  const openDelete = (item) => setDeleteModal({ show: true, item });
+  const confirmDelete = () => {
+    setItems((prev) => prev.filter((i) => i.id !== deleteModal.item.id));
+    setDeleteModal({ show: false, item: null });
+    showSnack('success', 'Berhasil', 'Blog telah dihapus');
+  };
+
+  /* ── Edit ── */
+  const handleEdit = (item) => {
+    setEditItem(item);
+    setShowForm(true);
+  };
+
+  /* ── Save (add / update) ── */
+  const handleSave = (data) => {
+    if (editItem) {
+      setItems((prev) => prev.map((i) => i.id === editItem.id ? { ...i, ...data } : i));
+      if (data.status === 'terbit') {
+        showSnack('success', 'Berhasil', 'Blog telah diperbarui');
+      } else {
+        showSnack('success', 'Berhasil', 'Blog disimpan sebagai draf');
+      }
+    } else {
+      const newId = Math.max(...items.map((i) => i.id), 0) + 1;
+      setItems((prev) => [{ id: newId, ...data }, ...prev]);
+      if (data.status === 'terbit') {
+        showSnack('success', 'Berhasil', 'Blog telah diterbitkan');
+      } else {
+        showSnack('success', 'Berhasil', 'Blog disimpan sebagai draf');
+      }
+    }
+    setShowForm(false);
+    setEditItem(null);
+  };
+
+  /* ── Close form ── */
+  const handleBack = () => {
+    setShowForm(false);
+    setEditItem(null);
+  };
+
+  if (showForm) {
+    return <BlogForm editData={editItem} onBack={handleBack} onSubmit={handleSave} />;
+  }
 
   return (
     <div className="admin-page-wrap">
@@ -40,7 +200,7 @@ export default function BlogPage({ showSnack }) {
           <button className="admin-btn admin-btn-secondary admin-btn-sm">
             <IconTag size={16} stroke={1.5} /> Atur Kategori
           </button>
-          <button className="admin-btn admin-btn-primary admin-btn-sm" onClick={() => showSnack?.('info', 'Fitur tambah blog sedang dikembangkan.')}>
+          <button className="admin-btn admin-btn-primary admin-btn-sm" onClick={() => { setEditItem(null); setShowForm(true); }}>
             <IconPlus size={16} stroke={1.5} /> Tambah Blog
           </button>
         </div>
@@ -87,10 +247,10 @@ export default function BlogPage({ showSnack }) {
                 </td>
                 <td>
                   <div className="admin-action-group">
-                    <button className="admin-action-btn admin-action-btn-edit" title="Edit" onClick={() => showSnack?.('info', 'Edit blog: ' + item.title)}>
+                    <button className="admin-action-btn admin-action-btn-edit" title="Edit" onClick={() => handleEdit(item)}>
                       <IconEdit size={15} stroke={1.5} />
                     </button>
-                    <button className="admin-action-btn admin-action-btn-delete" title="Hapus" onClick={() => showSnack?.('info', 'Konfirmasi hapus: ' + item.title)}>
+                    <button className="admin-action-btn admin-action-btn-delete" title="Hapus" onClick={() => openDelete(item)}>
                       <IconTrash size={15} stroke={1.5} />
                     </button>
                   </div>
@@ -104,8 +264,13 @@ export default function BlogPage({ showSnack }) {
         </table>
 
         <div className="admin-pagination">
-          <div className="admin-pagination-info">
-            Menampilkan {start + 1}-{Math.min(start + perPage, total)} dari {total}
+          <div className="admin-pagination-left">
+            Show <select value={perPage} onChange={(e) => { setPerPage(Number(e.target.value)); setPage(1); }}>
+              <option value={5}>5</option>
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={50}>50</option>
+            </select> entries &middot; {total > 0 ? start + 1 : 0}-{Math.min(start + perPage, total)} dari {total}
           </div>
           <div className="admin-pagination-controls">
             <button className="admin-page-btn" disabled={page <= 1} onClick={() => setPage(page - 1)}>
@@ -118,6 +283,15 @@ export default function BlogPage({ showSnack }) {
           </div>
         </div>
       </div>
+
+      {deleteModal.show && (
+        <ConfirmModal
+          title="Hapus Blog"
+          message={`Apakah kamu yakin ingin menghapus "${deleteModal.item?.title}"? Tindakan ini tidak dapat dibatalkan.`}
+          onClose={() => setDeleteModal({ show: false, item: null })}
+          onConfirm={confirmDelete}
+        />
+      )}
     </div>
   );
 }
