@@ -1,18 +1,5 @@
 import { useState } from 'react';
-
-function Icon({ d, size = 20 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, display: 'block' }}>
-      <path d={d} />
-    </svg>
-  );
-}
-const I = {
-  plus: 'M12 5v14m-7-7h14',
-  search: 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z',
-  filter: 'M22 3H2l8 9.46V19l4 2v-8.54L22 3z',
-  x: 'M18 6L6 18M6 6l12 12',
-};
+import { IconPlus, IconSearch, IconFilter } from '@tabler/icons-react';
 
 const CATEGORIES = [
   { id: 'umum', icon: '🔑', label: 'Umum', count: 4 },
@@ -62,7 +49,7 @@ export default function FAQPage({ showSnack }) {
         </div>
         <div className="admin-page-actions">
           <button className="admin-btn admin-btn-primary admin-btn-sm" onClick={() => showSnack?.('info', 'Fitur tambah FAQ sedang dikembangkan.')}>
-            <Icon d={I.plus} size={16} /> Tambah FAQ
+            <IconPlus size={16} stroke={1.5} /> Tambah FAQ
           </button>
         </div>
       </div>
@@ -70,18 +57,16 @@ export default function FAQPage({ showSnack }) {
       <div className="admin-toolbar">
         <div className="admin-search-wrap">
           <div className="admin-search-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <IconSearch size={16} stroke={1.5} color="#97A2B0" />
           </div>
           <input className="admin-search-input" placeholder="Cari pertanyaan..." />
         </div>
         <button className="admin-filter-btn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>
-          Filter
+          <IconFilter size={16} stroke={1.5} /> Filter
         </button>
       </div>
 
       <div style={{ display: 'flex', gap: 24, alignItems: 'flex-start' }}>
-        {/* Left — Categories */}
         <div style={{ width: 280, flexShrink: 0 }}>
           <div className="admin-cat-list">
             {CATEGORIES.map((c) => (
@@ -93,18 +78,17 @@ export default function FAQPage({ showSnack }) {
             ))}
           </div>
           <button className="admin-btn admin-btn-outline admin-btn-sm admin-btn-block" style={{ marginTop: 12 }} onClick={() => showSnack?.('info', 'Fitur tambah kategori sedang dikembangkan.')}>
-            <Icon d={I.plus} size={14} /> Tambah Kategori
+            <IconPlus size={14} stroke={1.5} /> Tambah Kategori
           </button>
         </div>
 
-        {/* Right — Accordion */}
         <div style={{ flex: 1, minWidth: 0, background: 'var(--adm-surface)', borderRadius: 'var(--adm-radius-lg)', border: '1px solid var(--adm-border)', padding: '4px 24px' }}>
           {items.map((faq, idx) => (
             <div className="admin-accordion-item" key={idx}>
               <button className="admin-accordion-trigger" onClick={() => toggle(idx)}>
                 <span className="admin-accordion-title">{faq.q}</span>
                 <span className={`admin-accordion-icon${openId === idx ? ' open' : ''}`}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M12 5v14m-7-7h14"/></svg>
+                  <IconPlus size={20} stroke={1.5} />
                 </span>
               </button>
               {openId === idx && (

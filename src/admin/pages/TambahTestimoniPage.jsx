@@ -1,17 +1,5 @@
 import { useState, useRef } from 'react';
-
-function Icon({ d, size = 20 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, display: 'block' }}>
-      {typeof d === 'string' ? <path d={d} /> : d}
-    </svg>
-  );
-}
-const I = {
-  arrowLeft: 'M19 12H5m7-7l-7 7 7 7',
-  upload: 'M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4m7-1l-4 4m0 0l4-4m-4 4V3',
-  user: 'M12 12a5 5 0 100-10 5 5 0 000 10zM20.59 22c0-3.87-3.85-7-8.59-7s-8.59 3.13-8.59 7',
-};
+import { IconArrowLeft, IconUpload, IconPhoto } from '@tabler/icons-react';
 
 const AVATAR_COLORS = ['#046CF2', '#007955', '#E07B00', '#8B5CF6', '#DC2626', '#0891B2'];
 
@@ -80,47 +68,31 @@ export default function TambahTestimoniPage({ onBack, onSubmit }) {
 
   return (
     <div className="admin-page-wrap">
-      {/* Back button */}
       <button onClick={onBack} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Inter, sans-serif', fontSize: 13, color: '#5D6B82', padding: 0, marginBottom: 20 }}>
-        <Icon d={I.arrowLeft} size={16} />
+        <IconArrowLeft size={16} stroke={1.5} />
         Kembali
       </button>
 
-      {/* Card */}
       <div style={{ background: '#fff', borderRadius: 12, padding: 28, border: '1px solid #E8E9F1' }}>
         <h2 style={{ fontWeight: 700, fontSize: 22, color: '#010E23', margin: '0 0 28px', fontFamily: 'Inter, sans-serif' }}>
           Tambah Testimoni
         </h2>
 
-        {/* 2 column layout */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 28 }}>
-          {/* LEFT - Fields */}
+          {/* LEFT */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-            {/* Nama & Jabatan */}
             <div className="admin-field">
               <label className="admin-label">Nama &amp; Jabatan <span className="text-danger">*</span></label>
-              <input
-                className={`admin-input${errors.name ? ' admin-input-error' : ''}`}
-                placeholder="mis. Wakil Kepala Sekolah"
-                value={form.name}
-                onChange={(e) => { set('name')(e.target.value); if (errors.name) setErrors((p) => ({ ...p, name: null })); }}
-              />
+              <input className={`admin-input${errors.name ? ' admin-input-error' : ''}`} placeholder="mis. Wakil Kepala Sekolah" value={form.name} onChange={(e) => { set('name')(e.target.value); if (errors.name) setErrors((p) => ({ ...p, name: null })); }} />
               {errors.name && <small className="admin-error-text">{errors.name}</small>}
             </div>
 
-            {/* Instansi */}
             <div className="admin-field">
               <label className="admin-label">Instansi <span className="text-danger">*</span></label>
-              <input
-                className={`admin-input${errors.instansi ? ' admin-input-error' : ''}`}
-                placeholder="mis. MA Unggulan Wahab Hasbulloh, Jombang"
-                value={form.instansi}
-                onChange={(e) => { set('instansi')(e.target.value); if (errors.instansi) setErrors((p) => ({ ...p, instansi: null })); }}
-              />
+              <input className={`admin-input${errors.instansi ? ' admin-input-error' : ''}`} placeholder="mis. MA Unggulan Wahab Hasbulloh, Jombang" value={form.instansi} onChange={(e) => { set('instansi')(e.target.value); if (errors.instansi) setErrors((p) => ({ ...p, instansi: null })); }} />
               {errors.instansi && <small className="admin-error-text">{errors.instansi}</small>}
             </div>
 
-            {/* Dipublikasikan oleh + Tanggal — sejajar */}
             <div style={{ display: 'flex', gap: 16 }}>
               <div style={{ flex: 1 }}>
                 <div className="admin-field">
@@ -139,21 +111,14 @@ export default function TambahTestimoniPage({ onBack, onSubmit }) {
               </div>
             </div>
 
-            {/* Isi Testimoni */}
             <div className="admin-field">
               <label className="admin-label">Isi Testimoni <span className="text-danger">*</span></label>
-              <textarea
-                className={`admin-textarea${errors.text ? ' admin-input-error' : ''}`}
-                placeholder="Tulis isi testimoni di sini..."
-                style={{ minHeight: 120, ...(errors.text ? { borderColor: '#B3202F' } : {}) }}
-                value={form.text}
-                onChange={(e) => { set('text')(e.target.value); if (errors.text) setErrors((p) => ({ ...p, text: null })); }}
-              />
+              <textarea className={`admin-textarea${errors.text ? ' admin-input-error' : ''}`} placeholder="Tulis isi testimoni di sini..." style={{ minHeight: 120, ...(errors.text ? { borderColor: '#B3202F' } : {}) }} value={form.text} onChange={(e) => { set('text')(e.target.value); if (errors.text) setErrors((p) => ({ ...p, text: null })); }} />
               {errors.text && <small className="admin-error-text">{errors.text}</small>}
             </div>
           </div>
 
-          {/* RIGHT - Upload Foto */}
+          {/* RIGHT */}
           <div className="admin-field">
             <label className="admin-label">Foto (Opsional)</label>
             <div
@@ -163,27 +128,18 @@ export default function TambahTestimoniPage({ onBack, onSubmit }) {
               onDrop={handleDrop}
               style={{
                 border: `2px dashed ${dragOver ? '#046CF2' : '#E8E9F1'}`,
-                borderRadius: 12,
-                padding: 24,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 12,
-                cursor: 'pointer',
-                transition: 'border-color 0.15s',
-                background: dragOver ? '#EEF4FF' : '#F9FAFB',
-                minHeight: 240,
+                borderRadius: 12, padding: 24,
+                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                gap: 12, cursor: 'pointer', transition: 'border-color 0.15s',
+                background: dragOver ? '#EEF4FF' : '#F9FAFB', minHeight: 240,
               }}
             >
               {form.foto ? (
                 <img src={form.foto} alt="Preview" style={{ width: 120, height: 120, borderRadius: '50%', objectFit: 'cover' }} />
               ) : (
-                <>
-                  <div style={{ width: 64, height: 64, borderRadius: '50%', background: '#046CF2', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <span style={{ fontWeight: 700, fontSize: 24, color: '#fff' }}>{initChar}</span>
-                  </div>
-                </>
+                <div style={{ width: 64, height: 64, borderRadius: '50%', background: '#046CF2', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <span style={{ fontWeight: 700, fontSize: 24, color: '#fff' }}>{initChar}</span>
+                </div>
               )}
               <div style={{ textAlign: 'center' }}>
                 <div style={{ fontSize: 13, fontWeight: 500, color: '#010E23' }}>Unggah foto, atau telusuri</div>
@@ -194,7 +150,6 @@ export default function TambahTestimoniPage({ onBack, onSubmit }) {
           </div>
         </div>
 
-        {/* Footer */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 28, paddingTop: 20, borderTop: '1px solid #E8E9F1' }}>
           <div style={{ fontSize: 12, color: '#5D6B82' }}>
             * Testimoni tersimpan sebagai draf bila tidak diterbitkan.
@@ -203,7 +158,7 @@ export default function TambahTestimoniPage({ onBack, onSubmit }) {
             <button className="admin-btn admin-btn-outline admin-btn-sm" onClick={onBack}>Batal</button>
             <button className="admin-btn admin-btn-outline admin-btn-sm" style={{ borderColor: '#101828', color: '#101828' }} onClick={() => handleSave('draf')}>Simpan sebagai Draf</button>
             <button className="admin-btn admin-btn-primary admin-btn-sm" onClick={() => handleSave('terbit')}>
-              <Icon d={I.upload} size={16} /> Simpan &amp; Terbitkan
+              <IconUpload size={16} stroke={1.5} /> Simpan &amp; Terbitkan
             </button>
           </div>
         </div>

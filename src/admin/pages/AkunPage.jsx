@@ -1,17 +1,5 @@
 import { useState } from 'react';
-
-function Icon({ d, size = 20 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, display: 'block' }}>
-      <path d={d} />
-    </svg>
-  );
-}
-const I = {
-  eye: 'M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8zM12 15a3 3 0 100-6 3 3 0 000 6z',
-  eyeOff: 'M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24M1 1l22 22',
-  camera: 'M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2zM9 13a3 3 0 106 0 3 3 0 00-6 0z',
-};
+import { IconEye, IconEyeOff, IconPhoto } from '@tabler/icons-react';
 
 export default function AkunPage({ showSnack }) {
   const [form, setForm] = useState({ name: 'admin', email: 'admin@cms.com', role: 'Administrator' });
@@ -30,14 +18,14 @@ export default function AkunPage({ showSnack }) {
       </div>
 
       <div className="admin-card-grid">
-        {/* Card 1 — Profile Info */}
+        {/* Card 1 */}
         <div className="admin-card">
           <h3 className="admin-card-title">Informasi Profil</h3>
           <div className="admin-card-body">
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
               <div className="admin-avatar-lg">A</div>
               <button className="admin-btn admin-btn-outline admin-btn-sm" onClick={() => showSnack?.('info', 'Fitur ganti foto sedang dikembangkan.')}>
-                <Icon d={I.camera} size={14} /> Ganti Foto
+                <IconPhoto size={14} stroke={1.5} /> Ganti Foto
               </button>
             </div>
 
@@ -60,7 +48,7 @@ export default function AkunPage({ showSnack }) {
           </div>
         </div>
 
-        {/* Card 2 — Change Password */}
+        {/* Card 2 */}
         <div className="admin-card">
           <h3 className="admin-card-title">Ubah Kata Sandi</h3>
           <div className="admin-card-body">
@@ -70,16 +58,9 @@ export default function AkunPage({ showSnack }) {
                 <div className="admin-field" key={f}>
                   <label className="admin-label">{labels[f]}</label>
                   <div className="admin-input-wrap">
-                    <input
-                      className="admin-input"
-                      type={show[f] ? 'text' : 'password'}
-                      placeholder={labels[f]}
-                      value={pass[f]}
-                      onChange={(e) => setPass({ ...pass, [f]: e.target.value })}
-                      style={{ paddingRight: 44 }}
-                    />
+                    <input className="admin-input" type={show[f] ? 'text' : 'password'} placeholder={labels[f]} value={pass[f]} onChange={(e) => setPass({ ...pass, [f]: e.target.value })} style={{ paddingRight: 44 }} />
                     <button type="button" className="admin-input-icon" onClick={() => toggleShow(f)} tabIndex={-1}>
-                      <Icon d={show[f] ? I.eyeOff : I.eye} size={18} />
+                      {show[f] ? <IconEyeOff size={18} stroke={1.5} /> : <IconEye size={18} stroke={1.5} />}
                     </button>
                   </div>
                 </div>

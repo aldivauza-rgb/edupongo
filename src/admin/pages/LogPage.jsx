@@ -1,17 +1,5 @@
 import { useState } from 'react';
-
-function Icon({ d, size = 20 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, display: 'block' }}>
-      <path d={d} />
-    </svg>
-  );
-}
-const I = {
-  search: 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z',
-  chevronLeft: 'M15 18l-6-6 6-6',
-  chevronRight: 'M9 18l6-6-6-6',
-};
+import { IconSearch, IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 
 const DUMMY = [
   { time: '2026-05-14T21:30', admin: 'admin', aksi: 'Tambah', page: 'Blog', detail: 'Menambah artikel "Kenapa Sekolah Memilih Edupongo?"' },
@@ -64,7 +52,7 @@ export default function LogPage({ showSnack }) {
       <div className="admin-toolbar">
         <div className="admin-search-wrap">
           <div className="admin-search-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <IconSearch size={16} stroke={1.5} color="#97A2B0" />
           </div>
           <input className="admin-search-input" placeholder="Cari aktivitas..." value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} />
         </div>
@@ -120,11 +108,11 @@ export default function LogPage({ showSnack }) {
           </div>
           <div className="admin-pagination-controls">
             <button className="admin-page-btn" disabled={page <= 1} onClick={() => setPage(page - 1)}>
-              <Icon d={I.chevronLeft} size={14} />
+              <IconChevronLeft size={14} stroke={1.5} />
             </button>
             <button className="admin-page-btn active">{page}</button>
             <button className="admin-page-btn" disabled={start + perPage >= total} onClick={() => setPage(page + 1)}>
-              <Icon d={I.chevronRight} size={14} />
+              <IconChevronRight size={14} stroke={1.5} />
             </button>
           </div>
         </div>
