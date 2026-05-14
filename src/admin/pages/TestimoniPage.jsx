@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import TambahTestimoniPage from './TambahTestimoniPage';
 
 function Icon({ d, size = 20 }) {
   return (
@@ -14,10 +15,7 @@ const I = {
   trash: 'M3 6h18m-2 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6',
   chevronLeft: 'M15 18l-6-6 6-6',
   chevronRight: 'M9 18l6-6-6-6',
-  quote: 'M3 21c3 0 7-1 7-8V5c0-1.5-.5-2-2-2H4c-1.5 0-2 .5-2 2v6c0 1.5.5 2 2 2h3c0 4-2 6-4 6m12 0c3 0 7-1 7-8V5c0-1.5-.5-2-2-2h-4c-1.5 0-2 .5-2 2v6c0 1.5.5 2 2 2h3c0 4-2 6-4 6',
 };
-
-const COLORS = ['#046CF2', '#007955', '#E07B00', '#8B5CF6', '#DC2626', '#0891B2'];
 
 const DUMMY = [
   { id: 1, name: 'Wakil Kepala Sekolah', initial: 'W', bg: '#046CF2', instansi: 'MA Unggulan Wahab Hasbulloh, Jombang, Jawa Timur', status: 'terbit', text: 'Yang paling saya suka adalah orang tua sekarang bisa langsung tahu kalau anaknya tidak hadir. Dulu mereka baru tahu kalau sudah telepon ke sekolah: dan kadang kami sendiri yang kewalahan mengangkat telepon.' },
@@ -26,9 +24,10 @@ const DUMMY = [
 ];
 
 export default function TestimoniPage({ showSnack }) {
-  const [items] = useState(DUMMY);
+  const [items, setItems] = useState(DUMMY);
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
+  const [showForm, setShowForm] = useState(false);
   const perPage = 10;
 
   const filtered = items.filter((i) =>
@@ -39,6 +38,17 @@ export default function TestimoniPage({ showSnack }) {
   const start = (page - 1) * perPage;
   const paged = filtered.slice(start, start + perPage);
 
+  const handleAddTestimoni = (data) => {
+    const newId = Math.max(...items.map((i) => i.id), 0) + 1;
+    setItems((prev) => [{ id: newId, ...data }, ...prev]);
+    setShowForm(false);
+    showSnack?.('success', `Testimoni ${data.status === 'terbit' ? 'diterbitkan' : 'disimpan sebagai draf'}.`);
+  };
+
+  if (showForm) {
+    return <TambahTestimoniPage onBack={() => setShowForm(false)} onSubmit={handleAddTestimoni} />;
+  }
+
   return (
     <div className="admin-page-wrap">
       <div className="admin-page-header">
@@ -47,7 +57,7 @@ export default function TestimoniPage({ showSnack }) {
           <p className="admin-page-subtitle">Kelola testimoni yang tampil di website.</p>
         </div>
         <div className="admin-page-actions">
-          <button className="admin-btn admin-btn-primary admin-btn-sm" onClick={() => showSnack?.('info', 'Fitur tambah testimoni sedang dikembangkan.')}>
+          <button className="admin-btn admin-btn-primary admin-btn-sm" onClick={() => setShowForm(true)}>
             <Icon d={I.plus} size={16} /> Tambah Testimoni
           </button>
         </div>

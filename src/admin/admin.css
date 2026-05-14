@@ -273,6 +273,8 @@ aside nav button {
 .admin-input:focus { border-color: var(--adm-blue); }
 .admin-input::placeholder { color: var(--adm-text-muted); }
 .admin-input[readonly] { background: var(--adm-bg); cursor: not-allowed; }
+.admin-input-error { border-color: var(--adm-error) !important; }
+.admin-error-text { display: block; margin-top: 4px; color: var(--adm-error); font-size: 12px; font-weight: 500; font-family: 'Inter', sans-serif; }
 
 .admin-input-wrap { position: relative; }
 .admin-input-icon {
