@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { IconPlus, IconSearch, IconFilter, IconEdit, IconTrash, IconArrowLeft, IconUpload } from '@tabler/icons-react';
 import ConfirmModal from '../components/ConfirmModal';
+import * as api from '../../lib/admin-api';
 
 const CATEGORIES = [
   { id: 'umum', icon: '🔑', label: 'Umum' },
@@ -8,35 +9,6 @@ const CATEGORIES = [
   { id: 'implementasi', icon: '🚀', label: 'Implementasi' },
   { id: 'keamanan', icon: '🔒', label: 'Keamanan & Data' },
 ];
-
-const FAQ_DATA = {
-  umum: [
-    { id: 1, q: 'Apakah Edupongo cocok untuk pesantren dan boarding school?', a: 'Ya: dan ini justru yang membedakan Edupongo dari platform manajemen sekolah lainnya. Edupongo dirancang dari awal untuk memahami ekosistem pesantren: dari manajemen santri, koordinasi asrama, hingga integrasi yayasan dalam satu sistem. Sudah dipakai oleh beberapa pondok pesantren dan boarding school di Jawa.' },
-    { id: 2, q: 'Jenjang sekolah apa saja yang bisa menggunakan Edupongo?', a: 'Edupongo dapat digunakan oleh SD, SMP, SMA, SMK, hingga pesantren dan boarding school dari berbagai jenjang.' },
-    { id: 3, q: 'Apakah Edupongo mendukung Kurikulum Merdeka?', a: 'Ya, Edupongo sudah mendukung penuh Kurikulum Merdeka termasuk pelaporan capaian pembelajaran dan P5.' },
-    { id: 4, q: 'Sudah berapa lama Edupongo beroperasi?', a: 'Edupongo telah beroperasi sejak 2014, lebih dari 10 tahun mendampingi sekolah-sekolah di Indonesia.' },
-  ],
-  fitur: [
-    { id: 5, q: 'Metode presensi apa saja yang didukung?', a: 'Edupongo mendukung 3 metode: presensi via web, fingerprint, dan GPS berbasis lokasi di aplikasi mobile.' },
-    { id: 6, q: 'Apakah ada aplikasi mobile untuk orang tua?', a: 'Ya, tersedia aplikasi mobile untuk orang tua agar bisa memantau kehadiran dan perkembangan anak secara real-time.' },
-    { id: 7, q: 'Apakah bisa diintegrasikan dengan sistem yang sudah ada?', a: 'Edupongo menyediakan API yang dapat diintegrasikan dengan sistem manajemen sekolah yang sudah berjalan.' },
-    { id: 8, q: 'Apakah tersedia fitur laporan dan analitik?', a: 'Ya, tersedia dashboard analitik lengkap dengan laporan kehadiran, akademik, dan keuangan yang bisa diekspor.' },
-  ],
-  implementasi: [
-    { id: 9, q: 'Berapa lama proses implementasi Edupongo?', a: 'Proses setup awal biasanya selesai dalam 1-2 hari kerja, termasuk pelatihan tim sekolah.' },
-    { id: 10, q: 'Apakah ada dukungan teknis setelah implementasi?', a: 'Ya, kami menyediakan dukungan teknis via WhatsApp, email, dan kunjungan langsung jika diperlukan.' },
-    { id: 11, q: 'Bagaimana proses migrasi data dari sistem lama?', a: 'Tim kami akan membantu proses migrasi data secara penuh tanpa biaya tambahan.' },
-  ],
-  keamanan: [
-    { id: 12, q: 'Apakah data sekolah kami aman?', a: 'Data disimpan dengan enkripsi SSL dan backup otomatis setiap hari. Server kami berlokasi di Indonesia.' },
-    { id: 13, q: 'Siapa yang bisa mengakses data sekolah kami?', a: 'Hanya admin sekolah yang terdaftar yang dapat mengakses data. Edupongo tidak membagikan data ke pihak ketiga.' },
-    { id: 14, q: 'Apakah Edupongo sudah tersertifikasi?', a: 'Ya, Edupongo memiliki HaKI terdaftar dan telah lolos seleksi RISTEK-BRIN sebagai bukti kualitas platform kami.' },
-  ],
-};
-
-function countItems(catId, items) {
-  return (items[catId] || []).length;
-}
 
 /* ─── Inline FAQ Form ──────────────────────────────────────── */
 function FAQForm({ editData, onBack, onSubmit }) {
@@ -131,54 +103,67 @@ function FAQForm({ editData, onBack, onSubmit }) {
 
 /* ─── FAQ List Page ────────────────────────────────────────── */
 export default function FAQPage({ showSnack }) {
-  const [items, setItems] = useState(FAQ_DATA);
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [cat, setCat] = useState('umum');
   const [openId, setOpenId] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [editItem, setEditItem] = useState(null);
   const [deleteModal, setDeleteModal] = useState({ show: false, item: null });
 
-  const toggle = (idx) => setOpenId(openId === idx ? null : idx);
-  const catItems = items[cat] || [];
-  const itemId = (catItems.length > 0 ? Math.max(...catItems.map((i) => i.id)) : 0) + 1;
+  useEffect(() => {
+    api.getFAQs().then(data => { setItems(data); setLoading(false); }).catch(() => setLoading(false));
+  }, []);
 
-  /* ── Delete ── */
+  const grouped = {};
+  items.forEach(i => {
+    const c = i.category || 'umum';
+    if (!grouped[c]) grouped[c] = [];
+    grouped[c].push(i);
+  });
+  CATEGORIES.forEach(c => { if (!grouped[c.id]) grouped[c.id] = []; });
+
+  const catItems = grouped[cat] || [];
+
+  const toggle = (idx) => setOpenId(openId === idx ? null : idx);
+
   const openDelete = (item) => setDeleteModal({ show: true, item });
-  const confirmDelete = () => {
-    setItems((prev) => ({
-      ...prev,
-      [cat]: prev[cat].filter((i) => i.id !== deleteModal.item.id),
-    }));
-    setDeleteModal({ show: false, item: null });
-    showSnack('success', 'Berhasil', 'FAQ telah dihapus');
+  const confirmDelete = async () => {
+    try {
+      await api.deleteFAQ(deleteModal.item.id);
+      setItems((prev) => prev.filter((i) => i.id !== deleteModal.item.id));
+      setDeleteModal({ show: false, item: null });
+      showSnack('success', 'Berhasil', 'FAQ telah dihapus');
+    } catch { showSnack('error', 'Gagal', 'Gagal menghapus FAQ'); }
   };
 
-  /* ── Save (add / update) ── */
-  const handleSave = (data) => {
-    if (editItem) {
-      setItems((prev) => ({
-        ...prev,
-        [cat]: prev[cat].map((i) => i.id === editItem.id ? { ...i, q: data.q, a: data.a, status: data.status } : i),
-      }));
-      if (data.status === 'terbit') {
+  const handleSave = async (data) => {
+    try {
+      const payload = {
+        question: data.q.trim(),
+        answer: data.a.trim(),
+        category: data.category,
+        status: data.status,
+      };
+      if (editItem) {
+        await api.updateFAQ(editItem.id, payload);
+        setItems((prev) => prev.map((i) => i.id === editItem.id ? { ...i, ...payload } : i));
         showSnack('success', 'Berhasil', 'FAQ telah diperbarui');
       } else {
-        showSnack('success', 'Berhasil', 'FAQ disimpan sebagai draf');
-      }
-    } else {
-      const newId = Math.max(...Object.values(items).flat().map((i) => i.id), 0) + 1;
-      setItems((prev) => ({
-        ...prev,
-        [data.category]: [...(prev[data.category] || []), { id: newId, q: data.q, a: data.a, status: data.status }],
-      }));
-      if (data.status === 'terbit') {
+        const created = await api.createFAQ(payload);
+        setItems((prev) => [created, ...prev]);
         showSnack('success', 'Berhasil', 'FAQ telah diterbitkan');
-      } else {
-        showSnack('success', 'Berhasil', 'FAQ disimpan sebagai draf');
       }
+      setShowForm(false);
+      setEditItem(null);
+    } catch {
+      showSnack('error', 'Gagal', 'Terjadi kesalahan');
     }
-    setShowForm(false);
-    setEditItem(null);
+  };
+
+  const handleEdit = (item) => {
+    setEditItem({ ...item, q: item.question, a: item.answer });
+    setShowForm(true);
   };
 
   const handleBack = () => {
@@ -223,7 +208,7 @@ export default function FAQPage({ showSnack }) {
               <button key={c.id} className={`admin-cat-btn${cat === c.id ? ' active' : ''}`} onClick={() => { setCat(c.id); setOpenId(null); }}>
                 <span className="admin-cat-btn-icon">{c.icon}</span>
                 <span className="admin-cat-btn-label">{c.label}</span>
-                <span className="admin-cat-btn-count">{countItems(c.id, items)} pertanyaan</span>
+                <span className="admin-cat-btn-count">{(grouped[c.id] || []).length} pertanyaan</span>
               </button>
             ))}
           </div>
@@ -233,19 +218,23 @@ export default function FAQPage({ showSnack }) {
         </div>
 
         <div style={{ flex: 1, minWidth: 0, background: 'var(--adm-surface)', borderRadius: 'var(--adm-radius-lg)', border: '1px solid var(--adm-border)', padding: '4px 24px' }}>
-          {catItems.map((faq, idx) => (
+          {loading ? (
+            <div className="admin-empty" style={{ padding: '40px 0' }}>Memuat data...</div>
+          ) : catItems.length === 0 ? (
+            <div className="admin-empty">Tidak ada pertanyaan di kategori ini.</div>
+          ) : catItems.map((faq) => (
             <div className="admin-accordion-item" key={faq.id}>
               <button className="admin-accordion-trigger" onClick={() => toggle(faq.id)}>
-                <span className="admin-accordion-title">{faq.q}</span>
+                <span className="admin-accordion-title">{faq.question}</span>
                 <span className={`admin-accordion-icon${openId === faq.id ? ' open' : ''}`}>
                   <IconPlus size={20} stroke={1.5} />
                 </span>
               </button>
               {openId === faq.id && (
                 <div className="admin-accordion-content">
-                  <p style={{ margin: '0 0 12px' }}>{faq.a}</p>
+                  <p style={{ margin: '0 0 12px' }}>{faq.answer}</p>
                   <div style={{ display: 'flex', gap: 8 }}>
-                    <button className="admin-action-btn admin-action-btn-edit" title="Edit" onClick={() => { setEditItem({ ...faq, category: cat }); setShowForm(true); }}>
+                    <button className="admin-action-btn admin-action-btn-edit" title="Edit" onClick={() => handleEdit(faq)}>
                       <IconEdit size={15} stroke={1.5} />
                     </button>
                     <button className="admin-action-btn admin-action-btn-delete" title="Hapus" onClick={() => openDelete(faq)}>
@@ -256,16 +245,13 @@ export default function FAQPage({ showSnack }) {
               )}
             </div>
           ))}
-          {catItems.length === 0 && (
-            <div className="admin-empty">Tidak ada pertanyaan di kategori ini.</div>
-          )}
         </div>
       </div>
 
       {deleteModal.show && (
         <ConfirmModal
           title="Hapus FAQ"
-          message={`Apakah kamu yakin ingin menghapus "${deleteModal.item?.q}"? Tindakan ini tidak dapat dibatalkan.`}
+          message={`Apakah kamu yakin ingin menghapus "${deleteModal.item?.question}"? Tindakan ini tidak dapat dibatalkan.`}
           onClose={() => setDeleteModal({ show: false, item: null })}
           onConfirm={confirmDelete}
         />

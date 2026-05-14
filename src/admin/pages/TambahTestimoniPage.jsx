@@ -2,12 +2,10 @@ import { useState, useRef } from 'react';
 import { IconArrowLeft, IconUpload, IconPhoto } from '@tabler/icons-react';
 import ConfirmModal from '../components/ConfirmModal';
 
-const AVATAR_COLORS = ['#046CF2', '#007955', '#E07B00', '#8B5CF6', '#DC2626', '#0891B2'];
-
 export default function TambahTestimoniPage({ editData, onBack, onSubmit }) {
   const [form, setForm] = useState({
     name: editData?.name || '',
-    instansi: editData?.instansi || '',
+    role: editData?.role || '',
     date: editData?.date || new Date().toISOString().split('T')[0],
     text: editData?.text || '',
     foto: editData?.foto || null,
@@ -22,7 +20,7 @@ export default function TambahTestimoniPage({ editData, onBack, onSubmit }) {
   const validate = () => {
     const err = {};
     if (!form.name.trim()) err.name = 'Nama & jabatan harus diisi';
-    if (!form.instansi.trim()) err.instansi = 'Instansi harus diisi';
+    if (!form.role.trim()) err.role = 'Instansi harus diisi';
     if (!form.text.trim()) err.text = 'Isi testimoni harus diisi';
     setErrors(err);
     return Object.keys(err).length === 0;
@@ -30,12 +28,10 @@ export default function TambahTestimoniPage({ editData, onBack, onSubmit }) {
 
   const buildPayload = (status) => {
     const initial = form.name.trim().charAt(0).toUpperCase();
-    const colorIdx = initial.charCodeAt(0) % AVATAR_COLORS.length;
     return {
       name: form.name.trim(),
       initial,
-      bg: AVATAR_COLORS[colorIdx],
-      instansi: form.instansi.trim(),
+      role: form.role.trim(),
       text: form.text.trim(),
       status,
       publisher: 'Admin Humas',
@@ -105,8 +101,8 @@ export default function TambahTestimoniPage({ editData, onBack, onSubmit }) {
 
             <div className="admin-field">
               <label className="admin-label">Instansi <span className="text-danger">*</span></label>
-              <input className={`admin-input${errors.instansi ? ' admin-input-error' : ''}`} placeholder="mis. MA Unggulan Wahab Hasbulloh, Jombang" value={form.instansi} onChange={(e) => { set('instansi')(e.target.value); if (errors.instansi) setErrors((p) => ({ ...p, instansi: null })); }} />
-              {errors.instansi && <small className="admin-error-text">{errors.instansi}</small>}
+              <input className={`admin-input${errors.role ? ' admin-input-error' : ''}`} placeholder="mis. MA Unggulan Wahab Hasbulloh, Jombang" value={form.role} onChange={(e) => { set('role')(e.target.value); if (errors.role) setErrors((p) => ({ ...p, role: null })); }} />
+              {errors.role && <small className="admin-error-text">{errors.role}</small>}
             </div>
 
             <div style={{ display: 'flex', gap: 16 }}>

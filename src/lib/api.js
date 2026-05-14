@@ -11,10 +11,12 @@ const FALLBACK = {
   edp_site_content: [],
 };
 
-async function fetchData(table, order = 'sort_order') {
+async function fetchData(table, order = 'sort_order', filterStatus = false) {
   if (!supabase) return FALLBACK[table] || [];
   try {
-    const { data, error } = await supabase.from(table).select('*').eq('is_active', true).order(order);
+    let query = supabase.from(table).select('*').eq('is_active', true);
+    if (filterStatus) query = query.eq('status', 'terbit');
+    const { data, error } = await query.order(order);
     if (error) throw error;
     return data || [];
   } catch {
@@ -24,8 +26,8 @@ async function fetchData(table, order = 'sort_order') {
 }
 
 export async function getFeatures()       { return fetchData('edp_features'); }
-export async function getTestimonials()   { return fetchData('edp_testimonials'); }
-export async function getFAQs()           { return fetchData('edp_faqs'); }
+export async function getTestimonials()   { return fetchData('edp_testimonials', 'sort_order', true); }
+export async function getFAQs()           { return fetchData('edp_faqs', 'sort_order', true); }
 export async function getWhyCards()       { return fetchData('edp_why_cards'); }
 export async function getProblemCards()   { return fetchData('edp_problem_cards'); }
 export async function getStats()          { return fetchData('edp_stats'); }

@@ -187,3 +187,29 @@ insert into edp_stats (num, label, page, sort_order) values
 ('10+', 'Tahun Pengalaman', 'about', 1),
 ('100+', 'Sekolah se-Indonesia', 'about', 2),
 ('30rb+', 'Pengguna Aktif', 'about', 3);
+
+-- =============================================================
+-- KOLOM TAMBAHAN UNTUK ADMIN CMS
+-- =============================================================
+alter table edp_testimonials add column if not exists status text not null default 'terbit';
+alter table edp_testimonials add column if not exists publisher text not null default 'Admin';
+alter table edp_testimonials add column if not exists date date;
+
+alter table edp_faqs add column if not exists status text not null default 'terbit';
+alter table edp_faqs add column if not exists publisher text not null default 'Admin';
+alter table edp_faqs add column if not exists date date;
+
+-- =============================================================
+-- RLS POLICIES UNTUK INSERT / UPDATE / DELETE (admin write)
+-- =============================================================
+create policy if not exists "anon_can_insert_edp_testimonials" on edp_testimonials for insert to anon with check (true);
+create policy if not exists "anon_can_update_edp_testimonials" on edp_testimonials for update to anon using (true);
+create policy if not exists "anon_can_delete_edp_testimonials" on edp_testimonials for delete to anon using (true);
+
+create policy if not exists "anon_can_insert_edp_faqs" on edp_faqs for insert to anon with check (true);
+create policy if not exists "anon_can_update_edp_faqs" on edp_faqs for update to anon using (true);
+create policy if not exists "anon_can_delete_edp_faqs" on edp_faqs for delete to anon using (true);
+
+create policy if not exists "anon_can_insert_edp_blog" on edp_blog for insert to anon with check (true);
+create policy if not exists "anon_can_update_edp_blog" on edp_blog for update to anon using (true);
+create policy if not exists "anon_can_delete_edp_blog" on edp_blog for delete to anon using (true);

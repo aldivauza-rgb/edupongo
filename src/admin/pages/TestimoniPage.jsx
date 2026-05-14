@@ -1,16 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { IconPlus, IconFilter, IconEdit, IconTrash, IconChevronLeft, IconChevronRight, IconSearch } from '@tabler/icons-react';
 import TambahTestimoniPage from './TambahTestimoniPage';
 import ConfirmModal from '../components/ConfirmModal';
+import * as api from '../../lib/admin-api';
 
-const DUMMY = [
-  { id: 1, name: 'Wakil Kepala Sekolah', initial: 'W', bg: '#046CF2', instansi: 'MA Unggulan Wahab Hasbulloh, Jombang, Jawa Timur', status: 'terbit', publisher: 'Admin Humas', date: '2026-05-14', text: 'Yang paling saya suka adalah orang tua sekarang bisa langsung tahu kalau anaknya tidak hadir. Dulu mereka baru tahu kalau sudah telepon ke sekolah: dan kadang kami sendiri yang kewalahan mengangkat telepon.' },
-  { id: 2, name: 'Kepala Sekolah', initial: 'K', bg: '#007955', instansi: 'SMP Negeri 3 Surabaya, Jawa Timur', status: 'terbit', publisher: 'Admin Humas', date: '2026-05-10', text: 'Sistem ini benar-benar mengubah cara kami bekerja. Laporan yang dulu butuh waktu berhari-hari sekarang bisa selesai dalam hitungan menit.' },
-  { id: 3, name: 'Guru Senior', initial: 'G', bg: '#E07B00', instansi: 'SMK Telkom Malang, Jawa Timur', status: 'draf', publisher: 'Admin Humas', date: '2026-05-05', text: 'Fitur presensi GPS sangat membantu kami memantau kehadiran guru di lapangan secara real-time.' },
-];
+const AVATAR_COLORS = ['#046CF2', '#007955', '#E07B00', '#8B5CF6', '#DC2626', '#0891B2'];
+const getAvatarColor = (name) => {
+  const char = (name || 'A').charAt(0).toUpperCase();
+  return AVATAR_COLORS[char.charCodeAt(0) % AVATAR_COLORS.length];
+};
 
 export default function TestimoniPage({ showSnack }) {
-  const [items, setItems] = useState(DUMMY);
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
@@ -18,42 +20,49 @@ export default function TestimoniPage({ showSnack }) {
   const [editItem, setEditItem] = useState(null);
   const [deleteModal, setDeleteModal] = useState({ show: false, item: null });
 
+  useEffect(() => {
+    api.getTestimonials().then(data => { setItems(data); setLoading(false); }).catch(() => setLoading(false));
+  }, []);
+
   const filtered = items.filter((i) =>
-    i.name.toLowerCase().includes(search.toLowerCase()) ||
-    i.instansi.toLowerCase().includes(search.toLowerCase())
+    i.name?.toLowerCase().includes(search.toLowerCase()) ||
+    (i.role || '').toLowerCase().includes(search.toLowerCase())
   );
   const total = filtered.length;
   const start = (page - 1) * perPage;
   const paged = filtered.slice(start, start + perPage);
 
-  /* ── Delete ── */
   const openDelete = (item) => setDeleteModal({ show: true, item });
-  const confirmDelete = () => {
-    setItems((prev) => prev.filter((i) => i.id !== deleteModal.item.id));
-    setDeleteModal({ show: false, item: null });
-    showSnack('success', 'Berhasil', 'Testimoni telah dihapus');
+  const confirmDelete = async () => {
+    try {
+      await api.deleteTestimoni(deleteModal.item.id);
+      setItems((prev) => prev.filter((i) => i.id !== deleteModal.item.id));
+      setDeleteModal({ show: false, item: null });
+      showSnack('success', 'Berhasil', 'Testimoni telah dihapus');
+    } catch { showSnack('error', 'Gagal', 'Gagal menghapus testimoni'); }
   };
 
-  /* ── Save (add / update) ── */
-  const handleSubmit = (data) => {
-    if (editItem) {
-      setItems((prev) => prev.map((i) => i.id === editItem.id ? { ...i, ...data } : i));
-      if (data.status === 'terbit') {
+  const handleEdit = (item) => {
+    setEditItem(item);
+    setShowForm(true);
+  };
+
+  const handleSave = async (data) => {
+    try {
+      if (editItem) {
+        await api.updateTestimoni(editItem.id, data);
+        setItems((prev) => prev.map((i) => i.id === editItem.id ? { ...i, ...data } : i));
         showSnack('success', 'Berhasil', 'Testimoni telah diperbarui');
       } else {
-        showSnack('success', 'Berhasil', 'Testimoni disimpan sebagai draf');
-      }
-    } else {
-      const newId = Math.max(...items.map((i) => i.id), 0) + 1;
-      setItems((prev) => [{ id: newId, ...data }, ...prev]);
-      if (data.status === 'terbit') {
+        const created = await api.createTestimoni(data);
+        setItems((prev) => [created, ...prev]);
         showSnack('success', 'Berhasil', 'Testimoni telah diterbitkan');
-      } else {
-        showSnack('success', 'Berhasil', 'Testimoni disimpan sebagai draf');
       }
+      setShowForm(false);
+      setEditItem(null);
+    } catch {
+      showSnack('error', 'Gagal', 'Terjadi kesalahan');
     }
-    setShowForm(false);
-    setEditItem(null);
   };
 
   const handleBack = () => {
@@ -62,7 +71,7 @@ export default function TestimoniPage({ showSnack }) {
   };
 
   if (showForm) {
-    return <TambahTestimoniPage editData={editItem} onBack={handleBack} onSubmit={handleSubmit} />;
+    return <TambahTestimoniPage editData={editItem} onBack={handleBack} onSubmit={handleSave} />;
   }
 
   return (
@@ -103,16 +112,20 @@ export default function TestimoniPage({ showSnack }) {
             </tr>
           </thead>
           <tbody>
-            {paged.map((item) => (
+            {loading ? (
+              <tr><td colSpan={5} className="admin-empty">Memuat data...</td></tr>
+            ) : paged.length === 0 ? (
+              <tr><td colSpan={5} className="admin-empty">Tidak ada data</td></tr>
+            ) : paged.map((item) => (
               <tr key={item.id}>
                 <td>
-                  <div style={{ width: 44, height: 44, borderRadius: '50%', background: item.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, fontSize: 15, color: '#fff', flexShrink: 0 }}>
-                    {item.initial}
+                  <div style={{ width: 44, height: 44, borderRadius: '50%', background: getAvatarColor(item.name), display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, fontSize: 15, color: '#fff', flexShrink: 0 }}>
+                    {item.initial || (item.name || '?').charAt(0).toUpperCase()}
                   </div>
                 </td>
                 <td>
                   <div style={{ fontWeight: 600, fontSize: 13, color: 'var(--adm-text)' }}>{item.name}</div>
-                  <div style={{ fontSize: 11, color: 'var(--adm-text-secondary)', marginTop: 2 }}>{item.instansi}</div>
+                  <div style={{ fontSize: 11, color: 'var(--adm-text-secondary)', marginTop: 2 }}>{item.role}</div>
                 </td>
                 <td>
                   <div style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', fontSize: 13, color: 'var(--adm-text-dark)', lineHeight: 1.5, maxWidth: 350 }}>
@@ -126,7 +139,7 @@ export default function TestimoniPage({ showSnack }) {
                 </td>
                 <td>
                   <div className="admin-action-group">
-                    <button className="admin-action-btn admin-action-btn-edit" title="Edit" onClick={() => { setEditItem(item); setShowForm(true); }}>
+                    <button className="admin-action-btn admin-action-btn-edit" title="Edit" onClick={() => handleEdit(item)}>
                       <IconEdit size={15} stroke={1.5} />
                     </button>
                     <button className="admin-action-btn admin-action-btn-delete" title="Hapus" onClick={() => openDelete(item)}>
@@ -136,9 +149,6 @@ export default function TestimoniPage({ showSnack }) {
                 </td>
               </tr>
             ))}
-            {paged.length === 0 && (
-              <tr><td colSpan={5} className="admin-empty">Tidak ada data</td></tr>
-            )}
           </tbody>
         </table>
 
