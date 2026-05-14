@@ -1,14 +1,14 @@
 export default function CTASection({ onOpenDemo }) {
   return (
     <section className="cta-section">
-      <h2 className="cta-title">Siap bawa sekolah Anda<br />ke level berikutnya?</h2>
+      <h2 className="cta-title">Siap bawa sekolah Anda<br />ke <span style={{ color: 'var(--yellow)' }}>level berikutnya</span>?</h2>
       <p className="cta-sub">Bergabung dengan 100+ sekolah yang sudah membuktikan bahwa administrasi bisa lebih mudah — dan guru bisa lebih fokus mengajar.</p>
       <div className="cta-results">
         {[
           { text: 'Presensi & rapor otomatis' },
           { text: 'PPDB online tanpa antre' },
           { text: 'Orang tua terhubung real-time' },
-          { text: 'Didampingi tim ', accent: 'Edupongo' },
+          { text: 'Didampingi tim Edupongo' },
         ].map((item, i) => (
           <div className="cta-result-item" key={i}>
             <div className="cta-check">✓</div>
