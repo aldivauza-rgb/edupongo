@@ -133,8 +133,8 @@ function PartnerForm({ editData, onBack, onSubmit }) {
               style={{
                 width: '100%', border: '1.5px dashed #E8E9F1',
                 borderRadius: 12, background: '#F9F9F9', cursor: 'pointer',
-                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                position: 'relative', overflow: 'hidden', padding: '32px 20px',
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10,
+                position: 'relative', overflow: 'hidden', padding: 24,
               }}
             >
               {form.foto ? (
@@ -158,20 +158,16 @@ function PartnerForm({ editData, onBack, onSubmit }) {
                 </>
               ) : (
                 <>
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-                    <div style={{ width: 80, height: 80, borderRadius: 14, background: logoColor || '#E8E9F1', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <span style={{ fontWeight: 700, fontSize: 28, color: '#fff' }}>{initChar}</span>
-                    </div>
-                    <div style={{ textAlign: 'center' }}>
-                      <div style={{ fontWeight: 600, fontSize: 14, color: '#010E23' }}>{form.name || 'Nama Sekolah'}</div>
-                      <div style={{ fontSize: 12, color: '#6B7280', marginTop: 2 }}>{form.kota || 'Kota'}</div>
-                    </div>
+                  <div style={{ width: 80, height: 80, borderRadius: 14, background: logoColor || '#E8E9F1', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <span style={{ fontWeight: 700, fontSize: 28, color: '#fff' }}>{initChar}</span>
                   </div>
-                  <div style={{ position: 'absolute', bottom: 12 }}>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#fff', border: '1px solid #E8E9F1', borderRadius: 8, padding: '6px 14px', fontSize: 12, fontWeight: 500, color: '#010E23' }}>
-                      <IconPhoto size={14} stroke={1.5} /> Unggah Logo
-                    </span>
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontWeight: 600, fontSize: 14, color: '#010E23' }}>{form.name || 'Nama Sekolah'}</div>
+                    <div style={{ fontSize: 12, color: '#6B7280', marginTop: 2 }}>{form.kota || 'Kota'}</div>
                   </div>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#fff', border: '1px solid #E8E9F1', borderRadius: 8, padding: '6px 14px', fontSize: 12, fontWeight: 500, color: '#010E23' }}>
+                    <IconPhoto size={14} stroke={1.5} /> Unggah Logo
+                  </span>
                 </>
               )}
             </div>
