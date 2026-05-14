@@ -29,8 +29,8 @@ const I = {
 };
 
 /* ─── Sidebar Button ─────────────────────────────────────── */
-function NavBtn({ icon, label, active, disabled, onClick, badge, chevron, chevronOpen }) {
-  const base = { width: "100%", height: 48, borderRadius: 12, border: "none", padding: "0 12px", display: "flex", alignItems: "center", gap: 10, cursor: disabled ? "not-allowed" : "pointer", transition: "background 0.15s", fontFamily: "Inter", fontSize: 14, fontWeight: 500, textAlign: "left", lineHeight: 1.4, whiteSpace: "nowrap", flexShrink: 0 };
+function NavBtn({ icon, label, active, disabled, onClick, badge, chevron, chevronOpen, rotateDeg = 90 }) {
+  const base = { width: "100%", height: 46, borderRadius: 12, border: "none", padding: "0 12px", display: "flex", alignItems: "center", gap: 10, cursor: disabled ? "not-allowed" : "pointer", transition: "background 0.15s", fontFamily: "Inter", fontSize: 14, fontWeight: 500, textAlign: "left", lineHeight: 1.4, whiteSpace: "nowrap", flexShrink: 0 };
   const hoverBg = "#051B3E";
   const hoverColor = "#F9F9F9";
   const [h, setH] = useState(false);
@@ -49,7 +49,7 @@ function NavBtn({ icon, label, active, disabled, onClick, badge, chevron, chevro
         <span style={{ minWidth: 24, height: 24, borderRadius: 12, padding: "0 8px", background: "#E6F0FE", color: "#046CF2", fontFamily: "Inter", fontWeight: 600, fontSize: 12, display: "inline-flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>{badge}</span>
       )}
       {chevron && (
-        <Svg d={chevron} size={16} style={{ transform: chevronOpen ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.2s ease", flexShrink: 0 }} />
+        <Svg d={chevron} size={16} style={{ transform: chevronOpen ? `rotate(${rotateDeg}deg)` : "rotate(0deg)", transition: "transform 0.2s ease", flexShrink: 0 }} />
       )}
     </button>
   );
@@ -105,7 +105,7 @@ export default function AdminLayout({ onLogout }) {
         </div>
 
         {/* NAV MENU */}
-        <nav style={{ flex: 1, display: "flex", flexDirection: "column", gap: 3, minHeight: 0, background: "transparent" }}>
+        <nav style={{ flex: 1, display: "flex", flexDirection: "column", gap: 2, minHeight: 0, background: "transparent" }}>
           <NavBtn icon={I.chart} label="Analisis Web" disabled />
           <NavBtn icon={I.monitor} label="Slideshow" disabled />
 
@@ -115,7 +115,7 @@ export default function AdminLayout({ onLogout }) {
             chevron={I.chevronR} chevronOpen={profilOpen}
           />
           {profilOpen && (
-            <div style={{ display: "flex", flexDirection: "column", gap: 2, background: "transparent" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 2, background: "transparent", paddingLeft: 12 }}>
               {["Sambutan", "Tentang Kami", "Visi & Misi", "Struktur Organisasi", "Akreditasi", "Statistik"].map(s => (
                 <SubItem key={s} label={s} />
               ))}
@@ -125,10 +125,10 @@ export default function AdminLayout({ onLogout }) {
           {/* Informasi — collapsible, chevron ↓ collapsed, ↑ expanded */}
           <NavBtn icon={I.bell} label="Informasi"
             onClick={() => setInfoOpen(o => !o)}
-            chevron={I.chevronD} chevronOpen={!infoOpen}
+            chevron={I.chevronD} chevronOpen={infoOpen} rotateDeg={180}
           />
           {infoOpen && (
-            <div style={{ display: "flex", flexDirection: "column", gap: 2, background: "transparent" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 2, background: "transparent", paddingLeft: 12 }}>
               {["Berita", "Agenda", "Fasilitas", "Dokumen Rilis", "Majalah"].map(s => (
                 <SubItem key={s} label={s} />
               ))}
@@ -137,7 +137,7 @@ export default function AdminLayout({ onLogout }) {
 
           <NavBtn icon={I.gear} label="Kelola Akun" disabled />
 
-          <div style={{ margin: "16px 8px 8px", display: "flex", flexDirection: "column", gap: 3, background: "transparent" }}>
+          <div style={{ margin: "4px 8px 4px", display: "flex", flexDirection: "column", gap: 2, background: "transparent" }}>
             <NavBtn icon={I.inbox} label="Pemberitahuan" badge="2" />
           </div>
         </nav>
