@@ -13,7 +13,7 @@ export default function AboutTrust() {
         <div className="about-trust-header">
           <div className="about-trust-tag">Dipercaya & Terbukti</div>
           <h2>Mereka yang menjadikan kami partner manajemen sekolahnya</h2>
-          <p>Dari SMA negeri hingga pondok pesantren — beragam sekolah dengan kebutuhan unik telah mempercayakan sistem mereka pada Edupongo.</p>
+          <p>Dari SMA negeri hingga pondok pesantren: beragam sekolah dengan kebutuhan unik telah mempercayakan sistem mereka pada Edupongo.</p>
         </div>
         <div className="about-trust-stats">
           {[
@@ -37,7 +37,7 @@ export default function AboutTrust() {
             </div>
           ))}
         </div>
-        <p className="about-school-more">Konsultasikan kebutuhan sekolah Anda — gratis, tanpa komitmen.</p>
+        <p className="about-school-more">Konsultasikan kebutuhan sekolah Anda: gratis, tanpa komitmen.</p>
       </div>
     </section>
   );

@@ -3,7 +3,7 @@ export default function EcosystemSection() {
     <section className="ecosystem-section" id="ekosistem">
       <div className="section-tag">Ekosistem Terintegrasi</div>
       <h2 className="section-title">Satu platform.<br />Semua terhubung.</h2>
-      <p className="section-sub">Dari yayasan, sekolah, hingga pesantren — Edupongo menghubungkan semua pihak dalam satu sistem yang saling terhubung secara real-time.</p>
+      <p className="section-sub">Dari yayasan, sekolah, hingga pesantren: Edupongo menghubungkan semua pihak dalam satu sistem yang saling terhubung secara real-time.</p>
 
       <div className="ecosystem-flow">
         <div className="eco-node">

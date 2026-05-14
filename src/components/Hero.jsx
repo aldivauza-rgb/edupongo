@@ -9,7 +9,7 @@ export default function Hero({ onOpenDemo }) {
       <h1>Cara Lebih Mudah<br />Kelola <span>Sekolah Anda</span></h1>
 
       <p className="hero-sub">
-        Satu platform untuk semua — dari PPDB, presensi, rapor digital, hingga komunikasi orang tua. Sekolah lebih teratur, guru lebih fokus, orang tua lebih terhubung.
+        Satu platform untuk semua: dari PPDB, presensi, rapor digital, hingga komunikasi orang tua. Sekolah lebih teratur, guru lebih fokus, orang tua lebih terhubung.
       </p>
 
       <div className="hero-cta">

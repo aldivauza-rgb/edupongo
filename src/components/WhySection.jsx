@@ -1,12 +1,12 @@
 import { useEffect, useRef } from 'react';
 
 const cards = [
-  { title: 'Administrasi lebih efisien, data tersimpan rapi', desc: 'Semua data siswa, guru, dan keuangan tersimpan terpusat dan mudah diakses kapanpun — tidak ada lagi data yang berserakan di berbagai file Excel.' },
-  { title: 'PPDB tanpa antre — dari mana saja, kapan saja', desc: 'Proses penerimaan siswa baru yang biasanya butuh berminggu-minggu bisa diselesaikan lebih cepat, lebih rapi, dan lebih transparan.' },
+  { title: 'Administrasi lebih efisien, data tersimpan rapi', desc: 'Semua data siswa, guru, dan keuangan tersimpan terpusat dan mudah diakses kapanpun: tidak ada lagi data yang berserakan di berbagai file Excel.' },
+  { title: 'PPDB tanpa antre: dari mana saja, kapan saja', desc: 'Proses penerimaan siswa baru yang biasanya butuh berminggu-minggu bisa diselesaikan lebih cepat, lebih rapi, dan lebih transparan.' },
   { title: 'Orang tua terhubung langsung dengan sekolah', desc: 'Tidak ada lagi informasi yang telat sampai. Orang tua bisa pantau kehadiran, nilai, dan tagihan anak langsung dari HP mereka.' },
-  { title: 'Presensi fleksibel — 3 metode dalam satu platform', desc: 'Manual via web, fingerprint untuk sekolah yang sudah punya mesin, atau GPS berbasis lokasi di aplikasi mobile. Pilih yang paling cocok.' },
-  { title: 'Satu-satunya yang cover ekosistem pesantren', desc: 'Edupongo dirancang untuk memahami kebutuhan unik pesantren dan boarding school — dari manajemen santri hingga koordinasi asrama dan yayasan.' },
-  { title: 'Terpercaya sejak 2014 — bukan startup kemarin sore', desc: '10+ tahun mendampingi sekolah di Indonesia. HaKI terdaftar, lolos seleksi RISTEK-BRIN, dan terus berkembang bersama kebutuhan sekolah.' },
+  { title: 'Presensi fleksibel: 3 metode dalam satu platform', desc: 'Manual via web, fingerprint untuk sekolah yang sudah punya mesin, atau GPS berbasis lokasi di aplikasi mobile. Pilih yang paling cocok.' },
+  { title: 'Satu-satunya yang cover ekosistem pesantren', desc: 'Edupongo dirancang untuk memahami kebutuhan unik pesantren dan boarding school: dari manajemen santri hingga koordinasi asrama dan yayasan.' },
+  { title: 'Terpercaya sejak 2014: bukan startup kemarin sore', desc: '10+ tahun mendampingi sekolah di Indonesia. HaKI terdaftar, lolos seleksi RISTEK-BRIN, dan terus berkembang bersama kebutuhan sekolah.' },
 ];
 
 export default function WhySection() {
@@ -102,7 +102,7 @@ export default function WhySection() {
           <div className="why-pin-header">
             <div className="section-tag">Kenapa Edupongo</div>
             <h2 className="section-title">Kenapa sekolah memilih Edupongo?</h2>
-            <p className="section-sub">Bukan sekadar software — tapi partner digitalisasi sekolah yang memahami kebutuhan unik pendidikan Indonesia.</p>
+            <p className="section-sub">Bukan sekadar software: tapi partner digitalisasi sekolah yang memahami kebutuhan unik pendidikan Indonesia.</p>
           </div>
           <div className="why-grid" ref={gridRef}>
             {cards.map((c, i) => (

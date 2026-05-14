@@ -1,8 +1,8 @@
 const milestones = [
-  { year: '2016', title: 'Santripreneur Digital Product', desc: 'Edupongo lahir sebagai produk digital untuk pesantren — fondasi awal sebelum berkembang lebih luas.' },
+  { year: '2016', title: 'Santripreneur Digital Product', desc: 'Edupongo lahir sebagai produk digital untuk pesantren: fondasi awal sebelum berkembang lebih luas.' },
   { year: '2017', title: 'Cakrawala Awards', desc: 'Pengakuan pertama atas inovasi platform manajemen sekolah berbasis teknologi.' },
   { year: '2019', title: 'PBBT RISTEK-BRIN', desc: 'Lolos seleksi Program Bantuan Bisnis Teknologi dari Kementerian Riset & Teknologi.' },
-  { year: '2021', title: 'BekUp Scale Program', desc: 'Bagian dari program akselerasi bisnis digital nasional — memperluas jangkauan ke lebih banyak sekolah.' },
+  { year: '2021', title: 'BekUp Scale Program', desc: 'Bagian dari program akselerasi bisnis digital nasional: memperluas jangkauan ke lebih banyak sekolah.' },
   { year: '2026', title: '100+ Sekolah, 30rb+ Pengguna', desc: 'Terus tumbuh bersama sekolah-sekolah di seluruh Indonesia dengan ekosistem yang semakin lengkap.' },
 ];
 

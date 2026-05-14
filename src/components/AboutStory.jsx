@@ -8,7 +8,7 @@ export default function AboutStory() {
             Edupongo adalah sistem manajemen sekolah terintegrasi berbasis teknologi terkini yang dirancang untuk memperkuat komunikasi antara <strong>sekolah, guru, dan orang tua</strong>.
           </p>
           <p>
-            Kami membantu sekolah mengelola administrasi secara efisien dan transparan. Platform ini juga memungkinkan orang tua memantau aktivitas anak di sekolah melalui aplikasi mobile — menciptakan ekosistem pendidikan yang <strong>kolaboratif dan modern</strong>.
+            Kami membantu sekolah mengelola administrasi secara efisien dan transparan. Platform ini juga memungkinkan orang tua memantau aktivitas anak di sekolah melalui aplikasi mobile: menciptakan ekosistem pendidikan yang <strong>kolaboratif dan modern</strong>.
           </p>
           <p>
             Dimulai sebagai Santripreneur Digital Product pada 2016, Edupongo terus berkembang menjadi platform yang dipercaya ratusan sekolah, pesantren, dan boarding school di Indonesia.

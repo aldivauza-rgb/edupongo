@@ -46,7 +46,7 @@ export default function ClientSection() {
         <div className="section-tag">Partner Sekolah</div>
         <h2 className="section-title">Sekolah yang mempercayai Edupongo</h2>
         <p className="section-sub" style={{ margin: '12px auto 0' }}>
-          Dari sekolah negeri, swasta Islam, hingga pesantren dan boarding school — di berbagai kota di Indonesia.
+          Dari sekolah negeri, swasta Islam, hingga pesantren dan boarding school: di berbagai kota di Indonesia.
         </p>
       </div>
       <MarqueeRow schools={schools} />

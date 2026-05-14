@@ -4,7 +4,7 @@ export default function AboutHero() {
       <div className="about-hero-inner">
         <div className="about-hero-tag">Tentang Edupongo</div>
         <h1 className="about-hero-title">
-          Bukan sekadar software — <span className="highlight">partner digitalisasi</span> pendidikan Indonesia.
+          Bukan sekadar software: <span className="highlight">partner digitalisasi</span> pendidikan Indonesia.
         </h1>
         <p className="about-hero-sub">
           Sejak 2014, Edupongo telah mendampingi sekolah di Indonesia mengelola administrasi, memperkuat komunikasi sekolah-orang tua, dan menyederhanakan kerja guru. Lebih dari 10 tahun bukan startup kemarin sore.
