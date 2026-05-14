@@ -10,7 +10,7 @@ const getAvatarColor = (name) => {
   return AVATAR_COLORS[char.charCodeAt(0) % AVATAR_COLORS.length];
 };
 
-export default function TestimoniPage({ showSnack }) {
+export default function TestimoniPage({ showSnack, userName }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -71,7 +71,7 @@ export default function TestimoniPage({ showSnack }) {
   };
 
   if (showForm) {
-    return <TambahTestimoniPage editData={editItem} onBack={handleBack} onSubmit={handleSave} />;
+    return <TambahTestimoniPage editData={editItem} onBack={handleBack} onSubmit={handleSave} userName={userName} />;
   }
 
   return (

@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { IconArrowLeft, IconUpload, IconPhoto } from '@tabler/icons-react';
 import ConfirmModal from '../components/ConfirmModal';
 
-export default function TambahTestimoniPage({ editData, onBack, onSubmit }) {
+export default function TambahTestimoniPage({ editData, onBack, onSubmit, userName }) {
   const [form, setForm] = useState({
     name: editData?.name || '',
     role: editData?.role || '',
@@ -34,7 +34,7 @@ export default function TambahTestimoniPage({ editData, onBack, onSubmit }) {
       role: form.role.trim(),
       text: form.text.trim(),
       status,
-      publisher: 'Admin Humas',
+      publisher: userName || 'admin',
       date: form.date,
     };
   };
@@ -110,8 +110,8 @@ export default function TambahTestimoniPage({ editData, onBack, onSubmit }) {
                 <div className="admin-field">
                   <label className="admin-label">Dipublikasikan oleh</label>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, height: 48, padding: '0 16px', border: '1px solid #E8E9F1', borderRadius: 12, background: '#F1F2F5' }}>
-                    <div style={{ width: 24, height: 24, borderRadius: '50%', background: '#046CF2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, fontSize: 11, color: '#fff', flexShrink: 0 }}>A</div>
-                    <span style={{ fontSize: 13, color: '#5D6B82' }}>Admin Humas</span>
+                    <div style={{ width: 24, height: 24, borderRadius: '50%', background: '#046CF2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, fontSize: 11, color: '#fff', flexShrink: 0 }}>{(userName || 'A').charAt(0).toUpperCase()}</div>
+                    <span style={{ fontSize: 13, color: '#5D6B82' }}>{userName || 'admin'}</span>
                   </div>
                 </div>
               </div>

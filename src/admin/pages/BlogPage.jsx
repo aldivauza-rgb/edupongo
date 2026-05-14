@@ -11,12 +11,12 @@ function formatDate(d) {
 }
 
 /* ─── Inline Form ──────────────────────────────────────────── */
-function BlogForm({ editData, onBack, onSubmit }) {
+function BlogForm({ editData, onBack, onSubmit, userName }) {
   const [form, setForm] = useState({
     title: editData?.title || '',
     kategori: editData?.kategori || 'Artikel',
     date: editData?.date || new Date().toISOString().split('T')[0],
-    author: editData?.author || 'Admin',
+    author: editData?.author || userName || 'admin',
     content: editData?.content || '',
   });
   const [errors, setErrors] = useState({});
@@ -112,7 +112,7 @@ function BlogForm({ editData, onBack, onSubmit }) {
 }
 
 /* ─── List Page ────────────────────────────────────────────── */
-export default function BlogPage({ showSnack }) {
+export default function BlogPage({ showSnack, userName }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -172,7 +172,7 @@ export default function BlogPage({ showSnack }) {
   };
 
   if (showForm) {
-    return <BlogForm editData={editItem} onBack={handleBack} onSubmit={handleSave} />;
+    return <BlogForm editData={editItem} onBack={handleBack} onSubmit={handleSave} userName={userName} />;
   }
 
   return (

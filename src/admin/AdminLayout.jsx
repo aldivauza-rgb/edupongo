@@ -25,8 +25,8 @@ const SNACK_COLORS = {
 };
 
 /* ─── Detail Akun Modal ─────────────────────────────────────── */
-function DetailAkunModal({ onClose, showSnack }) {
-  const [name, setName] = useState('admin');
+function DetailAkunModal({ onClose, showSnack, initialName, onNameSave }) {
+  const [name, setName] = useState(initialName || 'admin');
   const fileRef = useRef(null);
 
   return (
@@ -87,7 +87,7 @@ function DetailAkunModal({ onClose, showSnack }) {
           {/* Footer */}
           <div style={{ borderTop: '1px solid #F3F4F6', paddingTop: 16, display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
             <button className="admin-btn admin-btn-outline admin-btn-sm" onClick={onClose}>Batal</button>
-            <button className="admin-btn admin-btn-primary admin-btn-sm" onClick={() => { showSnack?.('success', 'Berhasil', 'Nama admin berhasil diperbarui.'); onClose(); }}>Simpan</button>
+            <button className="admin-btn admin-btn-primary admin-btn-sm" onClick={() => { sessionStorage.setItem('adminName', name); onNameSave(name); showSnack?.('success', 'Berhasil', 'Nama admin berhasil diperbarui.'); onClose(); }}>Simpan</button>
           </div>
         </div>
       </div>
@@ -102,6 +102,7 @@ export default function AdminLayout({ onLogout }) {
   const [hover, setHover] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [detailModal, setDetailModal] = useState(false);
+  const [userName, setUserName] = useState(() => sessionStorage.getItem('adminName') || 'admin');
   const userBlockRef = useRef(null);
 
   /* Close dropdown on outside click */
@@ -237,7 +238,7 @@ export default function AdminLayout({ onLogout }) {
 
       {/* ─── MAIN CONTENT ────────────────────────────────────── */}
       <main style={{ flex: 1, minWidth: 0, background: '#E8E9F1', display: 'flex', flexDirection: 'column', padding: '28px 32px' }}>
-        {PAGES[page]?.render({ showSnack })}
+        {PAGES[page]?.render({ showSnack, userName })}
       </main>
 
       {/* ─── SNACKBAR ────────────────────────────────────────── */}
@@ -256,7 +257,7 @@ export default function AdminLayout({ onLogout }) {
 
       {/* ─── DETAIL AKUN MODAL ───────────────────────────────── */}
       {detailModal && (
-        <DetailAkunModal onClose={() => setDetailModal(false)} showSnack={showSnack} />
+        <DetailAkunModal onClose={() => setDetailModal(false)} showSnack={showSnack} initialName={userName} onNameSave={setUserName} />
       )}
     </div>
   );
