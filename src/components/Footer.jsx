@@ -1,3 +1,5 @@
+import { IconBrandInstagram, IconBrandTiktok, IconBrandFacebook } from '@tabler/icons-react';
+
 export default function Footer({ onNavigate }) {
   return (
     <footer>
@@ -7,6 +9,17 @@ export default function Footer({ onNavigate }) {
             <img src="/logo-white.png" alt="Edupongo" style={{ height: 36, width: 'auto' }} />
           </a>
           <p className="footer-tagline">Platform manajemen sekolah terintegrasi untuk sekolah, pesantren, dan yayasan pendidikan di Indonesia.</p>
+          <div className="footer-social">
+            <a href="https://www.instagram.com/edupongoapp/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <IconBrandInstagram size={18} stroke={1.5} />
+            </a>
+            <a href="https://www.tiktok.com/@edupongo.com" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+              <IconBrandTiktok size={18} stroke={1.5} />
+            </a>
+            <a href="https://www.facebook.com/EdupongoApp" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+              <IconBrandFacebook size={18} stroke={1.5} />
+            </a>
+          </div>
         </div>
 
         <div className="footer-links">
@@ -22,12 +35,11 @@ export default function Footer({ onNavigate }) {
         </div>
 
         <div className="footer-links">
-          <h4>Perusahaan</h4>
+          <h4>Tentang Kami</h4>
           <ul>
             <li><a href="#" onClick={(e) => { e.preventDefault(); onNavigate('about'); }}>Tentang Kami</a></li>
             <li><a href="#" onClick={(e) => e.preventDefault()}>Blog</a></li>
-            <li><a href="#" onClick={(e) => e.preventDefault()}>Karir</a></li>
-            <li><a href="#" onClick={(e) => e.preventDefault()}>Hubungi Kami</a></li>
+            <li><a href="#" onClick={(e) => e.preventDefault()}>Tutorial</a></li>
           </ul>
         </div>
 

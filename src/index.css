@@ -531,15 +531,20 @@ section { padding: 80px 0; }
 .cta-btn-group { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
 /* FOOTER */
-footer { background: var(--black); color: rgba(255,255,255,0.6); padding: 48px 100px 28px; }
-.footer-top { display: flex; justify-content: space-between; gap: 40px; margin-bottom: 40px; flex-wrap: wrap; }
+footer { background: var(--black); color: rgba(255,255,255,0.6); padding: 48px 80px 28px; }
+.footer-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 48px; margin-bottom: 40px; flex-wrap: wrap; }
 .footer-tagline { font-size: 14px; max-width: 260px; line-height: 1.6; }
-.footer-links h4 { font-size: 13px; font-weight: 600; color: white; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 16px; }
-.footer-links ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-.footer-links a { color: rgba(255,255,255,0.55); font-size: 14px; text-decoration: none; transition: color 0.2s; cursor: pointer; }
+.footer-links { display: flex; flex-direction: column; gap: 16px; }
+.footer-links h4 { font-size: 12px; font-weight: 700; color: white; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+.footer-links ul { list-style: none; display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; }
+.footer-links li { margin: 0; padding: 0; }
+.footer-links a { color: rgba(255,255,255,0.55); font-size: 14px; text-decoration: none; transition: color 0.2s; cursor: pointer; line-height: 1.6; }
 .footer-links a:hover { color: white; }
 .footer-contact p { font-size: 14px; margin-bottom: 8px; }
 .footer-contact a { color: rgba(255,255,255,0.55); text-decoration: none; }
+.footer-social { display: flex; align-items: center; gap: 12px; margin-top: 16px; }
+.footer-social a { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 8px; background: rgba(255,255,255,0.1); color: white; text-decoration: none; transition: background 0.15s; }
+.footer-social a:hover { background: rgba(255,255,255,0.2); }
 .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; flex-wrap: wrap; gap: 12px; }
 .footer-bottom-badges { display: flex; gap: 12px; }
 .footer-badge { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 6px; padding: 4px 10px; font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.5); }
