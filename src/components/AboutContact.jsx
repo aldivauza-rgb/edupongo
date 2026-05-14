@@ -21,19 +21,6 @@ export default function AboutContact() {
             <div className="about-contact-card-label">Email</div>
             <div className="about-contact-card-value">contact@edupongo.com</div>
           </a>
-          <a href="https://edupongo.com" className="about-contact-card">
-            <div className="about-contact-card-icon">🌐</div>
-            <div className="about-contact-card-label">Website</div>
-            <div className="about-contact-card-value">www.edupongo.com</div>
-          </a>
-          <div className="about-contact-card">
-            <div className="about-contact-card-icon">📍</div>
-            <div className="about-contact-card-label">Kantor</div>
-            <div className="about-contact-card-value">
-              Jl. Papa Biru 3 No. 5B<br />
-              <span style={{ fontSize: 13, fontWeight: 500, color: 'rgba(255,255,255,0.7)' }}>Tulusrejo, Malang, Jawa Timur 65141</span>
-            </div>
-          </div>
         </div>
       </div>
     </section>
