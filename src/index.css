@@ -562,13 +562,8 @@ footer { background: var(--black); color: rgba(255,255,255,0.6); padding: 48px 1
 .about-story-text h2 .accent { color: var(--blue); }
 .about-story-text p { font-size: 16px; line-height: 1.7; color: var(--gray-mid); margin-bottom: 16px; }
 .about-story-text p strong { color: var(--black); font-weight: 600; }
-.about-story-visual { background: var(--blue-light); border-radius: 24px; padding: 48px; text-align: center; position: relative; overflow: hidden; min-height: 360px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-.about-story-visual::before { content: ''; position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: var(--blue); border-radius: 50%; opacity: 0.12; }
-.about-story-visual::after { content: ''; position: absolute; bottom: -40px; left: -40px; width: 160px; height: 160px; background: var(--blue); border-radius: 50%; opacity: 0.08; }
-.about-story-logo { position: relative; z-index: 1; font-size: 64px; font-weight: 600; color: var(--blue); margin-bottom: 16px; letter-spacing: -2px; }
-.about-story-logo span { color: var(--blue-dark); }
-.about-story-tagline { position: relative; z-index: 1; font-size: 18px; font-weight: 600; color: var(--gray-dark); margin-bottom: 8px; }
-.about-story-since { position: relative; z-index: 1; font-size: 13px; color: var(--gray-mid); font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
+.about-story-visual { background: var(--blue-light); border-radius: 24px; padding: 24px; position: relative; overflow: hidden; }
+.about-story-img { width: 100%; height: auto; border-radius: 16px; display: block; position: relative; z-index: 1; }
 
 /* ABOUT EKOSISTEM */
 .about-ekosistem { background: var(--gray-light); padding: 100px; }
@@ -766,16 +761,16 @@ footer { background: var(--black); color: rgba(255,255,255,0.6); padding: 48px 1
   .features-tabs::-webkit-scrollbar { display: none; }
   .feature-tab { flex-shrink: 0; }
 
-  .ecosystem-flow { display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: auto auto auto; gap: 16px; align-items: center; justify-items: center; max-width: 320px; }
-  .ecosystem-flow .eco-node:nth-child(1) { grid-column: 1; grid-row: 1; }
-  .ecosystem-flow .eco-arrow:nth-child(2) { display: none; }
-  .ecosystem-flow .eco-node:nth-child(3) { grid-column: 3; grid-row: 1; }
-  .ecosystem-flow .eco-arrow:nth-child(4) { display: none; }
-  .ecosystem-flow .eco-center:nth-child(5) { grid-column: 2; grid-row: 2; margin: 0; }
-  .ecosystem-flow .eco-arrow:nth-child(6) { display: none; }
-  .ecosystem-flow .eco-node:nth-child(7) { grid-column: 1; grid-row: 3; }
-  .ecosystem-flow .eco-arrow:nth-child(8) { display: none; }
-  .ecosystem-flow .eco-node:nth-child(9) { grid-column: 3; grid-row: 3; }
+	  .ecosystem-flow { display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: auto auto auto; gap: 16px; align-items: center; justify-items: center; max-width: 320px; }
+	  .ecosystem-flow .eco-node:nth-child(1) { grid-column: 1; grid-row: 1; }
+	  .ecosystem-flow .eco-arrow:nth-child(2) { display: none; }
+	  .ecosystem-flow .eco-node:nth-child(3) { grid-column: 3; grid-row: 1; }
+	  .ecosystem-flow .eco-arrow:nth-child(4) { display: none; }
+	  .ecosystem-flow .eco-center:nth-child(5) { grid-column: 2; grid-row: 2; margin: 0; }
+	  .ecosystem-flow .eco-arrow:nth-child(6) { display: none; }
+	  .ecosystem-flow .eco-node:nth-child(7) { grid-column: 1; grid-row: 3; }
+	  .ecosystem-flow .eco-arrow:nth-child(8) { display: none; }
+	  .ecosystem-flow .eco-node:nth-child(9) { grid-column: 3; grid-row: 3; }
 
   .why-pin-track { height: auto !important; }
   .why-pin-stage { position: static; height: auto; padding: 0; display: block; }
@@ -800,8 +795,7 @@ footer { background: var(--black); color: rgba(255,255,255,0.6); padding: 48px 1
   .about-story { padding: 60px 20px !important; }
   .about-story-grid { grid-template-columns: 1fr; gap: 40px; }
   .about-story-text h2 { font-size: 28px; }
-  .about-story-visual { padding: 32px; min-height: 280px; }
-  .about-story-logo { font-size: 48px; }
+	  .about-story-visual { padding: 16px; }
 
   .about-ekosistem { padding: 60px 20px !important; }
   .about-ekosistem-header h2 { font-size: 28px; }

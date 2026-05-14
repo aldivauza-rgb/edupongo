@@ -15,9 +15,7 @@ export default function AboutStory() {
           </p>
         </div>
         <div className="about-story-visual">
-          <div className="about-story-logo">edu<span>pongo</span></div>
-          <div className="about-story-tagline">Satu platform, seluruh ekosistem sekolah</div>
-          <div className="about-story-since">Sejak 2014 · Malang, Indonesia</div>
+          <img src="/hero-dashboard.jpg" alt="Dashboard Edupongo" className="about-story-img" />
         </div>
       </div>
     </section>
