@@ -70,12 +70,9 @@ export default function BlogPage({ showSnack }) {
 
       {/* Toolbar */}
       <div className="admin-toolbar">
-        <div className="admin-search-wrap">
-          <Icon d={I.search} size={16} />
-          <div className="admin-search-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-          </div>
-          <input className="admin-search-input" placeholder="Cari Sesuatu..." value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0 14px', height: 46, borderRadius: 12, border: '1px solid #E8E9F1', background: '#fff', flex: 1, maxWidth: 500 }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#97A2B0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input style={{ flex: 1, border: 'none', outline: 'none', fontSize: 13, fontFamily: 'Inter, sans-serif', color: '#010E23' }} placeholder="Cari Sesuatu..." value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} />
         </div>
         <button className="admin-filter-btn">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>
@@ -91,7 +88,7 @@ export default function BlogPage({ showSnack }) {
               <th style={{ width: 80 }}>Thumbnail</th>
               <th>Judul</th>
               <th style={{ width: 120 }}>Tanggal</th>
-              <th style={{ width: 110 }}>Penulis</th>
+              <th style={{ width: 130 }}>Penulis</th>
               <th style={{ width: 100 }}>Status</th>
               <th style={{ width: 90 }}>Aksi</th>
             </tr>
@@ -100,16 +97,14 @@ export default function BlogPage({ showSnack }) {
             {paged.map((item) => (
               <tr key={item.id}>
                 <td>
-                  <div className="admin-thumb" style={{ background: item.img ? 'none' : 'var(--adm-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--adm-text-muted)', fontSize: 20 }}>
-                    {item.title.charAt(0)}
-                  </div>
+                  <img src={`https://placehold.co/60x60/E8E9F1/97A2B0?text=${encodeURIComponent(item.title.split(' ')[0])}`} alt={item.title} className="admin-thumb" />
                 </td>
                 <td>
                   <div className="admin-cell-title">{item.title}</div>
                   <div className="admin-cell-sub">{item.kategori}</div>
                 </td>
                 <td><span className="admin-cell-date">{formatDate(item.date)}</span></td>
-                <td><span className="admin-cell-author">{item.author}</span></td>
+                <td><span className="admin-cell-author" style={{ whiteSpace: 'nowrap' }}>{item.author}</span></td>
                 <td>
                   <span className={`admin-badge admin-badge-${item.status === 'terbit' ? 'terbit' : 'draf'}`}>
                     {item.status === 'terbit' ? 'Terbit' : 'Draf'}
