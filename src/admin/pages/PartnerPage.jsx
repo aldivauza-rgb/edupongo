@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { IconPlus, IconFilter, IconEdit, IconTrash, IconArrowLeft, IconChevronDown, IconChevronLeft, IconChevronRight, IconSearch, IconUpload, IconPhoto } from '@tabler/icons-react';
 import ConfirmModal from '../components/ConfirmModal';
 
