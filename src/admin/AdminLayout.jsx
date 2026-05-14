@@ -99,7 +99,7 @@ function DetailAkunModal({ onClose, showSnack, initialName, onNameSave }) {
 
 /* ─── AdminLayout ────────────────────────────────────────────── */
 export default function AdminLayout({ onLogout }) {
-  const [page, setPage] = useState('blog');
+  const [page, setPage] = useState(() => localStorage.getItem('cms_active_page') || 'blog');
   const [snack, setSnack] = useState(null);
   const [hover, setHover] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -119,6 +119,11 @@ export default function AdminLayout({ onLogout }) {
     return () => document.removeEventListener('mousedown', handler);
   }, [dropdownOpen]);
 
+  const handleSetPage = (newPage) => {
+    setPage(newPage);
+    localStorage.setItem('cms_active_page', newPage);
+  };
+
   const showSnack = (type, title, message) => {
     setSnack({ type, title, message });
     setTimeout(() => setSnack(null), 3200);
@@ -130,7 +135,7 @@ export default function AdminLayout({ onLogout }) {
     return (
       <button
         key={key}
-        onClick={() => setPage(key)}
+        onClick={() => handleSetPage(key)}
         onMouseEnter={() => setHover(key)}
         onMouseLeave={() => setHover(null)}
         style={{
@@ -224,7 +229,7 @@ export default function AdminLayout({ onLogout }) {
                   Detail Akun
                 </button>
                 <button
-                  onClick={onLogout}
+                  onClick={() => { localStorage.removeItem('cms_active_page'); onLogout(); }}
                   style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', borderRadius: 8, border: 'none', background: 'transparent', color: '#EF4444', fontSize: 13, fontWeight: 500, cursor: 'pointer', width: '100%', textAlign: 'left', fontFamily: 'Inter, sans-serif' }}
                   onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.1)'}
                   onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
