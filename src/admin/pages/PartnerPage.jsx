@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
-import { IconPlus, IconFilter, IconEdit, IconTrash, IconArrowLeft, IconChevronDown, IconChevronLeft, IconChevronRight, IconSearch, IconUpload } from '@tabler/icons-react';
+import { useState, useRef } from 'react';
+import { IconPlus, IconFilter, IconEdit, IconTrash, IconArrowLeft, IconChevronDown, IconChevronLeft, IconChevronRight, IconSearch, IconUpload, IconPhoto } from '@tabler/icons-react';
 import ConfirmModal from '../components/ConfirmModal';
 
 const DUMMY = [
@@ -13,26 +13,42 @@ const DUMMY = [
   { id: 8, name: 'SMP Darrunajah 2', kota: 'Karangploso', warna: '#3498DB', status: 'draf' },
 ];
 
-const WARNA_OPTIONS = [
-  { label: 'Merah', value: '#E74C3C' },
-  { label: 'Hijau', value: '#27AE60' },
-  { label: 'Biru', value: '#3498DB' },
-  { label: 'Ungu', value: '#9B59B6' },
-  { label: 'Orange', value: '#E67E22' },
-  { label: 'Teal', value: '#1ABC9C' },
+const COLORS = [
+  '#E74C3C', '#E67E22', '#F39C12', '#2ECC71',
+  '#27AE60', '#1ABC9C', '#3498DB', '#2980B9',
+  '#9B59B6', '#8E44AD', '#C0392B', '#16A085',
 ];
 
-const getInitial = (name) => (name || '?').charAt(0).toUpperCase();
+const getColor = (name) => {
+  if (!name) return '#3498DB';
+  const index = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % COLORS.length;
+  return COLORS[index];
+};
+
+const PREFIXES = ['SMP ', 'MA ', 'SMK ', 'MI ', 'PKBM ', 'MTs ', 'Ponpes '];
+
+const getInitial = (name) => {
+  if (!name) return '?';
+  const trimmed = name.trim();
+  for (const prefix of PREFIXES) {
+    if (trimmed.startsWith(prefix)) {
+      const rest = trimmed.slice(prefix.length).trim();
+      if (rest) return rest.charAt(0).toUpperCase();
+    }
+  }
+  return trimmed.charAt(0).toUpperCase();
+};
 
 /* ─── Inline Form ──────────────────────────────────────────── */
 function PartnerForm({ editData, onBack, onSubmit }) {
   const [form, setForm] = useState({
     name: editData?.name || '',
     kota: editData?.kota || '',
-    warna: editData?.warna || '#3498DB',
+    foto: editData?.foto || null,
   });
   const [errors, setErrors] = useState({});
   const [publishModal, setPublishModal] = useState(false);
+  const fileRef = useRef(null);
 
   const set = (f) => (v) => setForm((prev) => ({ ...prev, [f]: v }));
 
@@ -44,9 +60,17 @@ function PartnerForm({ editData, onBack, onSubmit }) {
     return Object.keys(err).length === 0;
   };
 
+  const buildPayload = (status) => ({
+    name: form.name.trim(),
+    kota: form.kota.trim(),
+    warna: getColor(form.name.trim()),
+    foto: form.foto,
+    status,
+  });
+
   const handleDraft = () => {
     if (!validate()) return;
-    onSubmit({ ...form, name: form.name.trim(), kota: form.kota.trim(), status: 'draf' });
+    onSubmit(buildPayload('draf'));
   };
 
   const handlePublishClick = () => {
@@ -56,10 +80,26 @@ function PartnerForm({ editData, onBack, onSubmit }) {
 
   const confirmPublish = () => {
     setPublishModal(false);
-    onSubmit({ ...form, name: form.name.trim(), kota: form.kota.trim(), status: 'terbit' });
+    onSubmit(buildPayload('terbit'));
   };
 
-  const initChar = form.name.trim() ? form.name.trim().charAt(0).toUpperCase() : '?';
+  const handleFile = (file) => {
+    if (file && file.size <= 2 * 1024 * 1024) {
+      const reader = new FileReader();
+      reader.onload = (e) => setForm((prev) => ({ ...prev, foto: e.target.result }));
+      reader.readAsDataURL(file);
+    } else {
+      setForm((prev) => ({ ...prev, foto: null }));
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) handleFile(file);
+  };
+
+  const logoColor = getColor(form.name.trim());
+  const initChar = getInitial(form.name);
 
   return (
     <div className="admin-page-wrap">
@@ -70,55 +110,46 @@ function PartnerForm({ editData, onBack, onSubmit }) {
         <h2 style={{ fontWeight: 700, fontSize: 22, color: '#010E23', margin: '0 0 28px', fontFamily: 'Inter, sans-serif' }}>
           {editData ? 'Edit Partner' : 'Tambah Partner'}
         </h2>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 720 }}>
-          <div style={{ display: 'flex', gap: 28 }}>
-            {/* Left fields */}
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 20 }}>
-              <div className="admin-field">
-                <label className="admin-label">Nama Sekolah <span className="text-danger">*</span></label>
-                <input className={`admin-input${errors.name ? ' admin-input-error' : ''}`} placeholder="mis. SMP An Nawawiyah" value={form.name} onChange={(e) => { set('name')(e.target.value); if (errors.name) setErrors((p) => ({ ...p, name: null })); }} />
-                {errors.name && <small className="admin-error-text">{errors.name}</small>}
-              </div>
-              <div className="admin-field">
-                <label className="admin-label">Kota/Kabupaten <span className="text-danger">*</span></label>
-                <input className={`admin-input${errors.kota ? ' admin-input-error' : ''}`} placeholder="mis. Rembang, Jawa Tengah" value={form.kota} onChange={(e) => { set('kota')(e.target.value); if (errors.kota) setErrors((p) => ({ ...p, kota: null })); }} />
-                {errors.kota && <small className="admin-error-text">{errors.kota}</small>}
-              </div>
-              <div className="admin-field">
-                <label className="admin-label">Warna Logo <span className="text-danger">*</span></label>
-                <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                  {WARNA_OPTIONS.map((w) => (
-                    <button
-                      key={w.value}
-                      type="button"
-                      onClick={() => set('warna')(w.value)}
-                      style={{
-                        width: 44, height: 44, borderRadius: 12, border: form.warna === w.value ? '3px solid #010E23' : '2px solid transparent',
-                        background: w.value, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        transition: 'border-color 0.15s',
-                      }}
-                      title={w.label}
-                    >
-                      {form.warna === w.value && (
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="20 6 9 17 4 12" />
-                        </svg>
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </div>
+        <div style={{ display: 'flex', gap: 28 }}>
+          {/* Left: Fields */}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 480 }}>
+            <div className="admin-field">
+              <label className="admin-label">Nama Sekolah <span className="text-danger">*</span></label>
+              <input className={`admin-input${errors.name ? ' admin-input-error' : ''}`} placeholder="mis. SMP An Nawawiyah" value={form.name} onChange={(e) => { set('name')(e.target.value); if (errors.name) setErrors((p) => ({ ...p, name: null })); }} />
+              {errors.name && <small className="admin-error-text">{errors.name}</small>}
             </div>
-            {/* Right: Preview */}
-            <div style={{ width: 200, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, background: '#F9FAFB', borderRadius: 12, border: '1px solid #E8E9F1', padding: 28 }}>
-              <div style={{ width: 80, height: 80, borderRadius: 16, background: form.warna, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <span style={{ fontWeight: 700, fontSize: 28, color: '#fff' }}>{initChar}</span>
-              </div>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ fontWeight: 600, fontSize: 13, color: '#010E23' }}>{form.name || 'Nama Sekolah'}</div>
-                <div style={{ fontSize: 12, color: '#5D6B82', marginTop: 2 }}>{form.kota || 'Kota'}</div>
-              </div>
+            <div className="admin-field">
+              <label className="admin-label">Kota/Kabupaten <span className="text-danger">*</span></label>
+              <input className={`admin-input${errors.kota ? ' admin-input-error' : ''}`} placeholder="mis. Rembang, Jawa Tengah" value={form.kota} onChange={(e) => { set('kota')(e.target.value); if (errors.kota) setErrors((p) => ({ ...p, kota: null })); }} />
+              {errors.kota && <small className="admin-error-text">{errors.kota}</small>}
             </div>
+          </div>
+
+          {/* Right: Preview + Upload */}
+          <div style={{ width: 240, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, background: '#F9FAFB', borderRadius: 12, border: '1px solid #E8E9F1', padding: 28 }}>
+            {form.foto ? (
+              <img src={form.foto} alt="Logo" style={{ width: 100, height: 100, borderRadius: 16, objectFit: 'cover' }} />
+            ) : (
+              <div style={{ width: 100, height: 100, borderRadius: 16, background: logoColor, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <span style={{ fontWeight: 700, fontSize: 36, color: '#fff' }}>{initChar}</span>
+              </div>
+            )}
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontWeight: 600, fontSize: 14, color: '#010E23' }}>{form.name || 'Nama Sekolah'}</div>
+              <div style={{ fontSize: 12, color: '#6B7280', marginTop: 2 }}>{form.kota || 'Kota'}</div>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%', marginTop: 4 }}>
+              <button className="admin-btn admin-btn-outline admin-btn-sm" style={{ justifyContent: 'center', height: 38, fontSize: 13 }} onClick={() => fileRef.current?.click()}>
+                <IconPhoto size={16} stroke={1.5} /> Unggah Logo
+              </button>
+              <input ref={fileRef} type="file" accept="image/png,image/jpeg,image/svg+xml" onChange={handleFileChange} style={{ display: 'none' }} />
+              {form.foto && (
+                <button onClick={() => setForm((prev) => ({ ...prev, foto: null }))} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Inter, sans-serif', fontSize: 12, color: '#DC2626', fontWeight: 500, padding: 0, textAlign: 'center' }}>
+                  Hapus Foto
+                </button>
+              )}
+            </div>
+            <div style={{ fontSize: 11, color: '#97A2B0', textAlign: 'center' }}>Format PNG, JPG, SVG. Maks 2MB.</div>
           </div>
         </div>
         <div style={{ display: 'flex', gap: 10, marginTop: 28, paddingTop: 20, borderTop: '1px solid #E8E9F1' }}>
