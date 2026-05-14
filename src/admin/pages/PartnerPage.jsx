@@ -125,31 +125,58 @@ function PartnerForm({ editData, onBack, onSubmit }) {
             </div>
           </div>
 
-          {/* Right: Preview + Upload */}
-          <div style={{ width: 240, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, background: '#F9FAFB', borderRadius: 12, border: '1px solid #E8E9F1', padding: 28 }}>
-            {form.foto ? (
-              <img src={form.foto} alt="Logo" style={{ width: 100, height: 100, borderRadius: 16, objectFit: 'cover' }} />
-            ) : (
-              <div style={{ width: 100, height: 100, borderRadius: 16, background: logoColor, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <span style={{ fontWeight: 700, fontSize: 36, color: '#fff' }}>{initChar}</span>
-              </div>
-            )}
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontWeight: 600, fontSize: 14, color: '#010E23' }}>{form.name || 'Nama Sekolah'}</div>
-              <div style={{ fontSize: 12, color: '#6B7280', marginTop: 2 }}>{form.kota || 'Kota'}</div>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%', marginTop: 4 }}>
-              <button className="admin-btn admin-btn-outline admin-btn-sm" style={{ justifyContent: 'center', height: 38, fontSize: 13 }} onClick={() => fileRef.current?.click()}>
-                <IconPhoto size={16} stroke={1.5} /> Unggah Logo
-              </button>
-              <input ref={fileRef} type="file" accept="image/png,image/jpeg,image/svg+xml" onChange={handleFileChange} style={{ display: 'none' }} />
-              {form.foto && (
-                <button onClick={() => setForm((prev) => ({ ...prev, foto: null }))} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Inter, sans-serif', fontSize: 12, color: '#DC2626', fontWeight: 500, padding: 0, textAlign: 'center' }}>
-                  Hapus Foto
-                </button>
+          {/* Right: Upload Logo */}
+          <div style={{ width: 240 }}>
+            <label className="admin-label" style={{ marginBottom: 6, display: 'block', color: '#354764' }}>Logo Sekolah</label>
+            <div
+              onClick={() => fileRef.current?.click()}
+              style={{
+                width: '100%', aspectRatio: '1/1', border: '1.5px dashed #E8E9F1',
+                borderRadius: 12, background: '#F9F9F9', cursor: 'pointer',
+                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                position: 'relative', overflow: 'hidden',
+              }}
+            >
+              {form.foto ? (
+                <>
+                  <div style={{ position: 'absolute', inset: 0, background: `url(${form.foto}) center/cover no-repeat` }} />
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(transparent 50%, rgba(0,0,0,0.4))' }} />
+                  <div style={{ position: 'absolute', bottom: 10, right: 10, display: 'flex', gap: 6 }}>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); fileRef.current?.click(); }}
+                      style={{ background: '#fff', border: 'none', borderRadius: 8, padding: '5px 12px', fontSize: 12, fontWeight: 500, color: '#010E23', cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}
+                    >
+                      Ganti
+                    </button>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setForm((prev) => ({ ...prev, foto: null })); }}
+                      style={{ background: '#fff', border: 'none', borderRadius: 8, padding: '5px 12px', fontSize: 12, fontWeight: 500, color: '#E74C3C', cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}
+                    >
+                      Hapus
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+                    <div style={{ width: 80, height: 80, borderRadius: 14, background: logoColor || '#E8E9F1', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <span style={{ fontWeight: 700, fontSize: 28, color: '#fff' }}>{initChar}</span>
+                    </div>
+                    <div style={{ textAlign: 'center' }}>
+                      <div style={{ fontWeight: 600, fontSize: 14, color: '#010E23' }}>{form.name || 'Nama Sekolah'}</div>
+                      <div style={{ fontSize: 12, color: '#6B7280', marginTop: 2 }}>{form.kota || 'Kota'}</div>
+                    </div>
+                  </div>
+                  <div style={{ position: 'absolute', bottom: 12 }}>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#fff', border: '1px solid #E8E9F1', borderRadius: 8, padding: '6px 14px', fontSize: 12, fontWeight: 500, color: '#010E23' }}>
+                      <IconPhoto size={14} stroke={1.5} /> Unggah Logo
+                    </span>
+                  </div>
+                </>
               )}
             </div>
-            <div style={{ fontSize: 11, color: '#97A2B0', textAlign: 'center' }}>Format PNG, JPG, SVG. Maks 2MB.</div>
+            <input ref={fileRef} type="file" accept="image/*" onChange={handleFileChange} style={{ display: 'none' }} />
+            <div style={{ fontSize: 11, color: '#97A2B0', textAlign: 'center', marginTop: 6 }}>Format PNG, JPG, SVG · maks 2MB.</div>
           </div>
         </div>
         <div style={{ display: 'flex', gap: 10, marginTop: 28, paddingTop: 20, borderTop: '1px solid #E8E9F1' }}>
