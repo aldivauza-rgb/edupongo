@@ -340,7 +340,7 @@ aside nav button {
 
 /* ─── ACCORDION ─────────────────────────────────────────────── */
 .admin-accordion-item {
-  border-bottom: 1px solid var(--adm-border-light); padding: 16px 0;
+  border-bottom: 1px solid var(--adm-border-light); padding: 20px 0;
 }
 .admin-accordion-trigger {
   width: 100%; display: flex; align-items: center; gap: 12px;
@@ -359,7 +359,7 @@ aside nav button {
 .admin-accordion-icon.open { transform: rotate(45deg); }
 .admin-accordion-content {
   font-size: 13px; color: var(--adm-text-secondary); line-height: 1.7;
-  padding-top: 12px; max-width: 700px;
+  padding: 12px 0 8px; max-width: 700px;
 }
 
 /* ─── EMPTY / LOADING ───────────────────────────────────────── */

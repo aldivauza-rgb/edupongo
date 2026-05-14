@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { IconPlus, IconSearch, IconFilter, IconEdit, IconTrash, IconArrowLeft, IconUpload } from '@tabler/icons-react';
+import { IconPlus, IconEdit, IconTrash, IconArrowLeft, IconUpload } from '@tabler/icons-react';
 import ConfirmModal from '../components/ConfirmModal';
 import * as api from '../../lib/admin-api';
 
@@ -189,19 +189,7 @@ export default function FAQPage({ showSnack }) {
         </div>
       </div>
 
-      <div className="admin-toolbar">
-        <div className="admin-search-wrap">
-          <div className="admin-search-icon">
-            <IconSearch size={16} stroke={1.5} color="#97A2B0" />
-          </div>
-          <input className="admin-search-input" placeholder="Cari pertanyaan..." />
-        </div>
-        <button className="admin-filter-btn">
-          <IconFilter size={16} stroke={1.5} /> Filter
-        </button>
-      </div>
-
-      <div style={{ display: 'flex', gap: 24, alignItems: 'flex-start' }}>
+<div style={{ display: 'flex', gap: 24, alignItems: 'flex-start' }}>
         <div style={{ width: 280, flexShrink: 0 }}>
           <div className="admin-cat-list">
             {CATEGORIES.map((c) => (
