@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
-import { IconNews, IconMessage, IconHelp, IconHistory, IconChevronDown, IconExternalLink, IconX, IconCircleCheck, IconCircleX, IconAlertTriangle, IconUser, IconLogout, IconCamera, IconInfoCircle } from '@tabler/icons-react';
+import { IconNews, IconSchool, IconMessage, IconHelp, IconHistory, IconChevronDown, IconExternalLink, IconX, IconCircleCheck, IconCircleX, IconAlertTriangle, IconUser, IconLogout, IconCamera, IconInfoCircle } from '@tabler/icons-react';
 import BlogPage from './pages/BlogPage';
+import PartnerPage from './pages/PartnerPage';
 import TestimoniPage from './pages/TestimoniPage';
 import FAQPage from './pages/FAQPage';
 import LogPage from './pages/LogPage';
@@ -8,6 +9,7 @@ import LogPage from './pages/LogPage';
 /* ─── Pages ─────────────────────────────────────────────────── */
 const PAGES = {
   blog:      { label: 'Blog',         render: (p) => <BlogPage {...p} /> },
+  partner:   { label: 'Partner',      render: (p) => <PartnerPage {...p} /> },
   testimoni: { label: 'Testimoni',    render: (p) => <TestimoniPage {...p} /> },
   faq:       { label: 'FAQ',          render: (p) => <FAQPage {...p} /> },
   log:       { label: 'Log Aktivitas',render: (p) => <LogPage {...p} /> },
@@ -169,6 +171,7 @@ export default function AdminLayout({ onLogout }) {
           {/* Navigation */}
           <nav style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1, background: 'transparent', alignItems: 'stretch', justifyContent: 'flex-start', padding: 0, margin: 0, listStyle: 'none' }}>
             {navBtn('blog', IconNews, 'Blog')}
+            {navBtn('partner', IconSchool, 'Partner')}
             {navBtn('testimoni', IconMessage, 'Testimoni')}
             {navBtn('faq', IconHelp, 'FAQ')}
           </nav>
