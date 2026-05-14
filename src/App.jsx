@@ -34,11 +34,15 @@ function App() {
       window.location.hash = '#about';
     } else if (target === 'home') {
       if (hash) {
-        window.location.hash = hash;
-        // Kalau sudah di home, scroll langsung (useEffect gak kepanggil karena page sama)
         if (page === 'home') {
+          // Langsung smooth scroll + update URL saja (gak pakai location.hash biar gak loncat native)
           const el = document.querySelector(hash);
-          if (el) el.scrollIntoView({ behavior: 'smooth' });
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth' });
+            history.replaceState(null, '', hash);
+          }
+        } else {
+          window.location.hash = hash;
         }
       } else {
         window.location.hash = '#';
