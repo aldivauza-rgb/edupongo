@@ -340,7 +340,7 @@ aside nav button {
 
 /* ─── ACCORDION ─────────────────────────────────────────────── */
 .admin-accordion-item {
-  border-bottom: 1px solid var(--adm-border-light); padding: 20px 0;
+  border-bottom: 1px solid var(--adm-border-light); padding: 28px 0;
 }
 .admin-accordion-trigger {
   width: 100%; display: flex; align-items: center; gap: 12px;
