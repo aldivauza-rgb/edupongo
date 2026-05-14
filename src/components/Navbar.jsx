@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 const Logo = () => (
-  <img src="/logo-color.png" alt="Edupongo" style={{ height: 32, width: 'auto', flexShrink: 0 }} />
+  <img src="/logo-color.png" alt="Edupongo" style={{ height: 36, width: 'auto', flexShrink: 0 }} />
 );
 
 export default function Navbar({ page, onNavigate }) {
