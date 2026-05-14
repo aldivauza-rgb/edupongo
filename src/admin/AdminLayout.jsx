@@ -55,7 +55,7 @@ export default function AdminLayout({ onLogout }) {
         onMouseLeave={() => setHover(null)}
         style={{
           width: '100%', height: 46, borderRadius: 11, border: 'none',
-          padding: '0 11px', display: 'flex', alignItems: 'center', gap: 9,
+          padding: '0 12px', display: 'flex', alignItems: 'center', gap: 10,
           background: active ? '#046CF2' : hov ? '#051B3E' : 'transparent',
           color: active || hov ? '#F9F9F9' : '#8A96A8',
           fontWeight: 500, fontSize: 13, whiteSpace: 'nowrap', cursor: 'pointer',
@@ -86,7 +86,7 @@ export default function AdminLayout({ onLogout }) {
         </div>
 
         {/* Navigation — semua menu di sini, gap 2px */}
-        <nav style={{ display: 'flex', flexDirection: 'column', gap: 2, flex: 1, background: 'transparent' }}>
+        <nav style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1, background: 'transparent' }}>
           {navBtn('blog', I.newspaper, 'Blog')}
           {navBtn('testimoni', I.messageCircle, 'Testimoni')}
           {navBtn('faq', I.helpCircle, 'FAQ')}
