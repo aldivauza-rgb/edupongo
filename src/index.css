@@ -373,6 +373,7 @@ section { padding: 80px 0; }
 .hero-cta { animation-delay: 0.4s; }
 .hero-stats { animation-delay: 0.5s; }
 .hero-dashboard { animation-delay: 0.6s; }
+.hero-dashboard-img { width: 100%; height: auto; border-radius: 10px; display: block; }
 
 /* TRUST BAR */
 .trust-bar { padding: 80px 100px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); text-align: center; }
@@ -744,8 +745,8 @@ footer { background: var(--black); color: rgba(255,255,255,0.6); padding: 48px 1
   }
 
   .hero h1 { font-size: 34px; }
-  .dashboard-content { grid-template-columns: 1fr; }
-  .dash-sidebar { display: none; }
+  .hero-dashboard { padding: 12px; }
+  .hero-dashboard-img { border-radius: 8px; }
   .footer-top { flex-direction: column; }
   .eco-arrow { display: none; }
   .cta-results { flex-direction: column; align-items: center; }
