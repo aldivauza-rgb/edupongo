@@ -21,86 +21,108 @@ const I = {
   userCog: 'M12 15v2m-6 4a4 4 0 014-4h4a4 4 0 014 4m-6-16a4 4 0 100 8 4 4 0 000-8z',
   history: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z',
   chevronRight: 'M9 18l6-6-6-6',
-  chevronLeft: 'M15 18l-6-6 6-6',
-  plus: 'M12 5v14m-7-7h14',
-  search: 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z',
-  filter: 'M22 3H2l8 9.46V19l4 2v-8.54L22 3z',
-  tag: 'M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82zM7 7h.01',
-  edit: 'M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z',
-  trash: 'M3 6h18m-2 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6',
-  eye: 'M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8zM12 15a3 3 0 100-6 3 3 0 000 6z',
-  eyeOff: 'M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24M1 1l22 22',
   x: 'M18 6L6 18M6 6l12 12',
   check: 'M20 6L9 17l-5-5',
-  chevronDown: 'M6 9l6 6 6-6',
 };
-
-/* ─── Sidebar Button ────────────────────────────────────────── */
-function NavBtn({ icon, label, active, onClick }) {
-  return (
-    <button className={`admin-nav-btn${active ? ' active' : ''}`} onClick={onClick}>
-      <Icon d={icon} />
-      {label}
-    </button>
-  );
-}
 
 /* ─── Pages ─────────────────────────────────────────────────── */
 const PAGES = {
-  blog:      { label: 'Blog',      render: (p) => <BlogPage {...p} /> },
-  testimoni: { label: 'Testimoni', render: (p) => <TestimoniPage {...p} /> },
-  faq:       { label: 'FAQ',       render: (p) => <FAQPage {...p} /> },
-  akun:      { label: 'Akun Admin',render: (p) => <AkunPage {...p} /> },
-  log:       { label: 'Log Aktivitas', render: (p) => <LogPage {...p} /> },
+  blog:      { label: 'Blog',         render: (p) => <BlogPage {...p} /> },
+  testimoni: { label: 'Testimoni',    render: (p) => <TestimoniPage {...p} /> },
+  faq:       { label: 'FAQ',          render: (p) => <FAQPage {...p} /> },
+  akun:      { label: 'Akun Admin',   render: (p) => <AkunPage {...p} /> },
+  log:       { label: 'Log Aktivitas',render: (p) => <LogPage {...p} /> },
 };
 
 export default function AdminLayout({ onLogout }) {
   const [page, setPage] = useState('blog');
   const [snack, setSnack] = useState(null);
+  const [hover, setHover] = useState(null);
 
   const showSnack = (type, message) => {
     setSnack({ type, message });
     setTimeout(() => setSnack(null), 3200);
   };
 
-  const closeSnack = () => setSnack(null);
+  const navBtn = (key, icon, label) => {
+    const active = page === key;
+    const hov = hover === key;
+    return (
+      <button
+        key={key}
+        onClick={() => setPage(key)}
+        onMouseEnter={() => setHover(key)}
+        onMouseLeave={() => setHover(null)}
+        style={{
+          width: '100%', height: 46, borderRadius: 11, border: 'none',
+          padding: '0 11px', display: 'flex', alignItems: 'center', gap: 9,
+          background: active ? '#046CF2' : hov ? '#051B3E' : 'transparent',
+          color: active || hov ? '#F9F9F9' : '#8A96A8',
+          fontWeight: 500, fontSize: 13, whiteSpace: 'nowrap', cursor: 'pointer',
+          textAlign: 'left', lineHeight: 1.4, fontFamily: 'Inter, sans-serif',
+          transition: 'background 0.15s', flexShrink: 0,
+        }}
+      >
+        <Icon d={icon} size={18} />
+        {label}
+      </button>
+    );
+  };
 
   return (
-    <div className="admin-layout">
+    <div style={{ display: 'flex', minHeight: '100vh', fontFamily: 'Inter, system-ui, sans-serif' }}>
       {/* ─── SIDEBAR ─────────────────────────────────────────── */}
-      <aside className="admin-sidebar">
+      <aside style={{
+        width: 260, minWidth: 260, height: '100vh',
+        background: '#010E23', display: 'flex', flexDirection: 'column',
+        padding: '26px 14px', position: 'sticky', top: 0,
+      }}>
         {/* Logo */}
-        <div className="admin-sidebar-logo">
-          <div className="admin-sidebar-logo-circle">
-            <div className="admin-sidebar-logo-dot" />
+        <div style={{ padding: '0 6px', marginBottom: 28, display: 'flex', alignItems: 'center', gap: 10, background: 'transparent' }}>
+          <div style={{ width: 24, height: 24, borderRadius: '50%', border: '2px solid white', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <div style={{ width: 11, height: 11, borderRadius: '50%', background: 'white', opacity: 0.35 }} />
           </div>
-          <span className="admin-sidebar-logo-text">CMS</span>
+          <span style={{ fontWeight: 700, fontSize: 16, letterSpacing: 0.5, color: 'white' }}>CMS</span>
         </div>
 
-        {/* Navigation */}
-        <nav className="admin-nav">
-          <NavBtn icon={I.newspaper} label="Blog" active={page === 'blog'} onClick={() => setPage('blog')} />
-          <NavBtn icon={I.messageCircle} label="Testimoni" active={page === 'testimoni'} onClick={() => setPage('testimoni')} />
-          <NavBtn icon={I.helpCircle} label="FAQ" active={page === 'faq'} onClick={() => setPage('faq')} />
-          <NavBtn icon={I.userCog} label="Akun Admin" active={page === 'akun'} onClick={() => setPage('akun')} />
+        {/* Navigation — semua menu di sini, gap 2px */}
+        <nav style={{ display: 'flex', flexDirection: 'column', gap: 2, flex: 1, background: 'transparent' }}>
+          {navBtn('blog', I.newspaper, 'Blog')}
+          {navBtn('testimoni', I.messageCircle, 'Testimoni')}
+          {navBtn('faq', I.helpCircle, 'FAQ')}
+          {navBtn('akun', I.userCog, 'Akun Admin')}
         </nav>
 
-        {/* Bottom section */}
-        <div className="admin-nav-bottom">
-          <NavBtn icon={I.history} label="Log Aktivitas" active={page === 'log'} onClick={() => setPage('log')} />
-          <button className="admin-user-block" onClick={onLogout} title="Keluar">
-            <div className="admin-user-avatar">A</div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div className="admin-user-name">admin</div>
-              <div className="admin-user-role">Administrator</div>
+        {/* Bottom section — dorong ke bawah */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 'auto', background: 'transparent' }}>
+          {navBtn('log', I.history, 'Log Aktivitas')}
+
+          <button
+            onClick={onLogout}
+            title="Keluar"
+            style={{
+              background: '#051B3E', borderRadius: 11, padding: '0 11px', height: 58,
+              display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer',
+              border: 'none', width: '100%', fontFamily: 'Inter, sans-serif',
+              transition: 'background 0.15s',
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = '#0A2A5E'}
+            onMouseLeave={e => e.currentTarget.style.background = '#051B3E'}
+          >
+            <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#046CF2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, fontSize: 12, color: '#F9F9F9', flexShrink: 0 }}>
+              A
             </div>
-            <Icon d={I.chevronRight} size={16} color="#5D6B82" />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontWeight: 500, fontSize: 12, color: '#F9F9F9', whiteSpace: 'nowrap' }}>admin</div>
+              <div style={{ fontSize: 11, color: '#5D6B82', whiteSpace: 'nowrap' }}>Administrator</div>
+            </div>
+            <Icon d={I.chevronRight} size={16} style={{ color: '#5D6B82' }} />
           </button>
         </div>
       </aside>
 
       {/* ─── MAIN CONTENT ────────────────────────────────────── */}
-      <main className="admin-main">
+      <main style={{ flex: 1, minWidth: 0, background: '#E8E9F1', display: 'flex', flexDirection: 'column' }}>
         {PAGES[page]?.render({ showSnack })}
       </main>
 
@@ -109,7 +131,7 @@ export default function AdminLayout({ onLogout }) {
         <div className={`admin-snackbar admin-snackbar-${snack.type}`}>
           <Icon d={snack.type === 'error' ? I.x : I.check} size={18} />
           <span style={{ flex: 1 }}>{snack.message}</span>
-          <button className="admin-snackbar-close" onClick={closeSnack}>
+          <button className="admin-snackbar-close" onClick={() => setSnack(null)}>
             <Icon d={I.x} size={16} />
           </button>
         </div>
