@@ -544,3 +544,18 @@ aside nav button {
   .admin-login-ring.ring-1 { width: 300px; height: 300px; }
   .admin-login-ring.ring-2 { width: 200px; height: 200px; }
 }
+
+/* ─── CONTENT EDITABLE EDITOR ──────────────────────────────── */
+[contenteditable][data-placeholder]:empty:before {
+  content: attr(data-placeholder);
+  color: #97A2B0;
+  pointer-events: none;
+}
+
+[contenteditable] blockquote {
+  border-left: 3px solid #046CF2;
+  padding-left: 12px;
+  margin: 8px 0;
+  color: #5D6B82;
+  font-style: italic;
+}

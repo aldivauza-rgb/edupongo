@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { IconPlus, IconFilter, IconEdit, IconTrash, IconTag, IconChevronDown, IconChevronLeft, IconChevronRight, IconSearch, IconArrowLeft, IconUpload, IconCirclePlus, IconPhoto } from '@tabler/icons-react';
+import { IconPlus, IconFilter, IconEdit, IconTrash, IconTag, IconChevronDown, IconChevronLeft, IconChevronRight, IconSearch, IconArrowLeft, IconUpload, IconCirclePlus, IconPhoto, IconAlignLeft, IconAlignCenter, IconAlignRight, IconAlignJustified, IconList, IconListNumbers, IconLink, IconBlockquote, IconArrowBackUp, IconArrowForwardUp } from '@tabler/icons-react';
 import ConfirmModal from '../components/ConfirmModal';
 import * as api from '../../lib/admin-api';
 import { supabase } from '../../lib/supabase';
@@ -10,6 +10,25 @@ function formatDate(d) {
   const dt = new Date(d);
   return `${dt.getDate()} ${full[dt.getMonth()]} ${dt.getFullYear()}`;
 }
+
+const ToolbarBtn = ({ onClick, children, title }) => (
+  <button
+    type="button"
+    onClick={onClick}
+    title={title}
+    style={{
+      width: 30, height: 30, borderRadius: 6,
+      border: '1px solid #E8E9F1', background: 'white',
+      cursor: 'pointer', display: 'inline-flex',
+      alignItems: 'center', justifyContent: 'center',
+      fontSize: 13, color: '#354764',
+    }}
+    onMouseEnter={(e) => { e.currentTarget.style.background = '#F1F2F5'; }}
+    onMouseLeave={(e) => { e.currentTarget.style.background = 'white'; }}
+  >
+    {children}
+  </button>
+);
 
 /* ─── Inline Form ──────────────────────────────────────────── */
 function BlogForm({ editData, onBack, onSubmit, userName }) {
@@ -25,6 +44,14 @@ function BlogForm({ editData, onBack, onSubmit, userName }) {
   const [publishModal, setPublishModal] = useState(false);
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef(null);
+  const editorRef = useRef(null);
+
+  /* sync editor content when editData changes */
+  useEffect(() => {
+    if (editorRef.current && editData?.content) {
+      editorRef.current.innerHTML = editData.content;
+    }
+  }, [editData?.content]);
 
   const set = (f) => (v) => setForm((prev) => ({ ...prev, [f]: v }));
 
@@ -175,33 +202,87 @@ function BlogForm({ editData, onBack, onSubmit, userName }) {
             Konten Blog <span style={{ color: '#EA2227' }}>*</span>
           </div>
           {errors.content && <small className="admin-error-text" style={{ display: 'block', marginBottom: 4 }}>{errors.content}</small>}
-          <textarea
-            value={form.content}
-            onChange={(e) => {
-              setForm((prev) => ({ ...prev, content: e.target.value }));
-              if (errors.content) setErrors((p) => ({ ...p, content: null }));
-            }}
-            placeholder="Tulis konten blog di sini..."
-            rows={10}
-            style={{
-              width: '100%',
-              minHeight: '280px',
-              padding: '14px 16px',
-              fontSize: '14px',
-              lineHeight: '1.7',
-              color: '#010E23',
-              background: '#FFFFFF',
-              border: `1px solid ${errors.content ? '#B3202F' : '#E8E9F1'}`,
-              borderRadius: '12px',
-              outline: 'none',
-              resize: 'vertical',
-              fontFamily: 'Inter, sans-serif',
-              boxSizing: 'border-box',
-              display: 'block',
-            }}
-            onFocus={(e) => { if (!errors.content) e.target.style.borderColor = '#046CF2'; }}
-            onBlur={(e) => { if (!errors.content) e.target.style.borderColor = '#E8E9F1'; }}
-          />
+          <div style={{
+            border: `1px solid ${errors.content ? '#B3202F' : '#E8E9F1'}`,
+            borderRadius: 12, overflow: 'hidden', background: 'white',
+          }}>
+            {/* ── TOOLBAR ── */}
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: 2,
+              padding: '8px 12px', background: '#F9FAFB',
+              borderBottom: '1px solid #E8E9F1', flexWrap: 'wrap',
+            }}>
+              <select
+                onChange={(e) => {
+                  document.execCommand('formatBlock', false, e.target.value);
+                  editorRef.current?.focus();
+                }}
+                style={{
+                  height: 32, borderRadius: 6, border: '1px solid #E8E9F1',
+                  padding: '0 8px', fontSize: 13, background: 'white',
+                  cursor: 'pointer', marginRight: 4, fontFamily: 'Inter, sans-serif',
+                }}
+              >
+                <option value="p">Paragraph</option>
+                <option value="h1">Heading 1</option>
+                <option value="h2">Heading 2</option>
+                <option value="h3">Heading 3</option>
+              </select>
+
+              <div style={{ width: 1, height: 24, background: '#E8E9F1', margin: '0 6px' }} />
+
+              <ToolbarBtn onClick={() => { document.execCommand('bold'); editorRef.current?.focus(); }} title="Bold"><strong>B</strong></ToolbarBtn>
+              <ToolbarBtn onClick={() => { document.execCommand('italic'); editorRef.current?.focus(); }} title="Italic"><em>I</em></ToolbarBtn>
+              <ToolbarBtn onClick={() => { document.execCommand('underline'); editorRef.current?.focus(); }} title="Underline"><span style={{ textDecoration: 'underline' }}>U</span></ToolbarBtn>
+              <ToolbarBtn onClick={() => { document.execCommand('strikeThrough'); editorRef.current?.focus(); }} title="Strikethrough"><span style={{ textDecoration: 'line-through' }}>S</span></ToolbarBtn>
+
+              <div style={{ width: 1, height: 24, background: '#E8E9F1', margin: '0 6px' }} />
+
+              <ToolbarBtn onClick={() => { document.execCommand('justifyLeft'); editorRef.current?.focus(); }} title="Rata Kiri"><IconAlignLeft size={15} stroke="#354764" /></ToolbarBtn>
+              <ToolbarBtn onClick={() => { document.execCommand('justifyCenter'); editorRef.current?.focus(); }} title="Rata Tengah"><IconAlignCenter size={15} stroke="#354764" /></ToolbarBtn>
+              <ToolbarBtn onClick={() => { document.execCommand('justifyRight'); editorRef.current?.focus(); }} title="Rata Kanan"><IconAlignRight size={15} stroke="#354764" /></ToolbarBtn>
+              <ToolbarBtn onClick={() => { document.execCommand('justifyFull'); editorRef.current?.focus(); }} title="Rata Penuh"><IconAlignJustified size={15} stroke="#354764" /></ToolbarBtn>
+
+              <div style={{ width: 1, height: 24, background: '#E8E9F1', margin: '0 6px' }} />
+
+              <ToolbarBtn onClick={() => { document.execCommand('insertUnorderedList'); editorRef.current?.focus(); }} title="Bullet List"><IconList size={15} stroke="#354764" /></ToolbarBtn>
+              <ToolbarBtn onClick={() => { document.execCommand('insertOrderedList'); editorRef.current?.focus(); }} title="Numbered List"><IconListNumbers size={15} stroke="#354764" /></ToolbarBtn>
+
+              <div style={{ width: 1, height: 24, background: '#E8E9F1', margin: '0 6px' }} />
+
+              <ToolbarBtn onClick={() => { const url = prompt('Masukkan URL:'); if (url) { document.execCommand('createLink', false, url); editorRef.current?.focus(); } }} title="Insert Link"><IconLink size={15} stroke="#354764" /></ToolbarBtn>
+              <ToolbarBtn onClick={() => { document.execCommand('formatBlock', false, 'blockquote'); editorRef.current?.focus(); }} title="Blockquote"><IconBlockquote size={15} stroke="#354764" /></ToolbarBtn>
+
+              <div style={{ width: 1, height: 24, background: '#E8E9F1', margin: '0 6px' }} />
+
+              <ToolbarBtn onClick={() => { document.execCommand('undo'); editorRef.current?.focus(); }} title="Undo"><IconArrowBackUp size={15} stroke="#354764" /></ToolbarBtn>
+              <ToolbarBtn onClick={() => { document.execCommand('redo'); editorRef.current?.focus(); }} title="Redo"><IconArrowForwardUp size={15} stroke="#354764" /></ToolbarBtn>
+            </div>
+
+            {/* ── AREA TULIS ── */}
+            <div
+              ref={editorRef}
+              contentEditable
+              suppressContentEditableWarning
+              onInput={(e) => {
+                setForm((prev) => ({ ...prev, content: e.currentTarget.innerHTML }));
+                if (errors.content) setErrors((p) => ({ ...p, content: null }));
+              }}
+              dangerouslySetInnerHTML={{ __html: form.content || '' }}
+              style={{
+                minHeight: 300,
+                maxHeight: 500,
+                overflowY: 'auto',
+                padding: 16,
+                fontSize: 14,
+                lineHeight: 1.7,
+                color: '#010E23',
+                outline: 'none',
+                fontFamily: 'Inter, sans-serif',
+              }}
+              data-placeholder="Tulis konten blog di sini..."
+            />
+          </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 28, paddingTop: 20, borderTop: '1px solid #E8E9F1' }}>
           <span style={{ fontSize: 12, color: '#5D6B82' }}>* Data tersimpan sebagai draf bila tidak diterbitkan.</span>
