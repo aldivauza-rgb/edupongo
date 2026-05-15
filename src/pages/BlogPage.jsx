@@ -113,7 +113,7 @@ function BlogList({ blogs, loading, onSelect }) {
   return (
     <>
       {/* Header Section */}
-      <div style={{ background: '#F8F9FA', padding: '64px 0', width: '100%' }}>
+      <div style={{ background: '#F8F9FA', padding: '64px 0 32px', width: '100%' }}>
         <div style={{ maxWidth: 1000, margin: '0 auto', padding: '0 24px', textAlign: 'left' }}>
           <span style={{
             display: 'inline-flex', alignItems: 'center',
@@ -131,14 +131,9 @@ function BlogList({ blogs, loading, onSelect }) {
           }}>
             Artikel, tips, dan informasi seputar dunia pendidikan dan teknologi sekolah.
           </h1>
-        </div>
-      </div>
-
-      {/* Content */}
-      <div style={{ maxWidth: 1000, margin: '0 auto', padding: '0 24px 80px' }}>
-        {/* Search & Filter */}
-        <div style={{ display: 'flex', gap: 12, marginTop: 32, marginBottom: 40, flexWrap: 'wrap', alignItems: 'center' }}>
-        <input
+          {/* Search & Filter */}
+          <div style={{ display: 'flex', gap: 12, marginTop: 32, flexWrap: 'wrap', alignItems: 'center' }}>
+          <input
           placeholder="Cari artikel..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -165,9 +160,11 @@ function BlogList({ blogs, loading, onSelect }) {
             <option key={cat} value={cat}>{cat}</option>
           ))}
         </select>
+        </div>
       </div>
 
       {/* Blog Cards */}
+      <div style={{ maxWidth: 1000, margin: '0 auto', padding: '32px 24px 80px' }}>
       {loading ? (
         <div style={{ textAlign: 'center', padding: 60, color: '#9CA3AF', fontSize: 14 }}>
           Memuat artikel...
@@ -258,6 +255,7 @@ function BlogList({ blogs, loading, onSelect }) {
         </div>
       )}
     </div>
+      </div>
   </>
   );
 }
