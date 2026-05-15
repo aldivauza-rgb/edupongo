@@ -559,7 +559,7 @@ footer { background: var(--black); color: rgba(255,255,255,0.6); padding: 48px 8
 .about-hero::after { content: ''; position: absolute; bottom: -150px; left: -100px; width: 500px; height: 500px; background: rgba(255,255,255,0.05); border-radius: 50%; filter: blur(60px); }
 .about-hero-inner { max-width: 1240px; margin: 0 auto; position: relative; z-index: 1; }
 .about-hero-tag { display: inline-block; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); color: rgba(255,255,255,0.95); font-size: 13px; font-weight: 600; padding: 6px 16px; border-radius: 100px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.2); }
-.about-hero-title { font-size: 56px; font-weight: 600; line-height: 1.1; margin-bottom: 24px; }
+.about-hero-title { font-size: 56px; font-weight: 600; line-height: 1.1; margin-bottom: 24px; max-width: 680px; }
 .about-hero-title .highlight { color: var(--yellow); }
 .about-hero-sub { font-size: 18px; line-height: 1.6; color: rgba(255,255,255,0.85); max-width: 620px; margin-bottom: 40px; }
 .about-hero-stats { display: flex; gap: 48px; flex-wrap: wrap; }
