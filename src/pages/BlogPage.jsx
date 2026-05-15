@@ -129,7 +129,7 @@ function BlogList({ blogs, loading, onSelect }) {
             lineHeight: 1.2, margin: 0, maxWidth: 600,
             fontFamily: 'inherit',
           }}>
-            Artikel, tips, dan informasi seputar<br />dunia pendidikan dan teknologi sekolah.
+            Artikel, tips, dan informasi seputar dunia pendidikan dan teknologi sekolah.
           </h1>
         </div>
       </div>
