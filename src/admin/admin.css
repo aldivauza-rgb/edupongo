@@ -544,30 +544,3 @@ aside nav button {
   .admin-login-ring.ring-1 { width: 300px; height: 300px; }
   .admin-login-ring.ring-2 { width: 200px; height: 200px; }
 }
-
-/* ─── CKEDITOR 5 OVERRIDES ──────────────────────────────────── */
-.ck-editor__editable {
-  min-height: 280px !important;
-  font-family: Inter, sans-serif !important;
-  font-size: 14px !important;
-  line-height: 1.7 !important;
-  padding: 16px !important;
-  border: none !important;
-  border-top: 1px solid #E8E9F1 !important;
-}
-
-.ck-toolbar {
-  border: none !important;
-  border-bottom: 1px solid #E8E9F1 !important;
-  background: #F9FAFB !important;
-  padding: 8px 12px !important;
-}
-
-.ck.ck-editor {
-  border: none !important;
-}
-
-.ck-focused {
-  box-shadow: none !important;
-  border: none !important;
-}
