@@ -38,7 +38,7 @@ export default function Footer({ onNavigate }) {
           <h4>Tentang Kami</h4>
           <ul>
             <li><a href="#" onClick={(e) => { e.preventDefault(); onNavigate('about'); }}>Tentang Kami</a></li>
-            <li><a href="#" onClick={(e) => e.preventDefault()}>Blog</a></li>
+            <li><a href="#" onClick={(e) => { e.preventDefault(); onNavigate('blog'); }}>Blog</a></li>
             <li><a href="#" onClick={(e) => e.preventDefault()}>Tutorial</a></li>
           </ul>
         </div>

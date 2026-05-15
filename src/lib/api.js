@@ -9,6 +9,7 @@ const FALLBACK = {
   edp_why_cards: [],
   edp_problem_cards: [],
   edp_site_content: [],
+  edp_blog: [],
 };
 
 async function fetchData(table, order = 'sort_order', filterStatus = false) {
@@ -33,3 +34,19 @@ export async function getProblemCards()   { return fetchData('edp_problem_cards'
 export async function getStats()          { return fetchData('edp_stats'); }
 export async function getSiteContent()    { return fetchData('edp_site_content'); }
 export async function getPartners()       { return fetchData('edp_partners', 'sort_order', true); }
+export async function getBlogs() {
+  if (!supabase) return [];
+  try {
+    const { data, error } = await supabase
+      .from('edp_blog')
+      .select('*')
+      .eq('is_active', true)
+      .eq('status', 'terbit')
+      .order('date', { ascending: false });
+    if (error) throw error;
+    return data || [];
+  } catch {
+    console.warn('Supabase fetch edp_blog gagal');
+    return [];
+  }
+}

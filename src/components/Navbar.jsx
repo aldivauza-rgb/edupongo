@@ -39,6 +39,11 @@ export default function Navbar({ page, onNavigate, onOpenDemo }) {
           </button>
         </li>
         <li>
+          <button onClick={() => handleNav('blog')} style={page === 'blog' ? { color: 'var(--blue)' } : {}}>
+            Blog
+          </button>
+        </li>
+        <li>
           <button onClick={() => handleNav('home', '#faq')}>
             FAQ
           </button>

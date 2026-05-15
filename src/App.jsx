@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
+import BlogPage from './pages/BlogPage';
 import { IconArrowUp } from '@tabler/icons-react';
 import DemoModal from './components/DemoModal';
 import AdminLogin from './admin/AdminLogin';
@@ -98,6 +99,7 @@ function App() {
     function routeFromHash() {
       const hash = window.location.hash;
       if (hash === '#about') setPage('about');
+      else if (hash === '#blog') setPage('blog');
       else if (hash === '' || hash === '#') setPage('home');
       else setPage('home');
     }
@@ -112,6 +114,8 @@ function App() {
   const navigate = useCallback((target, hash) => {
     if (target === 'about') {
       window.location.hash = '#about';
+    } else if (target === 'blog') {
+      window.location.hash = '#blog';
     } else if (target === 'home') {
       if (hash) {
         if (page === 'home') {
@@ -137,6 +141,9 @@ function App() {
       </div>
       <div className={`page-view ${page !== 'about' ? 'hidden' : ''}`}>
         {page === 'about' && <AboutPage onOpenDemo={openDemo} />}
+      </div>
+      <div className={`page-view ${page !== 'blog' ? 'hidden' : ''}`}>
+        {page === 'blog' && <BlogPage />}
       </div>
       <Footer onNavigate={navigate} onOpenDemo={openDemo} />
       <DemoModal open={demoOpen} onClose={closeDemo} />
