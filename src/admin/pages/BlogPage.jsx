@@ -90,15 +90,15 @@ function BlogForm({ editData, onBack, onSubmit, userName }) {
       </button>
       <div style={{ background: '#fff', borderRadius: 12, padding: 28, border: '1px solid #E8E9F1' }}>
         <h2 style={{ fontWeight: 700, fontSize: 22, color: '#010E23', margin: '0 0 28px', fontFamily: 'Inter, sans-serif' }}>
-          {editData ? 'Edit Berita' : 'Tambah Berita'}
+          {editData ? 'Edit Blog' : 'Tambah Blog'}
         </h2>
         {/* ── ROW 1: 2 columns (60% / 40%) ── */}
         <div style={{ display: 'flex', gap: 24 }}>
           {/* LEFT COLUMN */}
           <div style={{ flex: '0 0 60%', display: 'flex', flexDirection: 'column', gap: 16 }}>
             <div className="admin-field">
-              <label className="admin-label">Judul Berita <span className="text-danger">*</span></label>
-              <input className={`admin-input${errors.title ? ' admin-input-error' : ''}`} placeholder="Masukkan judul Berita" value={form.title} onChange={(e) => { set('title')(e.target.value); if (errors.title) setErrors((p) => ({ ...p, title: null })); }} />
+              <label className="admin-label">Judul Blog <span className="text-danger">*</span></label>
+              <input className={`admin-input${errors.title ? ' admin-input-error' : ''}`} placeholder="Masukkan judul Blog" value={form.title} onChange={(e) => { set('title')(e.target.value); if (errors.title) setErrors((p) => ({ ...p, title: null })); }} />
               {errors.title && <small className="admin-error-text">{errors.title}</small>}
             </div>
             <div className="admin-field">
@@ -171,10 +171,10 @@ function BlogForm({ editData, onBack, onSubmit, userName }) {
           </div>
         </div>
 
-        {/* ── ROW 2: Full width — Konten Berita ── */}
+        {/* ── ROW 2: Full width — Konten Blog ── */}
         <div style={{ marginTop: 24 }}>
           <div className="admin-field">
-            <label className="admin-label">Konten Berita <span className="text-danger">*</span></label>
+            <label className="admin-label">Konten Blog <span className="text-danger">*</span></label>
             <div style={{
               border: errors.content ? '1px solid #B3202F' : '1px solid #E8E9F1',
               borderRadius: 12, overflow: 'hidden',
