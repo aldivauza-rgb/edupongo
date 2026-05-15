@@ -40,6 +40,20 @@ function BlogDetail({ blog, onBack }) {
         Kembali ke Blog
       </button>
 
+      {/* Thumbnail */}
+      {blog.thumbnail && (
+        <div style={{
+          width: '100%', height: 320, borderRadius: 14, overflow: 'hidden',
+          background: '#F3F4F6', marginBottom: 24,
+        }}>
+          <img
+            src={blog.thumbnail}
+            alt={blog.title}
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          />
+        </div>
+      )}
+
       {/* Category & Date */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 16, flexWrap: 'wrap' }}>
         <span style={{
@@ -162,8 +176,8 @@ function BlogList({ blogs, loading, onSelect }) {
               onClick={() => onSelect(blog)}
               style={{
                 background: '#fff', borderRadius: 14, border: '1px solid #F3F4F6',
-                padding: 28, cursor: 'pointer', transition: 'box-shadow 0.2s, transform 0.2s',
-                display: 'flex', flexDirection: 'column',
+                cursor: 'pointer', transition: 'box-shadow 0.2s, transform 0.2s',
+                display: 'flex', flexDirection: 'column', overflow: 'hidden',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.06)';
@@ -174,45 +188,61 @@ function BlogList({ blogs, loading, onSelect }) {
                 e.currentTarget.style.transform = 'none';
               }}
             >
-              {/* Category */}
-              <span style={{
-                display: 'inline-flex', alignSelf: 'flex-start', alignItems: 'center', gap: 4,
-                background: '#EEF2FF', color: '#046CF2', fontSize: 11, fontWeight: 600,
-                padding: '3px 10px', borderRadius: 999, marginBottom: 14,
-              }}>
-                <IconTag size={11} stroke={1.5} />
-                {blog.kategori || 'Artikel'}
-              </span>
-
-              {/* Title */}
-              <h2 style={{
-                fontSize: 18, fontWeight: 700, color: '#010E23', lineHeight: 1.4,
-                margin: '0 0 8px', fontFamily: 'inherit',
-              }}>
-                {blog.title}
-              </h2>
-
-              {/* Excerpt */}
-              <p style={{
-                fontSize: 14, color: '#6B7280', lineHeight: 1.6, margin: '0 0 16px',
-                flex: 1,
-              }}>
-                {excerpt(blog.content)}
-              </p>
-
-              {/* Meta */}
-              <div style={{
-                display: 'flex', alignItems: 'center', gap: 16, fontSize: 12, color: '#9CA3AF',
-                borderTop: '1px solid #F3F4F6', paddingTop: 14,
-              }}>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-                  <IconCalendar size={14} stroke={1.5} />
-                  {formatDate(blog.date)}
+              {/* Thumbnail */}
+              {blog.thumbnail && (
+                <div style={{
+                  width: '100%', height: 200, overflow: 'hidden', flexShrink: 0,
+                  background: '#F3F4F6',
+                }}>
+                  <img
+                    src={blog.thumbnail}
+                    alt={blog.title}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    loading="lazy"
+                  />
+                </div>
+              )}
+              <div style={{ padding: 24, display: 'flex', flexDirection: 'column', flex: 1 }}>
+                {/* Category */}
+                <span style={{
+                  display: 'inline-flex', alignSelf: 'flex-start', alignItems: 'center', gap: 4,
+                  background: '#EEF2FF', color: '#046CF2', fontSize: 11, fontWeight: 600,
+                  padding: '3px 10px', borderRadius: 999, marginBottom: 12,
+                }}>
+                  <IconTag size={11} stroke={1.5} />
+                  {blog.kategori || 'Artikel'}
                 </span>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-                  <IconUser size={14} stroke={1.5} />
-                  {blog.author || 'Admin'}
-                </span>
+
+                {/* Title */}
+                <h2 style={{
+                  fontSize: 18, fontWeight: 700, color: '#010E23', lineHeight: 1.4,
+                  margin: '0 0 8px', fontFamily: 'inherit',
+                }}>
+                  {blog.title}
+                </h2>
+
+                {/* Excerpt */}
+                <p style={{
+                  fontSize: 14, color: '#6B7280', lineHeight: 1.6, margin: '0 0 16px',
+                  flex: 1,
+                }}>
+                  {excerpt(blog.content)}
+                </p>
+
+                {/* Meta */}
+                <div style={{
+                  display: 'flex', alignItems: 'center', gap: 16, fontSize: 12, color: '#9CA3AF',
+                  borderTop: '1px solid #F3F4F6', paddingTop: 14,
+                }}>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                    <IconCalendar size={14} stroke={1.5} />
+                    {formatDate(blog.date)}
+                  </span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                    <IconUser size={14} stroke={1.5} />
+                    {blog.author || 'Admin'}
+                  </span>
+                </div>
               </div>
             </article>
           ))}
