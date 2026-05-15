@@ -1,7 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import { IconPlus, IconFilter, IconEdit, IconTrash, IconTag, IconChevronDown, IconChevronLeft, IconChevronRight, IconSearch, IconArrowLeft, IconUpload, IconCirclePlus, IconPhoto } from '@tabler/icons-react';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
 import ConfirmModal from '../components/ConfirmModal';
 import * as api from '../../lib/admin-api';
 import { supabase } from '../../lib/supabase';
@@ -27,22 +25,6 @@ function BlogForm({ editData, onBack, onSubmit, userName }) {
   const [publishModal, setPublishModal] = useState(false);
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef(null);
-
-  const quillModules = {
-    toolbar: [
-      [{ header: [1, 2, 3, false] }],
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ align: [] }],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      ['link', 'blockquote'],
-      ['clean'],
-    ],
-  };
-
-  const quillFormats = [
-    'header', 'bold', 'italic', 'underline', 'strike',
-    'align', 'list', 'bullet', 'link', 'blockquote',
-  ];
 
   const set = (f) => (v) => setForm((prev) => ({ ...prev, [f]: v }));
 
@@ -197,16 +179,28 @@ function BlogForm({ editData, onBack, onSubmit, userName }) {
             border: `1px solid ${errors.content ? '#B3202F' : '#E8E9F1'}`,
             borderRadius: 12, overflow: 'hidden', background: 'white',
           }}>
-            <ReactQuill
-              theme="snow"
+            <textarea
               value={form.content}
-              onChange={(val) => {
-                setForm((prev) => ({ ...prev, content: val }));
+              onChange={(e) => {
+                setForm((prev) => ({ ...prev, content: e.target.value }));
                 if (errors.content) setErrors((p) => ({ ...p, content: null }));
               }}
-              modules={quillModules}
-              formats={quillFormats}
               placeholder="Tulis konten blog di sini..."
+              rows={12}
+              style={{
+                width: '100%',
+                padding: '14px 16px',
+                fontSize: '14px',
+                lineHeight: '1.7',
+                border: 'none',
+                outline: 'none',
+                resize: 'vertical',
+                fontFamily: 'Inter, sans-serif',
+                boxSizing: 'border-box',
+                color: '#010E23',
+                background: 'transparent',
+                minHeight: '280px',
+              }}
             />
           </div>
         </div>
