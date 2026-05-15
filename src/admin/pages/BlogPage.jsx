@@ -25,14 +25,6 @@ function BlogForm({ editData, onBack, onSubmit, userName }) {
   const [publishModal, setPublishModal] = useState(false);
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef(null);
-  const contentRef = useRef(null);
-
-  /* sync contentEditable when editData changes */
-  useEffect(() => {
-    if (contentRef.current && editData?.content) {
-      contentRef.current.innerHTML = editData.content;
-    }
-  }, [editData?.content]);
 
   const set = (f) => (v) => setForm((prev) => ({ ...prev, [f]: v }));
 
@@ -183,65 +175,33 @@ function BlogForm({ editData, onBack, onSubmit, userName }) {
             Konten Blog <span style={{ color: '#EA2227' }}>*</span>
           </div>
           {errors.content && <small className="admin-error-text" style={{ display: 'block', marginBottom: 4 }}>{errors.content}</small>}
-          <div style={{
-            border: `1px solid ${errors.content ? '#B3202F' : '#E8E9F1'}`,
-            borderRadius: 12, overflow: 'hidden', background: 'white',
-          }}>
-            {/* Toolbar */}
-            <div style={{
-              display: 'flex', alignItems: 'center',
-              gap: 4, padding: '8px 12px',
-              background: '#F9FAFB',
-              borderBottom: '1px solid #E8E9F1', flexWrap: 'wrap',
-            }}>
-              <select
-                onChange={(e) => {
-                  const sel = e.target.value;
-                  if (sel) document.execCommand('formatBlock', false, sel);
-                  e.target.value = '';
-                }}
-                style={{ height: 32, borderRadius: 6, border: '1px solid #E8E9F1', padding: '0 8px', fontSize: 13, background: 'white', fontFamily: 'Inter, sans-serif' }}
-              >
-                <option value="">Paragraph</option>
-                <option value="h1">Heading 1</option>
-                <option value="h2">Heading 2</option>
-                <option value="h3">Heading 3</option>
-              </select>
-              <button type="button" onClick={() => document.execCommand('bold')} title="Bold" style={{ width: 32, height: 32, borderRadius: 6, border: '1px solid #E8E9F1', background: 'white', cursor: 'pointer', fontWeight: 700, fontSize: 14 }}>B</button>
-              <button type="button" onClick={() => document.execCommand('italic')} title="Italic" style={{ width: 32, height: 32, borderRadius: 6, border: '1px solid #E8E9F1', background: 'white', cursor: 'pointer', fontStyle: 'italic', fontSize: 14 }}>I</button>
-              <button type="button" onClick={() => document.execCommand('underline')} title="Underline" style={{ width: 32, height: 32, borderRadius: 6, border: '1px solid #E8E9F1', background: 'white', cursor: 'pointer', textDecoration: 'underline', fontSize: 14 }}>U</button>
-              <div style={{ width: 1, height: 24, background: '#E8E9F1', margin: '0 4px' }} />
-              <button type="button" onClick={() => document.execCommand('justifyLeft')} title="Align Left" style={{ width: 32, height: 32, borderRadius: 6, border: '1px solid #E8E9F1', background: 'white', cursor: 'pointer', fontSize: 13 }}>≡</button>
-              <button type="button" onClick={() => document.execCommand('justifyCenter')} title="Align Center" style={{ width: 32, height: 32, borderRadius: 6, border: '1px solid #E8E9F1', background: 'white', cursor: 'pointer', fontSize: 13 }}>≡</button>
-              <button type="button" onClick={() => document.execCommand('justifyRight')} title="Align Right" style={{ width: 32, height: 32, borderRadius: 6, border: '1px solid #E8E9F1', background: 'white', cursor: 'pointer', fontSize: 13 }}>≡</button>
-              <div style={{ width: 1, height: 24, background: '#E8E9F1', margin: '0 4px' }} />
-              <button type="button" onClick={() => { const url = prompt('Masukkan URL:'); if (url) document.execCommand('createLink', false, url); }} title="Link" style={{ width: 32, height: 32, borderRadius: 6, border: '1px solid #E8E9F1', background: 'white', cursor: 'pointer', fontSize: 14 }}>🔗</button>
-              <button type="button" onClick={() => document.execCommand('formatBlock', false, 'blockquote')} title="Blockquote" style={{ width: 32, height: 32, borderRadius: 6, border: '1px solid #E8E9F1', background: 'white', cursor: 'pointer', fontWeight: 700, fontSize: 14 }}>"</button>
-              <button type="button" onClick={() => document.execCommand('insertUnorderedList')} title="Bulleted List" style={{ width: 32, height: 32, borderRadius: 6, border: '1px solid #E8E9F1', background: 'white', cursor: 'pointer', fontSize: 14 }}>•</button>
-              <button type="button" onClick={() => document.execCommand('insertOrderedList')} title="Numbered List" style={{ width: 32, height: 32, borderRadius: 6, border: '1px solid #E8E9F1', background: 'white', cursor: 'pointer', fontSize: 14 }}>1.</button>
-            </div>
-
-            {/* Area Tulis */}
-            <div
-              ref={contentRef}
-              contentEditable
-              suppressContentEditableWarning
-              onInput={(e) => {
-                setForm((prev) => ({ ...prev, content: e.currentTarget.innerHTML }));
-                if (errors.content) setErrors((p) => ({ ...p, content: null }));
-              }}
-              style={{
-                minHeight: 280,
-                padding: 16,
-                fontSize: 14,
-                lineHeight: 1.7,
-                color: '#010E23',
-                outline: 'none',
-                fontFamily: 'Inter, sans-serif',
-              }}
-              dangerouslySetInnerHTML={{ __html: form.content || '' }}
-            />
-          </div>
+          <textarea
+            value={form.content}
+            onChange={(e) => {
+              setForm((prev) => ({ ...prev, content: e.target.value }));
+              if (errors.content) setErrors((p) => ({ ...p, content: null }));
+            }}
+            placeholder="Tulis konten blog di sini..."
+            rows={10}
+            style={{
+              width: '100%',
+              minHeight: '280px',
+              padding: '14px 16px',
+              fontSize: '14px',
+              lineHeight: '1.7',
+              color: '#010E23',
+              background: '#FFFFFF',
+              border: `1px solid ${errors.content ? '#B3202F' : '#E8E9F1'}`,
+              borderRadius: '12px',
+              outline: 'none',
+              resize: 'vertical',
+              fontFamily: 'Inter, sans-serif',
+              boxSizing: 'border-box',
+              display: 'block',
+            }}
+            onFocus={(e) => { if (!errors.content) e.target.style.borderColor = '#046CF2'; }}
+            onBlur={(e) => { if (!errors.content) e.target.style.borderColor = '#E8E9F1'; }}
+          />
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 28, paddingTop: 20, borderTop: '1px solid #E8E9F1' }}>
           <span style={{ fontSize: 12, color: '#5D6B82' }}>* Data tersimpan sebagai draf bila tidak diterbitkan.</span>
