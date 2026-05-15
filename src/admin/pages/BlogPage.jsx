@@ -1,7 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
-import { IconPlus, IconFilter, IconEdit, IconTrash, IconTag, IconChevronDown, IconChevronLeft, IconChevronRight, IconSearch, IconArrowLeft, IconUpload, IconCirclePlus } from '@tabler/icons-react';
+import { IconPlus, IconFilter, IconEdit, IconTrash, IconTag, IconChevronDown, IconChevronLeft, IconChevronRight, IconSearch, IconArrowLeft, IconUpload, IconCirclePlus, IconPhoto } from '@tabler/icons-react';
 import ConfirmModal from '../components/ConfirmModal';
 import * as api from '../../lib/admin-api';
+import { supabase } from '../../lib/supabase';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import {
+  ClassicEditor, Essentials, Bold, Italic, Underline,
+  Heading, Paragraph, Link, BlockQuote, List, Table, Undo, Alignment,
+} from 'ckeditor5';
 
 function formatDate(d) {
   const full = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
@@ -18,18 +24,48 @@ function BlogForm({ editData, onBack, onSubmit, userName }) {
     date: editData?.date || new Date().toISOString().split('T')[0],
     author: editData?.author || userName || 'admin',
     content: editData?.content || '',
+    thumbnail: editData?.thumbnail || '',
   });
   const [errors, setErrors] = useState({});
   const [publishModal, setPublishModal] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef(null);
 
   const set = (f) => (v) => setForm((prev) => ({ ...prev, [f]: v }));
 
   const validate = () => {
     const err = {};
     if (!form.title.trim()) err.title = 'Judul harus diisi';
+    if (!form.kategori.trim()) err.kategori = 'Kategori harus dipilih';
     if (!form.content.trim()) err.content = 'Konten harus diisi';
     setErrors(err);
     return Object.keys(err).length === 0;
+  };
+
+  const handleUpload = async (file) => {
+    if (!file || !supabase) return;
+    if (file.size > 2 * 1024 * 1024) {
+      setErrors((p) => ({ ...p, thumbnail: 'Maks 2MB' }));
+      return;
+    }
+    setUploading(true);
+    try {
+      const ext = file.name.split('.').pop();
+      const fileName = `blog_${Date.now()}.${ext}`;
+      const { data, error } = await supabase.storage
+        .from('blog-thumbnails')
+        .upload(fileName, file, { upsert: true });
+      if (error) throw error;
+      const { data: { publicUrl } } = supabase.storage
+        .from('blog-thumbnails')
+        .getPublicUrl(data.path);
+      setForm((prev) => ({ ...prev, thumbnail: publicUrl }));
+      setErrors((p) => ({ ...p, thumbnail: null }));
+    } catch {
+      setErrors((p) => ({ ...p, thumbnail: 'Gagal upload' }));
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleDraft = () => {
@@ -54,47 +90,136 @@ function BlogForm({ editData, onBack, onSubmit, userName }) {
       </button>
       <div style={{ background: '#fff', borderRadius: 12, padding: 28, border: '1px solid #E8E9F1' }}>
         <h2 style={{ fontWeight: 700, fontSize: 22, color: '#010E23', margin: '0 0 28px', fontFamily: 'Inter, sans-serif' }}>
-          {editData ? 'Edit Blog' : 'Tambah Blog'}
+          {editData ? 'Edit Berita' : 'Tambah Berita'}
         </h2>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 720 }}>
-          <div className="admin-field">
-            <label className="admin-label">Judul <span className="text-danger">*</span></label>
-            <input className={`admin-input${errors.title ? ' admin-input-error' : ''}`} placeholder="Judul artikel" value={form.title} onChange={(e) => { set('title')(e.target.value); if (errors.title) setErrors((p) => ({ ...p, title: null })); }} />
-            {errors.title && <small className="admin-error-text">{errors.title}</small>}
-          </div>
-          <div style={{ display: 'flex', gap: 16 }}>
-            <div style={{ flex: 1 }}>
-              <div className="admin-field">
-                <label className="admin-label">Kategori</label>
-                <select className="admin-select" value={form.kategori} onChange={(e) => set('kategori')(e.target.value)} style={{ width: '100%' }}>
-                  <option value="Artikel">Artikel</option>
-                  <option value="Fitur">Fitur</option>
-                </select>
+        {/* ── ROW 1: 2 columns (60% / 40%) ── */}
+        <div style={{ display: 'flex', gap: 24 }}>
+          {/* LEFT COLUMN */}
+          <div style={{ flex: '0 0 60%', display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div className="admin-field">
+              <label className="admin-label">Judul Berita <span className="text-danger">*</span></label>
+              <input className={`admin-input${errors.title ? ' admin-input-error' : ''}`} placeholder="Masukkan judul Berita" value={form.title} onChange={(e) => { set('title')(e.target.value); if (errors.title) setErrors((p) => ({ ...p, title: null })); }} />
+              {errors.title && <small className="admin-error-text">{errors.title}</small>}
+            </div>
+            <div className="admin-field">
+              <label className="admin-label">Penulis <span className="text-danger">*</span></label>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, height: 46, padding: '0 16px', background: '#F5F6FA', borderRadius: 12, border: '1px solid #E8E9F1' }}>
+                <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#046CF2', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 12, fontWeight: 600, flexShrink: 0 }}>
+                  {(form.author || 'A')[0].toUpperCase()}
+                </div>
+                <span style={{ fontSize: 13, color: '#010E23' }}>{form.author || 'admin'}</span>
+                <span style={{ fontSize: 12, color: '#97A2B0' }}>· otomatis</span>
               </div>
             </div>
-            <div style={{ flex: 1 }}>
-              <div className="admin-field">
-                <label className="admin-label">Tanggal</label>
-                <input type="date" className="admin-input" value={form.date} onChange={(e) => set('date')(e.target.value)} />
+            <div style={{ display: 'flex', gap: 16 }}>
+              <div style={{ flex: 1 }}>
+                <div className="admin-field">
+                  <label className="admin-label">Tanggal</label>
+                  <input type="date" className="admin-input" value={form.date} onChange={(e) => set('date')(e.target.value)} />
+                </div>
+              </div>
+              <div style={{ flex: 1 }}>
+                <div className="admin-field">
+                  <label className="admin-label">Kategori <span className="text-danger">*</span></label>
+                  <select className={`admin-select${errors.kategori ? ' admin-input-error' : ''}`} value={form.kategori} onChange={(e) => { set('kategori')(e.target.value); if (errors.kategori) setErrors((p) => ({ ...p, kategori: null })); }} style={{ width: '100%', height: 46 }}>
+                    <option value="">Pilih kategori</option>
+                    <option value="Artikel">Artikel</option>
+                    <option value="Fitur">Fitur</option>
+                  </select>
+                  {errors.kategori && <small className="admin-error-text">{errors.kategori}</small>}
+                </div>
               </div>
             </div>
           </div>
-          <div className="admin-field">
-            <label className="admin-label">Penulis</label>
-            <input className="admin-input" value={form.author} onChange={(e) => set('author')(e.target.value)} />
+
+          {/* RIGHT COLUMN — Thumbnail */}
+          <div style={{ flex: '0 0 calc(40% - 24px)', display: 'flex', flexDirection: 'column' }}>
+            <div className="admin-field" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+              <label className="admin-label">Thumbnail <span className="text-danger">*</span></label>
+              <div
+                onClick={() => fileRef.current?.click()}
+                style={{
+                  flex: 1, borderRadius: 12, minHeight: 200,
+                  border: `1.5px dashed ${errors.thumbnail ? '#B3202F' : '#E8E9F1'}`, background: '#F9F9F9',
+                  cursor: 'pointer', overflow: 'hidden', position: 'relative',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}
+              >
+                {uploading ? (
+                  <span style={{ fontSize: 13, color: '#97A2B0' }}>Mengupload...</span>
+                ) : form.thumbnail ? (
+                  <>
+                    <img src={form.thumbnail} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }} />
+                    <div style={{ position: 'absolute', bottom: 12, left: 12, display: 'flex', gap: 8, zIndex: 2 }}>
+                      <button onClick={(e) => { e.stopPropagation(); fileRef.current?.click(); }} style={{ background: '#fff', border: 'none', borderRadius: 8, padding: '6px 14px', fontSize: 12, fontWeight: 500, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Ganti</button>
+                      <button onClick={(e) => { e.stopPropagation(); setForm((p) => ({ ...p, thumbnail: '' })); }} style={{ background: '#fff', border: 'none', borderRadius: 8, padding: '6px 14px', fontSize: 12, fontWeight: 500, color: '#E74C3C', cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Hapus</button>
+                    </div>
+                  </>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, padding: 20, textAlign: 'center' }}>
+                    <IconPhoto size={36} stroke={1.5} color="#D1D5DB" />
+                    <div style={{ fontSize: 13, color: '#6B7280' }}>
+                      Unggah gambar, atau <span style={{ color: '#046CF2', fontWeight: 500 }}>telusuri</span>
+                    </div>
+                    <span style={{ fontSize: 11, color: '#D1D5DB' }}>Ukuran 1920×1080px · PNG atau JPG</span>
+                  </div>
+                )}
+              </div>
+              <input ref={fileRef} type="file" accept="image/png,image/jpeg,image/webp" onChange={(e) => { const f = e.target.files?.[0]; if (f) handleUpload(f); }} style={{ display: 'none' }} />
+              {errors.thumbnail && <small className="admin-error-text">{errors.thumbnail}</small>}
+            </div>
           </div>
+        </div>
+
+        {/* ── ROW 2: Full width — Konten Berita ── */}
+        <div style={{ marginTop: 24 }}>
           <div className="admin-field">
-            <label className="admin-label">Konten <span className="text-danger">*</span></label>
-            <textarea className={`admin-textarea${errors.content ? ' admin-input-error' : ''}`} placeholder="Tulis konten blog..." style={{ minHeight: 160, ...(errors.content ? { borderColor: '#B3202F' } : {}) }} value={form.content} onChange={(e) => { set('content')(e.target.value); if (errors.content) setErrors((p) => ({ ...p, content: null })); }} />
+            <label className="admin-label">Konten Berita <span className="text-danger">*</span></label>
+            <div style={{
+              border: errors.content ? '1px solid #B3202F' : '1px solid #E8E9F1',
+              borderRadius: 12, overflow: 'hidden',
+            }}>
+              <CKEditor
+                editor={ClassicEditor}
+                data={form.content}
+                onChange={(event, editor) => {
+                  const data = editor.getData();
+                  setForm((prev) => ({ ...prev, content: data }));
+                  if (errors.content) setErrors((p) => ({ ...p, content: null }));
+                }}
+                config={{
+                  plugins: [Essentials, Bold, Italic, Underline, Heading, Paragraph, Link, BlockQuote, List, Table, Undo, Alignment],
+                  toolbar: [
+                    'heading', '|',
+                    'bold', 'italic', 'underline', '|',
+                    'alignment', '|',
+                    'link', 'blockQuote', '|',
+                    'bulletedList', 'numberedList', '|',
+                    'insertTable', '|',
+                    'undo', 'redo',
+                  ],
+                  heading: {
+                    options: [
+                      { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                      { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+                      { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+                      { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
+                    ],
+                  },
+                  placeholder: 'Tulis konten di sini...',
+                }}
+              />
+            </div>
             {errors.content && <small className="admin-error-text">{errors.content}</small>}
           </div>
         </div>
-        <div style={{ display: 'flex', gap: 10, marginTop: 28, paddingTop: 20, borderTop: '1px solid #E8E9F1' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 28, paddingTop: 20, borderTop: '1px solid #E8E9F1' }}>
+          <span style={{ fontSize: 12, color: '#5D6B82' }}>* Data tersimpan sebagai draf bila tidak diterbitkan.</span>
           <div style={{ flex: 1 }} />
           <button className="admin-btn admin-btn-outline admin-btn-sm" onClick={onBack}>Batal</button>
           <button className="admin-btn admin-btn-outline admin-btn-sm" style={{ borderColor: '#101828', color: '#101828' }} onClick={handleDraft}>Simpan sebagai Draf</button>
           <button className="admin-btn admin-btn-primary admin-btn-sm" onClick={handlePublishClick}>
-            <IconUpload size={16} stroke={1.5} /> {editData ? 'Perbarui & Terbitkan' : 'Simpan & Terbitkan'}
+            <IconUpload size={16} stroke={1.5} /> Simpan &amp; Terbitkan
           </button>
         </div>
       </div>
@@ -404,7 +529,7 @@ export default function BlogPage({ showSnack, userName }) {
               <tr><td colSpan={6} className="admin-empty">Tidak ada data</td></tr>
             ) : paged.map((item) => (
               <tr key={item.id}>
-                <td><img src={`https://placehold.co/60x60/E8E9F1/97A2B0?text=${encodeURIComponent((item.title?.split(' ')[0] || 'B'))}`} alt={item.title} className="admin-thumb" /></td>
+                <td>{item.thumbnail ? <img src={item.thumbnail} alt={item.title} className="admin-thumb" /> : <img src={`https://placehold.co/60x60/E8E9F1/97A2B0?text=${encodeURIComponent((item.title?.split(' ')[0] || 'B'))}`} alt={item.title} className="admin-thumb" />}</td>
                 <td>
                   <div className="admin-cell-title">{item.title}</div>
                   <div className="admin-cell-sub">{item.kategori}</div>
