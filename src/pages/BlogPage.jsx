@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import { IconArrowLeft, IconCalendar, IconTag } from '@tabler/icons-react';
+import { IconArrowLeft, IconCalendar, IconUser, IconTag } from '@tabler/icons-react';
 import { getBlogs } from '../lib/api';
 
 function formatDate(d) {
   if (!d) return '';
   const full = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
   const dt = new Date(d);
-  return `${dt.getDate()} ${full[dt.getMonth()]} ${dt.getFullYear()}`;
+  return `${full[dt.getMonth()]} ${dt.getDate()}, ${dt.getFullYear()}`;
 }
 
 function stripHtml(html) {
@@ -175,22 +175,19 @@ function BlogList({ blogs, loading, onSelect }) {
               key={blog.id}
               onClick={() => onSelect(blog)}
               style={{
-                background: '#fff', borderRadius: 14, border: '1px solid #F3F4F6',
-                cursor: 'pointer', transition: 'box-shadow 0.2s, transform 0.2s',
-                display: 'flex', flexDirection: 'column', overflow: 'hidden',
+                cursor: 'pointer', transition: 'transform 0.2s',
+                display: 'flex', flexDirection: 'column',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.06)';
                 e.currentTarget.style.transform = 'translateY(-2px)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = 'none';
                 e.currentTarget.style.transform = 'none';
               }}
             >
               {/* Thumbnail with category badge */}
               {blog.thumbnail ? (
-                <div style={{ position: 'relative', overflow: 'hidden', width: '100%', height: 200, flexShrink: 0, background: '#F3F4F6' }}>
+                <div style={{ position: 'relative', overflow: 'hidden', width: '100%', height: 200, flexShrink: 0, borderRadius: 16, background: '#F3F4F6' }}>
                   <img
                     src={blog.thumbnail}
                     alt={blog.title}
@@ -209,7 +206,7 @@ function BlogList({ blogs, loading, onSelect }) {
                   </span>
                 </div>
               ) : (
-                <div style={{ position: 'relative', overflow: 'hidden', width: '100%', height: 200, flexShrink: 0, background: '#F3F4F6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ position: 'relative', overflow: 'hidden', width: '100%', height: 200, flexShrink: 0, borderRadius: 16, background: '#F3F4F6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <span style={{
                     display: 'inline-flex', alignItems: 'center', gap: 5,
                     background: '#fff', color: '#046CF2', fontSize: 12, fontWeight: 600,
@@ -222,10 +219,9 @@ function BlogList({ blogs, loading, onSelect }) {
                 </div>
               )}
 
-              <div style={{ padding: 24, display: 'flex', flexDirection: 'column', flex: 1 }}>
+              <div style={{ padding: '12px 24px 24px', display: 'flex', flexDirection: 'column' }}>
                 {/* Date above title */}
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#6B7280', marginBottom: 6 }}>
-                  <IconCalendar size={14} stroke={1.5} />
+                <span style={{ fontSize: 12, color: '#6B7280', marginBottom: 6 }}>
                   {formatDate(blog.date)}
                 </span>
 
