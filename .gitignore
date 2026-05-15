@@ -24,6 +24,9 @@ dist-ssr
 *.sw?
 .vercel
 
+# supabase CLI temp
+supabase/.temp
+
 # env
 .env
 .env.local

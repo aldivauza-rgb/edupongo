@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { loginWithEmail } from '../lib/auth';
 
 export default function AdminLogin({ onLogin }) {
   const [email, setEmail] = useState('');
@@ -6,8 +7,9 @@ export default function AdminLogin({ onLogin }) {
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [authError, setAuthError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
     if (!email.trim()) newErrors.email = 'Email harus diisi';
@@ -17,11 +19,25 @@ export default function AdminLogin({ onLogin }) {
       return;
     }
     setErrors({});
+    setAuthError('');
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      await loginWithEmail(email.trim(), password);
       onLogin();
-    }, 1200);
+    } catch (err) {
+      const msg = err.message || 'Terjadi kesalahan';
+      if (msg.includes('Invalid login credentials')) {
+        setAuthError('Email atau kata sandi salah.');
+      } else if (msg.includes('Email not confirmed')) {
+        setAuthError('Email belum dikonfirmasi. Cek inbox email Anda.');
+      } else if (msg.includes('rate limit')) {
+        setAuthError('Terlalu banyak percobaan. Coba lagi beberapa saat.');
+      } else {
+        setAuthError(msg);
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -152,6 +168,17 @@ export default function AdminLogin({ onLogin }) {
                 </small>
               )}
             </div>
+
+            {/* Auth Error */}
+            {authError && (
+              <div style={{
+                padding: '10px 14px', borderRadius: 10, background: '#FEF2F2',
+                border: '1px solid #FECACA', color: '#991B1B', fontSize: 13,
+                fontWeight: 500, fontFamily: "'Inter', sans-serif", marginBottom: 16,
+              }}>
+                {authError}
+              </div>
+            )}
 
             {/* Submit */}
             <button

@@ -7,32 +7,56 @@ import { IconArrowUp } from '@tabler/icons-react';
 import DemoModal from './components/DemoModal';
 import AdminLogin from './admin/AdminLogin';
 import AdminLayout from './admin/AdminLayout';
+import { getSession, onAuthChange, logout as authLogout } from './lib/auth';
 
 function App() {
   const [page, setPage] = useState('home');
   const [demoOpen, setDemoOpen] = useState(false);
   const [adminUser, setAdminUser] = useState(undefined);
 
-  // Cek admin session
+  // Cek admin session via Supabase Auth
   useEffect(() => {
     const isAdmin = window.location.pathname.startsWith('/admin');
     if (!isAdmin) {
-      setAdminUser(null);
+      setAdminUser(false);
       return;
     }
-    const stored = sessionStorage.getItem('cms_user');
-    setAdminUser(stored ? {} : null);
+    getSession().then((session) => {
+      setAdminUser(session ? { user: session.user } : false);
+    });
+  }, []);
+
+  // Listen to auth state changes
+  useEffect(() => {
+    const sub = onAuthChange((event, session) => {
+      if (event === 'SIGNED_IN') {
+        setAdminUser(session ? { user: session.user } : false);
+        window.history.replaceState(null, '', '/admin');
+      } else if (event === 'SIGNED_OUT') {
+        setAdminUser(false);
+        localStorage.removeItem('cms_active_page');
+        window.location.href = '/admin';
+      }
+    });
+    return () => sub?.unsubscribe();
   }, []);
 
   const handleLoginSuccess = () => {
-    sessionStorage.setItem('cms_user', '1');
-    setAdminUser({});
-    window.history.replaceState(null, '', '/admin');
+    // Supabase Auth sudah handle session, tinggal set state
+    getSession().then((session) => {
+      setAdminUser(session ? { user: session.user } : false);
+      window.history.replaceState(null, '', '/admin');
+    });
   };
 
-  const handleLogout = () => {
-    sessionStorage.removeItem('cms_user');
-    setAdminUser(null);
+  const handleLogout = async () => {
+    try {
+      await authLogout();
+    } catch {
+      // force logout lokal kalau gagal
+    }
+    setAdminUser(false);
+    localStorage.removeItem('cms_active_page');
     window.location.href = '/admin';
   };
 
