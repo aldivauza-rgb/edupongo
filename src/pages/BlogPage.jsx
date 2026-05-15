@@ -111,22 +111,33 @@ function BlogList({ blogs, loading, onSelect }) {
   });
 
   return (
-    <div style={{ maxWidth: 1000, margin: '0 auto', padding: '40px 24px 80px' }}>
-      {/* Header */}
-      <div style={{ textAlign: 'center', marginBottom: 40 }}>
-        <h1 style={{
-          fontSize: 36, fontWeight: 800, color: '#010E23', margin: '0 0 8px',
-          fontFamily: 'inherit',
-        }}>
-          Blog
-        </h1>
-        <p style={{ fontSize: 16, color: '#6B7280', margin: 0, fontFamily: 'inherit' }}>
-          Artikel, tips, dan informasi seputar dunia pendidikan dan teknologi sekolah.
-        </p>
+    <>
+      {/* Header Section */}
+      <div style={{ background: '#F8F9FA', padding: '64px 0', width: '100%' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto', padding: '0 24px', textAlign: 'left' }}>
+          <span style={{
+            display: 'inline-flex', alignItems: 'center',
+            padding: '6px 14px', background: '#EEF4FF', color: '#046CF2',
+            borderRadius: 999, fontSize: 12, fontWeight: 700,
+            letterSpacing: '0.06em', textTransform: 'uppercase',
+            marginBottom: 12,
+          }}>
+            Blog
+          </span>
+          <h1 style={{
+            fontSize: 36, fontWeight: 800, color: '#010E23',
+            lineHeight: 1.2, margin: 0, maxWidth: 600,
+            fontFamily: 'inherit',
+          }}>
+            Artikel, tips, dan informasi seputar<br />dunia pendidikan dan teknologi sekolah.
+          </h1>
+        </div>
       </div>
 
-      {/* Search & Filter */}
-      <div style={{ display: 'flex', gap: 12, marginBottom: 32, flexWrap: 'wrap', alignItems: 'center' }}>
+      {/* Content */}
+      <div style={{ maxWidth: 1000, margin: '0 auto', padding: '0 24px 80px' }}>
+        {/* Search & Filter */}
+        <div style={{ display: 'flex', gap: 12, marginTop: 32, marginBottom: 40, flexWrap: 'wrap', alignItems: 'center' }}>
         <input
           placeholder="Cari artikel..."
           value={search}
@@ -247,6 +258,7 @@ function BlogList({ blogs, loading, onSelect }) {
         </div>
       )}
     </div>
+  </>
   );
 }
 
