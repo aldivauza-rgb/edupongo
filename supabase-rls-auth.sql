@@ -40,6 +40,12 @@ create policy "auth_delete_edp_faqs" on edp_faqs
   for delete to authenticated using (true);
 
 -- 4. Policy untuk edp_blog
+create policy "anon_select_edp_blog" on edp_blog
+  for select to anon using (true);
+
+create policy "auth_select_edp_blog" on edp_blog
+  for select to authenticated using (true);
+
 create policy "auth_insert_edp_blog" on edp_blog
   for insert to authenticated with check (true);
 
