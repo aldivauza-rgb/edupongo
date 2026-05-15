@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { IconArrowLeft, IconCalendar, IconUser, IconTag } from '@tabler/icons-react';
+import { IconArrowLeft, IconCalendar, IconTag } from '@tabler/icons-react';
 import { getBlogs } from '../lib/api';
 
 function formatDate(d) {
@@ -188,61 +188,65 @@ function BlogList({ blogs, loading, onSelect }) {
                 e.currentTarget.style.transform = 'none';
               }}
             >
-              {/* Thumbnail */}
-              {blog.thumbnail && (
-                <div style={{
-                  width: '100%', height: 200, overflow: 'hidden', flexShrink: 0,
-                  background: '#F3F4F6',
-                }}>
+              {/* Thumbnail with category badge */}
+              {blog.thumbnail ? (
+                <div style={{ position: 'relative', overflow: 'hidden', width: '100%', height: 200, flexShrink: 0, background: '#F3F4F6' }}>
                   <img
                     src={blog.thumbnail}
                     alt={blog.title}
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     loading="lazy"
                   />
+                  <span style={{
+                    position: 'absolute', bottom: 16, left: 16,
+                    display: 'inline-flex', alignItems: 'center', gap: 5,
+                    background: '#fff', color: '#046CF2', fontSize: 12, fontWeight: 600,
+                    padding: '4px 12px', borderRadius: 999,
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                  }}>
+                    <IconTag size={12} stroke={1.5} />
+                    {blog.kategori || 'Artikel'}
+                  </span>
+                </div>
+              ) : (
+                <div style={{ position: 'relative', overflow: 'hidden', width: '100%', height: 200, flexShrink: 0, background: '#F3F4F6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <span style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 5,
+                    background: '#fff', color: '#046CF2', fontSize: 12, fontWeight: 600,
+                    padding: '4px 12px', borderRadius: 999,
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                  }}>
+                    <IconTag size={12} stroke={1.5} />
+                    {blog.kategori || 'Artikel'}
+                  </span>
                 </div>
               )}
+
               <div style={{ padding: 24, display: 'flex', flexDirection: 'column', flex: 1 }}>
-                {/* Category */}
-                <span style={{
-                  display: 'inline-flex', alignSelf: 'flex-start', alignItems: 'center', gap: 4,
-                  background: '#EEF2FF', color: '#046CF2', fontSize: 11, fontWeight: 600,
-                  padding: '3px 10px', borderRadius: 999, marginBottom: 12,
-                }}>
-                  <IconTag size={11} stroke={1.5} />
-                  {blog.kategori || 'Artikel'}
+                {/* Date above title */}
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#6B7280', marginBottom: 6 }}>
+                  <IconCalendar size={14} stroke={1.5} />
+                  {formatDate(blog.date)}
                 </span>
 
-                {/* Title */}
+                {/* Title — max 2 lines */}
                 <h2 style={{
                   fontSize: 18, fontWeight: 700, color: '#010E23', lineHeight: 1.4,
                   margin: '0 0 8px', fontFamily: 'inherit',
+                  display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
+                  overflow: 'hidden',
                 }}>
                   {blog.title}
                 </h2>
 
-                {/* Excerpt */}
+                {/* Excerpt — max 4 lines */}
                 <p style={{
-                  fontSize: 14, color: '#6B7280', lineHeight: 1.6, margin: '0 0 16px',
-                  flex: 1,
+                  fontSize: 14, color: '#6B7280', lineHeight: 1.6, margin: 0,
+                  display: '-webkit-box', WebkitLineClamp: 4, WebkitBoxOrient: 'vertical',
+                  overflow: 'hidden',
                 }}>
                   {excerpt(blog.content)}
                 </p>
-
-                {/* Meta */}
-                <div style={{
-                  display: 'flex', alignItems: 'center', gap: 16, fontSize: 12, color: '#9CA3AF',
-                  borderTop: '1px solid #F3F4F6', paddingTop: 14,
-                }}>
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-                    <IconCalendar size={14} stroke={1.5} />
-                    {formatDate(blog.date)}
-                  </span>
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-                    <IconUser size={14} stroke={1.5} />
-                    {blog.author || 'Admin'}
-                  </span>
-                </div>
               </div>
             </article>
           ))}
