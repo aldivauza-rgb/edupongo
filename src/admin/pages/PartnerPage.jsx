@@ -1,17 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { IconPlus, IconFilter, IconEdit, IconTrash, IconArrowLeft, IconChevronDown, IconChevronLeft, IconChevronRight, IconSearch, IconUpload, IconPhoto } from '@tabler/icons-react';
 import ConfirmModal from '../components/ConfirmModal';
-
-const DUMMY = [
-  { id: 1, name: 'MA Plus Al Hadi', kota: 'Bojonegoro', warna: '#C97B3F', status: 'terbit' },
-  { id: 2, name: 'PKBM Fanana', kota: 'Insan Baksya', warna: '#2ECC71', status: 'terbit' },
-  { id: 3, name: "Ponpes Mamba'ul Ulum", kota: 'Ulum', warna: '#E74C3C', status: 'terbit' },
-  { id: 4, name: 'SMP An Nawawiyah', kota: 'Rembang', warna: '#3498DB', status: 'terbit' },
-  { id: 5, name: 'MI An Nuroniyah', kota: 'Rembang', warna: '#9B59B6', status: 'terbit' },
-  { id: 6, name: 'SMK An Nuroniyah', kota: 'Rembang', warna: '#27AE60', status: 'terbit' },
-  { id: 7, name: "SMP Mamba'ul Maarif", kota: 'Jombang', warna: '#1ABC9C', status: 'terbit' },
-  { id: 8, name: 'SMP Darrunajah 2', kota: 'Karangploso', warna: '#3498DB', status: 'draf' },
-];
+import * as api from '../../lib/admin-api';
 
 const COLORS = [
   '#E74C3C', '#E67E22', '#F39C12', '#2ECC71',
@@ -199,7 +189,8 @@ function PartnerForm({ editData, onBack, onSubmit }) {
 
 /* ─── List Page ────────────────────────────────────────────── */
 export default function PartnerPage({ showSnack, userName }) {
-  const [items, setItems] = useState(DUMMY);
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
@@ -209,6 +200,15 @@ export default function PartnerPage({ showSnack, userName }) {
   const [filterOpen, setFilterOpen] = useState(false);
   const [filterVal, setFilterVal] = useState({ status: '' });
   const filterRef = useRef(null);
+
+  // Fetch data dari Supabase
+  useEffect(() => {
+    api.getPartners().then((data) => {
+      setItems(data);
+    }).catch((err) => {
+      showSnack?.('error', 'Gagal', 'Gagal memuat data partner');
+    }).finally(() => setLoading(false));
+  }, []);
 
   useEffect(() => {
     if (!filterOpen) return;
@@ -230,9 +230,14 @@ export default function PartnerPage({ showSnack, userName }) {
 
   const openDelete = (item) => setDeleteModal({ show: true, item });
   const confirmDelete = async () => {
-    setItems((prev) => prev.filter((i) => i.id !== deleteModal.item.id));
+    try {
+      await api.deletePartner(deleteModal.item.id);
+      setItems((prev) => prev.filter((i) => i.id !== deleteModal.item.id));
+      showSnack('success', 'Berhasil', 'Partner telah dihapus');
+    } catch {
+      showSnack('error', 'Gagal', 'Gagal menghapus partner');
+    }
     setDeleteModal({ show: false, item: null });
-    showSnack('success', 'Berhasil', 'Partner telah dihapus');
   };
 
   const handleEdit = (item) => {
@@ -240,14 +245,19 @@ export default function PartnerPage({ showSnack, userName }) {
     setShowForm(true);
   };
 
-  const handleSave = (data) => {
-    if (editItem) {
-      setItems((prev) => prev.map((i) => i.id === editItem.id ? { ...i, ...data } : i));
-      showSnack('success', 'Berhasil', 'Partner telah diperbarui');
-    } else {
-      const created = { ...data, id: Date.now() };
-      setItems((prev) => [created, ...prev]);
-      showSnack('success', 'Berhasil', 'Partner telah diterbitkan');
+  const handleSave = async (data) => {
+    try {
+      if (editItem) {
+        const updated = await api.updatePartner(editItem.id, data);
+        setItems((prev) => prev.map((i) => i.id === editItem.id ? { ...i, ...updated } : i));
+        showSnack('success', 'Berhasil', 'Partner telah diperbarui');
+      } else {
+        const created = await api.createPartner(data);
+        setItems((prev) => [created, ...prev]);
+        showSnack('success', 'Berhasil', 'Partner telah diterbitkan');
+      }
+    } catch {
+      showSnack('error', 'Gagal', 'Gagal menyimpan data partner');
     }
     setShowForm(false);
     setEditItem(null);
@@ -327,7 +337,9 @@ export default function PartnerPage({ showSnack, userName }) {
             </tr>
           </thead>
           <tbody>
-            {paged.length === 0 ? (
+            {loading ? (
+              <tr><td colSpan={5} className="admin-empty">Memuat data...</td></tr>
+            ) : paged.length === 0 ? (
               <tr><td colSpan={5} className="admin-empty">Tidak ada data</td></tr>
             ) : paged.map((item) => (
               <tr key={item.id}>

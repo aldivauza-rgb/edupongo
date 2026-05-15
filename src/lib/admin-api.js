@@ -100,3 +100,35 @@ export async function deleteFAQ(id) {
   const { error } = await db.from('edp_faqs').delete().eq('id', id);
   if (error) throw error;
 }
+
+/* ─── PARTNER ──────────────────────────────────────────────────── */
+export async function getPartners() {
+  const db = adminClient();
+  if (!db) return [];
+  const { data, error } = await db.from('edp_partners').select('*').order('sort_order', { ascending: true }).order('id', { ascending: false });
+  if (error) throw error;
+  return data || [];
+}
+
+export async function createPartner(partner) {
+  const db = adminClient();
+  if (!db) throw new Error('Supabase not configured');
+  const { data, error } = await db.from('edp_partners').insert(partner).select();
+  if (error) throw error;
+  return data?.[0];
+}
+
+export async function updatePartner(id, partner) {
+  const db = adminClient();
+  if (!db) throw new Error('Supabase not configured');
+  const { data, error } = await db.from('edp_partners').update(partner).eq('id', id).select();
+  if (error) throw error;
+  return data?.[0];
+}
+
+export async function deletePartner(id) {
+  const db = adminClient();
+  if (!db) throw new Error('Supabase not configured');
+  const { error } = await db.from('edp_partners').delete().eq('id', id);
+  if (error) throw error;
+}

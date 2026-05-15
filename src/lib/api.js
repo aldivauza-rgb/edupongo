@@ -32,3 +32,4 @@ export async function getWhyCards()       { return fetchData('edp_why_cards'); }
 export async function getProblemCards()   { return fetchData('edp_problem_cards'); }
 export async function getStats()          { return fetchData('edp_stats'); }
 export async function getSiteContent()    { return fetchData('edp_site_content'); }
+export async function getPartners()       { return fetchData('edp_partners', 'sort_order', true); }
