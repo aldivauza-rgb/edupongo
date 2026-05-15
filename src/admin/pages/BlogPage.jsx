@@ -46,12 +46,12 @@ function BlogForm({ editData, onBack, onSubmit, userName }) {
   const fileRef = useRef(null);
   const editorRef = useRef(null);
 
-  /* sync editor content when editData changes */
+  /* sync editor content when editData changes (initial mount) */
   useEffect(() => {
-    if (editorRef.current && editData?.content) {
-      editorRef.current.innerHTML = editData.content;
+    if (editorRef.current) {
+      editorRef.current.innerHTML = form.content || '';
     }
-  }, [editData?.content]);
+  }, []);
 
   const set = (f) => (v) => setForm((prev) => ({ ...prev, [f]: v }));
 
@@ -268,7 +268,15 @@ function BlogForm({ editData, onBack, onSubmit, userName }) {
                 setForm((prev) => ({ ...prev, content: e.currentTarget.innerHTML }));
                 if (errors.content) setErrors((p) => ({ ...p, content: null }));
               }}
-              dangerouslySetInnerHTML={{ __html: form.content || '' }}
+              onFocus={(e) => {
+                const parent = e.currentTarget.parentElement;
+                if (parent) parent.style.borderColor = '#046CF2';
+              }}
+              onBlur={(e) => {
+                if (errors.content) return;
+                const parent = e.currentTarget.parentElement;
+                if (parent) parent.style.borderColor = '#E8E9F1';
+              }}
               style={{
                 minHeight: 300,
                 maxHeight: 500,
