@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { IconPlus, IconFilter, IconEdit, IconTrash, IconTag, IconChevronDown, IconChevronLeft, IconChevronRight, IconSearch, IconArrowLeft, IconUpload, IconCirclePlus, IconPhoto } from '@tabler/icons-react';
+import { IconPlus, IconFilter, IconEdit, IconTrash, IconTag, IconChevronDown, IconChevronLeft, IconChevronRight, IconSearch, IconArrowLeft, IconUpload, IconCirclePlus, IconPhoto, IconCalendar } from '@tabler/icons-react';
 import ConfirmModal from '../components/ConfirmModal';
 import RichEditor from '../../components/RichEditor';
 import * as api from '../../lib/admin-api';
@@ -102,9 +102,9 @@ function BlogForm({ editData, onBack, onSubmit, userName }) {
               <label className="admin-label">Penulis <span className="text-danger">*</span></label>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, height: 46, padding: '0 16px', background: '#F5F6FA', borderRadius: 12, border: '1px solid #E8E9F1' }}>
                 <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#046CF2', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 12, fontWeight: 600, flexShrink: 0 }}>
-                  {(form.author || 'A')[0].toUpperCase()}
+                  {(userName || 'A')[0].toUpperCase()}
                 </div>
-                <span style={{ fontSize: 13, color: '#010E23' }}>{form.author || 'admin'}</span>
+                <span style={{ fontSize: 13, color: '#010E23' }}>{userName || 'admin'}</span>
                 <span style={{ fontSize: 12, color: '#97A2B0' }}>· otomatis</span>
               </div>
             </div>
@@ -112,7 +112,10 @@ function BlogForm({ editData, onBack, onSubmit, userName }) {
               <div style={{ flex: 1 }}>
                 <div className="admin-field">
                   <label className="admin-label">Tanggal</label>
-                  <input type="date" className="admin-input" value={form.date} disabled />
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, height: 46, padding: '0 14px', background: '#F5F6FA', borderRadius: 12, border: '1px solid #E8E9F1' }}>
+                    <IconCalendar size={18} stroke={1.5} color="#97A2B0" />
+                    <span style={{ fontSize: 13, color: '#5D6B82' }}>{form.date}</span>
+                  </div>
                 </div>
               </div>
               <div style={{ flex: 1 }}>

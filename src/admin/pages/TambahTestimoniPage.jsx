@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { IconArrowLeft, IconUpload, IconPhoto } from '@tabler/icons-react';
+import { IconArrowLeft, IconUpload, IconPhoto, IconCalendar } from '@tabler/icons-react';
 import ConfirmModal from '../components/ConfirmModal';
 
 export default function TambahTestimoniPage({ editData, onBack, onSubmit, userName }) {
@@ -118,7 +118,10 @@ export default function TambahTestimoniPage({ editData, onBack, onSubmit, userNa
               <div style={{ flex: 1 }}>
                 <div className="admin-field">
                   <label className="admin-label">Tanggal</label>
-                  <input type="date" className="admin-input" value={form.date} disabled />
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, height: 48, padding: '0 14px', border: '1px solid #E8E9F1', borderRadius: 12, background: '#F1F2F5' }}>
+                    <IconCalendar size={18} stroke={1.5} color="#97A2B0" />
+                    <span style={{ fontSize: 13, color: '#5D6B82' }}>{form.date}</span>
+                  </div>
                 </div>
               </div>
             </div>
