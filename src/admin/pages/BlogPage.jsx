@@ -25,6 +25,22 @@ function BlogForm({ editData, onBack, onSubmit, userName }) {
   const [publishModal, setPublishModal] = useState(false);
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef(null);
+  const textareaRef = useRef(null);
+
+  const wrapText = (before, after = before) => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selected = form.content.substring(start, end);
+    const newContent = form.content.substring(0, start) + before + selected + after + form.content.substring(end);
+    setForm((prev) => ({ ...prev, content: newContent }));
+    setTimeout(() => {
+      textarea.focus();
+      textarea.selectionStart = start + before.length;
+      textarea.selectionEnd = end + before.length;
+    }, 0);
+  };
 
   const set = (f) => (v) => setForm((prev) => ({ ...prev, [f]: v }));
 
@@ -179,7 +195,61 @@ function BlogForm({ editData, onBack, onSubmit, userName }) {
             border: `1px solid ${errors.content ? '#B3202F' : '#E8E9F1'}`,
             borderRadius: 12, overflow: 'hidden', background: 'white',
           }}>
+            {/* ── TOOLBAR ── */}
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: 3,
+              padding: '8px 12px', background: '#F9FAFB',
+              borderBottom: '1px solid #E8E9F1', flexWrap: 'wrap',
+            }}>
+              <select
+                onChange={(e) => {
+                  const val = e.target.value;
+                  const textarea = textareaRef.current;
+                  if (!textarea) return;
+                  const start = textarea.selectionStart;
+                  const end = textarea.selectionEnd;
+                  const selected = form.content.substring(start, end);
+                  let wrapped = selected;
+                  if (val === 'h1') wrapped = '# ' + selected;
+                  if (val === 'h2') wrapped = '## ' + selected;
+                  if (val === 'h3') wrapped = '### ' + selected;
+                  const newContent = form.content.substring(0, start) + wrapped + form.content.substring(end);
+                  setForm((prev) => ({ ...prev, content: newContent }));
+                  textarea.focus();
+                  e.target.value = 'p';
+                }}
+                style={{
+                  height: 30, borderRadius: 6, border: '1px solid #E8E9F1',
+                  padding: '0 8px', fontSize: 12, background: 'white', cursor: 'pointer',
+                  fontFamily: 'Inter, sans-serif',
+                }}
+              >
+                <option value="p">Paragraph</option>
+                <option value="h1">Heading 1</option>
+                <option value="h2">Heading 2</option>
+                <option value="h3">Heading 3</option>
+              </select>
+
+              <div style={{ width: 1, height: 22, background: '#E8E9F1', margin: '0 4px' }} />
+
+              <button type="button" onClick={() => wrapText('**')} title="Bold" style={{ width: 28, height: 28, borderRadius: 6, border: '1px solid #E8E9F1', background: 'white', cursor: 'pointer', fontWeight: 700, fontSize: 13 }}>B</button>
+              <button type="button" onClick={() => wrapText('_')} title="Italic" style={{ width: 28, height: 28, borderRadius: 6, border: '1px solid #E8E9F1', background: 'white', cursor: 'pointer', fontStyle: 'italic', fontSize: 13 }}>I</button>
+              <button type="button" onClick={() => wrapText('__')} title="Underline" style={{ width: 28, height: 28, borderRadius: 6, border: '1px solid #E8E9F1', background: 'white', cursor: 'pointer', textDecoration: 'underline', fontSize: 13 }}>U</button>
+
+              <div style={{ width: 1, height: 22, background: '#E8E9F1', margin: '0 4px' }} />
+
+              <button type="button" onClick={() => wrapText('\n> ', '')} title="Blockquote" style={{ width: 28, height: 28, borderRadius: 6, border: '1px solid #E8E9F1', background: 'white', cursor: 'pointer', fontWeight: 700, fontSize: 13 }}>"</button>
+              <button type="button" onClick={() => wrapText('\n- ', '')} title="Bullet List" style={{ width: 28, height: 28, borderRadius: 6, border: '1px solid #E8E9F1', background: 'white', cursor: 'pointer', fontSize: 13 }}>•</button>
+              <button type="button" onClick={() => wrapText('\n1. ', '')} title="Numbered List" style={{ width: 28, height: 28, borderRadius: 6, border: '1px solid #E8E9F1', background: 'white', cursor: 'pointer', fontSize: 13 }}>1.</button>
+
+              <div style={{ width: 1, height: 22, background: '#E8E9F1', margin: '0 4px' }} />
+
+              <button type="button" onClick={() => { const url = prompt('Masukkan URL:'); if (url) wrapText('[', `](${url})`); }} title="Insert Link" style={{ width: 28, height: 28, borderRadius: 6, border: '1px solid #E8E9F1', background: 'white', cursor: 'pointer', fontSize: 11 }}>🔗</button>
+            </div>
+
+            {/* ── TEXTAREA ── */}
             <textarea
+              ref={textareaRef}
               value={form.content}
               onChange={(e) => {
                 setForm((prev) => ({ ...prev, content: e.target.value }));
@@ -189,17 +259,19 @@ function BlogForm({ editData, onBack, onSubmit, userName }) {
               rows={12}
               style={{
                 width: '100%',
+                minHeight: '280px',
                 padding: '14px 16px',
                 fontSize: '14px',
                 lineHeight: '1.7',
+                color: '#010E23',
+                background: '#FFFFFF',
                 border: 'none',
+                borderRadius: 0,
                 outline: 'none',
                 resize: 'vertical',
                 fontFamily: 'Inter, sans-serif',
                 boxSizing: 'border-box',
-                color: '#010E23',
-                background: 'transparent',
-                minHeight: '280px',
+                display: 'block',
               }}
             />
           </div>
