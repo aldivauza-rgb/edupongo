@@ -167,8 +167,8 @@ function BlogList({ blogs, loading, onSelect }) {
         </div>
       ) : (
         <div style={{
-          display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-          gap: 24,
+          display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: '40px 32px',
         }}>
           {filtered.map((blog) => (
             <article
@@ -187,7 +187,7 @@ function BlogList({ blogs, loading, onSelect }) {
             >
               {/* Thumbnail with category badge */}
               {blog.thumbnail ? (
-                <div style={{ position: 'relative', overflow: 'hidden', width: '100%', height: 200, flexShrink: 0, borderRadius: 16, background: '#F3F4F6' }}>
+                <div style={{ position: 'relative', overflow: 'hidden', width: '100%', height: 220, flexShrink: 0, borderRadius: 12, background: '#F3F4F6' }}>
                   <img
                     src={blog.thumbnail}
                     alt={blog.title}
@@ -206,7 +206,7 @@ function BlogList({ blogs, loading, onSelect }) {
                   </span>
                 </div>
               ) : (
-                <div style={{ position: 'relative', overflow: 'hidden', width: '100%', height: 200, flexShrink: 0, borderRadius: 16, background: '#F3F4F6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ position: 'relative', overflow: 'hidden', width: '100%', height: 220, flexShrink: 0, borderRadius: 12, background: '#F3F4F6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <span style={{
                     display: 'inline-flex', alignItems: 'center', gap: 5,
                     background: '#fff', color: '#046CF2', fontSize: 12, fontWeight: 600,
@@ -219,31 +219,29 @@ function BlogList({ blogs, loading, onSelect }) {
                 </div>
               )}
 
-              <div style={{ padding: '12px 24px 24px', display: 'flex', flexDirection: 'column' }}>
-                {/* Date above title */}
-                <span style={{ fontSize: 12, color: '#6B7280', marginBottom: 6 }}>
-                  {formatDate(blog.date)}
-                </span>
+              {/* Date */}
+              <span style={{ fontSize: 12, color: '#6B7280', marginTop: 14 }}>
+                {formatDate(blog.date)}
+              </span>
 
-                {/* Title — max 2 lines */}
-                <h2 style={{
-                  fontSize: 18, fontWeight: 700, color: '#010E23', lineHeight: 1.4,
-                  margin: '0 0 8px', fontFamily: 'inherit',
-                  display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
-                  overflow: 'hidden',
-                }}>
-                  {blog.title}
-                </h2>
+              {/* Title — max 2 lines */}
+              <h2 style={{
+                fontSize: 18, fontWeight: 700, color: '#010E23', lineHeight: 1.4,
+                margin: '6px 0 0 0', fontFamily: 'inherit',
+                display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
+                overflow: 'hidden',
+              }}>
+                {blog.title}
+              </h2>
 
-                {/* Excerpt — max 4 lines */}
-                <p style={{
-                  fontSize: 14, color: '#6B7280', lineHeight: 1.6, margin: 0,
-                  display: '-webkit-box', WebkitLineClamp: 4, WebkitBoxOrient: 'vertical',
-                  overflow: 'hidden',
-                }}>
-                  {excerpt(blog.content)}
-                </p>
-              </div>
+              {/* Excerpt — max 4 lines */}
+              <p style={{
+                fontSize: 14, color: '#6B7280', lineHeight: 1.6, margin: '10px 0 0 0',
+                display: '-webkit-box', WebkitLineClamp: 4, WebkitBoxOrient: 'vertical',
+                overflow: 'hidden',
+              }}>
+                {excerpt(blog.content)}
+              </p>
             </article>
           ))}
         </div>
