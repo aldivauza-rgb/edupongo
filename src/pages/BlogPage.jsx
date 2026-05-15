@@ -161,6 +161,7 @@ function BlogList({ blogs, loading, onSelect }) {
           ))}
         </select>
         </div>
+        </div>
       </div>
 
       {/* Blog Cards */}
@@ -254,7 +255,6 @@ function BlogList({ blogs, loading, onSelect }) {
           ))}
         </div>
       )}
-    </div>
       </div>
   </>
   );
