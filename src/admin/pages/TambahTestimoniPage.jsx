@@ -119,8 +119,8 @@ export default function TambahTestimoniPage({ editData, onBack, onSubmit, userNa
                 <div className="admin-field">
                   <label className="admin-label">Tanggal</label>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, height: 48, padding: '0 14px', border: '1px solid #E8E9F1', borderRadius: 12, background: '#F1F2F5' }}>
+                    <span style={{ fontSize: 13, color: '#5D6B82', flex: 1 }}>{form.date}</span>
                     <IconCalendar size={18} stroke={1.5} color="#97A2B0" />
-                    <span style={{ fontSize: 13, color: '#5D6B82' }}>{form.date}</span>
                   </div>
                 </div>
               </div>
