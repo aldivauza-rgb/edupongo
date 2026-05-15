@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { IconArrowLeft, IconCalendar, IconUser, IconTag } from '@tabler/icons-react';
+import { IconArrowLeft, IconCalendar, IconTag, IconHeart, IconShare } from '@tabler/icons-react';
 import { getBlogs } from '../lib/api';
 
 function formatDate(d) {
@@ -21,9 +21,17 @@ function excerpt(content, max = 180) {
 
 /* ─── Blog Detail ─────────────────────────────────────────── */
 function BlogDetail({ blog, onBack }) {
+  const [liked, setLiked] = useState(false);
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [blog]);
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({ title: blog.title, url: window.location.href });
+    }
+  };
 
   return (
     <div style={{ maxWidth: 800, margin: '0 auto', padding: '40px 24px 80px' }}>
@@ -40,10 +48,11 @@ function BlogDetail({ blog, onBack }) {
         Kembali ke Blog
       </button>
 
-      {/* Thumbnail */}
+      {/* Thumbnail with category badge */}
       {blog.thumbnail && (
         <div style={{
-          width: '100%', height: 320, borderRadius: 14, overflow: 'hidden',
+          position: 'relative', overflow: 'hidden',
+          width: '100%', height: 320, borderRadius: 14,
           background: '#F3F4F6', marginBottom: 24,
         }}>
           <img
@@ -51,38 +60,31 @@ function BlogDetail({ blog, onBack }) {
             alt={blog.title}
             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           />
+          <span style={{
+            position: 'absolute', bottom: 16, left: 16,
+            display: 'inline-flex', alignItems: 'center', gap: 5,
+            background: '#fff', color: '#046CF2', fontSize: 12, fontWeight: 600,
+            padding: '4px 12px', borderRadius: 999,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+          }}>
+            <IconTag size={12} stroke={1.5} />
+            {blog.kategori || 'Artikel'}
+          </span>
         </div>
       )}
 
-      {/* Category & Date */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 16, flexWrap: 'wrap' }}>
-        <span style={{
-          display: 'inline-flex', alignItems: 'center', gap: 5,
-          background: '#EEF2FF', color: '#046CF2', fontSize: 12, fontWeight: 600,
-          padding: '4px 12px', borderRadius: 999,
-        }}>
-          <IconTag size={13} stroke={1.5} />
-          {blog.kategori || 'Artikel'}
-        </span>
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 13, color: '#9CA3AF' }}>
-          <IconCalendar size={15} stroke={1.5} />
-          {formatDate(blog.date)}
-        </span>
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 13, color: '#9CA3AF' }}>
-          <IconUser size={15} stroke={1.5} />
-          {blog.author || 'Admin'}
-        </span>
+      {/* Date */}
+      <div style={{ fontSize: 12, color: '#6B7280', marginBottom: 10 }}>
+        {formatDate(blog.date)}
       </div>
 
       {/* Title */}
       <h1 style={{
         fontSize: 32, fontWeight: 800, color: '#010E23', lineHeight: 1.3,
-        margin: '0 0 8px', fontFamily: 'inherit',
+        margin: '0 0 24px', fontFamily: 'inherit',
       }}>
         {blog.title}
       </h1>
-
-      <hr style={{ border: 'none', borderTop: '1px solid #E5E7EB', margin: '24px 0' }} />
 
       {/* Content */}
       <div
@@ -93,6 +95,38 @@ function BlogDetail({ blog, onBack }) {
         }}
         dangerouslySetInnerHTML={{ __html: blog.content }}
       />
+
+      {/* Like & Share */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 48 }}>
+        <button
+          onClick={() => setLiked(!liked)}
+          style={{
+            width: 44, height: 44, borderRadius: '50%',
+            border: '1.5px solid #E5E7EB', background: '#fff',
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            cursor: 'pointer', transition: 'all 0.2s', padding: 0,
+            color: liked ? '#E74C3C' : '#6B7280',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#E74C3C'; e.currentTarget.style.color = '#E74C3C'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#E5E7EB'; e.currentTarget.style.color = liked ? '#E74C3C' : '#6B7280'; }}
+        >
+          <IconHeart size={18} stroke={liked ? 2 : 1.5} fill={liked ? '#E74C3C' : 'none'} />
+        </button>
+        <button
+          onClick={handleShare}
+          style={{
+            width: 44, height: 44, borderRadius: '50%',
+            border: '1.5px solid #E5E7EB', background: '#fff',
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            cursor: 'pointer', transition: 'all 0.2s', padding: 0,
+            color: '#6B7280',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#046CF2'; e.currentTarget.style.color = '#046CF2'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#E5E7EB'; e.currentTarget.style.color = '#6B7280'; }}
+        >
+          <IconShare size={18} stroke={1.5} />
+        </button>
+      </div>
     </div>
   );
 }
