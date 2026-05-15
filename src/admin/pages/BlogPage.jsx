@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { IconPlus, IconFilter, IconEdit, IconTrash, IconTag, IconChevronDown, IconChevronLeft, IconChevronRight, IconSearch, IconArrowLeft, IconUpload, IconCirclePlus, IconPhoto } from '@tabler/icons-react';
+import { Editor } from '@tinymce/tinymce-react';
 import ConfirmModal from '../components/ConfirmModal';
 import * as api from '../../lib/admin-api';
 import { supabase } from '../../lib/supabase';
@@ -27,19 +28,8 @@ function BlogForm({ editData, onBack, onSubmit, userName }) {
   const fileRef = useRef(null);
   const editorRef = useRef(null);
 
-  const execCmd = (cmd, value = null) => {
-    editorRef.current?.focus();
-    document.execCommand(cmd, false, value);
-  };
-
-  /* sync editor content when editData changes */
-  useEffect(() => {
-    if (editorRef.current && editData?.content) {
-      editorRef.current.innerHTML = editData.content;
-    }
-  }, []);
-
   const set = (f) => (v) => setForm((prev) => ({ ...prev, [f]: v }));
+
 
   const validate = () => {
     const err = {};
@@ -188,74 +178,26 @@ function BlogForm({ editData, onBack, onSubmit, userName }) {
             Konten Blog <span style={{ color: '#EA2227' }}>*</span>
           </div>
           {errors.content && <small className="admin-error-text" style={{ display: 'block', marginBottom: 4 }}>{errors.content}</small>}
-          <div style={{
-            border: `1px solid ${errors.content ? '#B3202F' : '#E8E9F1'}`,
-            borderRadius: 12, overflow: 'hidden', background: 'white',
-          }}>
-            {/* ── TOOLBAR ── */}
-            <div style={{
-              display: 'flex', alignItems: 'center', gap: 3,
-              padding: '8px 12px', background: '#F9FAFB',
-              borderBottom: '1px solid #E8E9F1', flexWrap: 'wrap',
-            }}>
-              <select
-                onChange={(e) => {
-                  execCmd('formatBlock', e.target.value);
-                  e.target.value = 'p';
-                }}
-                style={{
-                  height: 30, borderRadius: 6, border: '1px solid #E8E9F1',
-                  padding: '0 8px', fontSize: 12, background: 'white', cursor: 'pointer',
-                  fontFamily: 'Inter, sans-serif',
-                }}
-              >
-                <option value="p">Paragraph</option>
-                <option value="h1">Heading 1</option>
-                <option value="h2">Heading 2</option>
-                <option value="h3">Heading 3</option>
-              </select>
-
-              <div style={{ width: 1, height: 22, background: '#E8E9F1', margin: '0 4px' }} />
-
-              <button type="button" onClick={() => execCmd('bold')} title="Bold" style={{ width: 28, height: 28, borderRadius: 6, border: '1px solid #E8E9F1', background: 'white', cursor: 'pointer', fontWeight: 700, fontSize: 13 }}>B</button>
-              <button type="button" onClick={() => execCmd('italic')} title="Italic" style={{ width: 28, height: 28, borderRadius: 6, border: '1px solid #E8E9F1', background: 'white', cursor: 'pointer', fontStyle: 'italic', fontSize: 13 }}>I</button>
-              <button type="button" onClick={() => execCmd('underline')} title="Underline" style={{ width: 28, height: 28, borderRadius: 6, border: '1px solid #E8E9F1', background: 'white', cursor: 'pointer', textDecoration: 'underline', fontSize: 13 }}>U</button>
-
-              <div style={{ width: 1, height: 22, background: '#E8E9F1', margin: '0 4px' }} />
-
-              <button type="button" onClick={() => execCmd('formatBlock', 'blockquote')} title="Blockquote" style={{ width: 28, height: 28, borderRadius: 6, border: '1px solid #E8E9F1', background: 'white', cursor: 'pointer', fontWeight: 700, fontSize: 13 }}>"</button>
-              <button type="button" onClick={() => execCmd('insertUnorderedList')} title="Bullet List" style={{ width: 28, height: 28, borderRadius: 6, border: '1px solid #E8E9F1', background: 'white', cursor: 'pointer', fontSize: 13 }}>•</button>
-              <button type="button" onClick={() => execCmd('insertOrderedList')} title="Numbered List" style={{ width: 28, height: 28, borderRadius: 6, border: '1px solid #E8E9F1', background: 'white', cursor: 'pointer', fontSize: 13 }}>1.</button>
-
-              <div style={{ width: 1, height: 22, background: '#E8E9F1', margin: '0 4px' }} />
-
-              <button type="button" onClick={() => { const url = prompt('URL:'); if (url) execCmd('createLink', url); }} title="Insert Link" style={{ width: 28, height: 28, borderRadius: 6, border: '1px solid #E8E9F1', background: 'white', cursor: 'pointer', fontSize: 11 }}>🔗</button>
-            </div>
-
-            {/* ── EDITOR ── */}
-            <div
-              ref={editorRef}
-              id="editor-konten"
-              contentEditable
-              suppressContentEditableWarning
-              onInput={(e) => {
-                setForm((prev) => ({ ...prev, content: e.currentTarget.innerHTML }));
-                if (errors.content) setErrors((p) => ({ ...p, content: null }));
-              }}
-              style={{
-                minHeight: 280,
-                maxHeight: 500,
-                overflowY: 'auto',
-                padding: '14px 16px',
-                fontSize: 14,
-                lineHeight: 1.7,
-                color: '#010E23',
-                outline: 'none',
-                fontFamily: 'Inter, sans-serif',
-                wordBreak: 'break-word',
-              }}
-            />
-          </div>
+          <Editor
+            ref={editorRef}
+            apiKey="qp1tgpammo2xw1cqyxx94s2113js78nqv4zlbi2y8ws0zypt"
+            value={form.content}
+            onEditorChange={(val) => {
+              setForm((prev) => ({ ...prev, content: val }));
+              if (errors.content) setErrors((p) => ({ ...p, content: null }));
+            }}
+            init={{
+              height: 400,
+              menubar: false,
+              branding: false,
+              statusbar: false,
+              plugins: 'advlist autolink lists link blockquote autoresize',
+              toolbar: 'blocks bold italic underline strikethrough | alignleft aligncenter alignright | bullist numlist blockquote link | removeformat',
+              block_formats: 'Paragraph=p;Heading 1=h1;Heading 2=h2;Heading 3=h3',
+              content_style: 'body { font-family: Inter, sans-serif; font-size: 14px; line-height: 1.7; color: #010E23; }',
+              autoresize_bottom_margin: 16,
+            }}
+          />
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 28, paddingTop: 20, borderTop: '1px solid #E8E9F1' }}>
           <span style={{ fontSize: 12, color: '#5D6B82' }}>* Data tersimpan sebagai draf bila tidak diterbitkan.</span>
