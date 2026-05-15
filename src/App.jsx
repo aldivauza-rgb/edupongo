@@ -31,7 +31,10 @@ function App() {
     const sub = onAuthChange((event, session) => {
       if (event === 'SIGNED_IN') {
         setAdminUser(session ? { user: session.user } : false);
-        window.history.replaceState(null, '', '/admin');
+        // Jangan redirect kalau user lagi di halaman publik
+        if (window.location.pathname.startsWith('/admin')) {
+          window.history.replaceState(null, '', '/admin');
+        }
       } else if (event === 'SIGNED_OUT') {
         setAdminUser(false);
         localStorage.removeItem('cms_active_page');
