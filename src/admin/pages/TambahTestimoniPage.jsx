@@ -118,7 +118,7 @@ export default function TambahTestimoniPage({ editData, onBack, onSubmit, userNa
               <div style={{ flex: 1 }}>
                 <div className="admin-field">
                   <label className="admin-label">Tanggal</label>
-                  <input type="date" className="admin-input" value={form.date} onChange={(e) => set('date')(e.target.value)} />
+                  <input type="date" className="admin-input" value={form.date} disabled />
                 </div>
               </div>
             </div>
