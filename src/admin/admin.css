@@ -545,10 +545,3 @@ aside nav button {
   .admin-login-ring.ring-2 { width: 200px; height: 200px; }
 }
 
-
-/* ─── CONTENT EDITABLE PLACEHOLDER ─────────────────────────── */
-#editor-konten:empty:before {
-  content: 'Tulis konten blog di sini...';
-  color: #97A2B0;
-  pointer-events: none;
-}

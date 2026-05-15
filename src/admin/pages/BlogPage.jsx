@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { IconPlus, IconFilter, IconEdit, IconTrash, IconTag, IconChevronDown, IconChevronLeft, IconChevronRight, IconSearch, IconArrowLeft, IconUpload, IconCirclePlus, IconPhoto } from '@tabler/icons-react';
-import { Editor } from '@tinymce/tinymce-react';
 import ConfirmModal from '../components/ConfirmModal';
+import RichEditor from '../../components/RichEditor';
 import * as api from '../../lib/admin-api';
 import { supabase } from '../../lib/supabase';
 
@@ -26,7 +26,6 @@ function BlogForm({ editData, onBack, onSubmit, userName }) {
   const [publishModal, setPublishModal] = useState(false);
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef(null);
-  const editorRef = useRef(null);
 
   const set = (f) => (v) => setForm((prev) => ({ ...prev, [f]: v }));
 
@@ -178,24 +177,11 @@ function BlogForm({ editData, onBack, onSubmit, userName }) {
             Konten Blog <span style={{ color: '#EA2227' }}>*</span>
           </div>
           {errors.content && <small className="admin-error-text" style={{ display: 'block', marginBottom: 4 }}>{errors.content}</small>}
-          <Editor
-            ref={editorRef}
-            apiKey="qp1tgpammo2xw1cqyxx94s2113js78nqv4zlbi2y8ws0zypt"
+          <RichEditor
             value={form.content}
-            onEditorChange={(val) => {
+            onChange={(val) => {
               setForm((prev) => ({ ...prev, content: val }));
               if (errors.content) setErrors((p) => ({ ...p, content: null }));
-            }}
-            init={{
-              height: 400,
-              menubar: false,
-              branding: false,
-              statusbar: false,
-              plugins: 'advlist autolink lists link blockquote autoresize',
-              toolbar: 'blocks bold italic underline strikethrough | alignleft aligncenter alignright | bullist numlist blockquote link | removeformat',
-              block_formats: 'Paragraph=p;Heading 1=h1;Heading 2=h2;Heading 3=h3',
-              content_style: 'body { font-family: Inter, sans-serif; font-size: 14px; line-height: 1.7; color: #010E23; }',
-              autoresize_bottom_margin: 16,
             }}
           />
         </div>
