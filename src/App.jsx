@@ -97,6 +97,13 @@ function App() {
   }, [page]);
 
   useEffect(() => {
+    // Path-based routing untuk /blog dan /blog/[slug]
+    const pathname = window.location.pathname;
+    if (pathname.startsWith('/blog')) {
+      setPage('blog');
+      return;
+    }
+
     function routeFromHash() {
       const hash = window.location.hash;
       if (hash === '#about') setPage('about');
@@ -117,7 +124,8 @@ function App() {
     if (target === 'about') {
       window.location.hash = '#about';
     } else if (target === 'blog') {
-      window.location.hash = '#blog';
+      window.history.pushState(null, '', '/blog');
+      setPage('blog');
     } else if (target === 'solution') {
       window.location.hash = '#solution';
     } else if (target === 'home') {
