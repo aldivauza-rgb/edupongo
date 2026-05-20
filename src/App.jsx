@@ -4,7 +4,8 @@ import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import BlogPage from './pages/BlogPage';
-import { IconArrowUp } from '@tabler/icons-react';
+import SolutionPage from './pages/SolutionPage';
+import { IconArrowUp, IconBrandWhatsapp } from '@tabler/icons-react';
 import DemoModal from './components/DemoModal';
 import AdminLogin from './admin/AdminLogin';
 import AdminLayout from './admin/AdminLayout';
@@ -100,6 +101,7 @@ function App() {
       const hash = window.location.hash;
       if (hash === '#about') setPage('about');
       else if (hash === '#blog') setPage('blog');
+      else if (hash === '#solution') setPage('solution');
       else if (hash === '' || hash === '#') setPage('home');
       else setPage('home');
     }
@@ -116,6 +118,8 @@ function App() {
       window.location.hash = '#about';
     } else if (target === 'blog') {
       window.location.hash = '#blog';
+    } else if (target === 'solution') {
+      window.location.hash = '#solution';
     } else if (target === 'home') {
       if (hash) {
         if (page === 'home') {
@@ -145,8 +149,36 @@ function App() {
       <div className={`page-view ${page !== 'blog' ? 'hidden' : ''}`}>
         {page === 'blog' && <BlogPage />}
       </div>
+      <div className={`page-view ${page !== 'solution' ? 'hidden' : ''}`}>
+        {page === 'solution' && <SolutionPage onNavigate={navigate} onOpenDemo={openDemo} />}
+      </div>
       <Footer onNavigate={navigate} onOpenDemo={openDemo} />
       <DemoModal open={demoOpen} onClose={closeDemo} />
+
+      {/* WhatsApp Floating Button */}
+      <a
+        href="https://wa.me/6281295802674?text=Halo%20Edupongo%2C%20saya%20tertarik%20dengan%20platform%20manajemen%20sekolah%20Edupongo%20dan%20ingin%20mendapatkan%20informasi%20lengkap%20mengenai%20fitur%2C%20harga%2C%20serta%20proses%20implementasinya.%20Boleh%20dibantu%3F%20%F0%9F%99%8F"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          position: 'fixed', bottom: 88, right: 32, zIndex: 998,
+          display: 'inline-flex', alignItems: 'center', gap: 8,
+          background: '#25D366', borderRadius: 999,
+          padding: '10px 18px',
+          boxShadow: '0 4px 16px rgba(37,211,102,0.4)',
+          textDecoration: 'none',
+          transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+        }}
+        onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(37,211,102,0.55)'; }}
+        onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 4px 16px rgba(37,211,102,0.4)'; }}
+      >
+        <IconBrandWhatsapp size={16} color="#fff" stroke={2} />
+        <span style={{
+          color: '#fff', fontSize: 14, fontWeight: 600,
+          fontFamily: 'Inter, sans-serif',
+        }}>Konsultasi yuk</span>
+      </a>
+
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         style={{

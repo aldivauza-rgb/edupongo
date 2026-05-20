@@ -17,11 +17,7 @@ export default function EcosystemSection() {
         </div>
         <span className="eco-arrow">→</span>
         <div className="eco-center">
-          <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-            <rect width="48" height="48" rx="14" fill="#1A4FD6"/>
-            <path d="M15 16C15 14.6 16.1 13.5 17.5 13.5H29.5C30.9 13.5 32 14.6 32 16V18.5H22.5C21.1 18.5 20 19.6 20 21C20 22.4 21.1 23.5 22.5 23.5H29V26C29 27.4 27.9 28.5 26.5 28.5H17.5C16.1 28.5 15 27.4 15 26V16Z" fill="#F5C842"/>
-            <circle cx="32" cy="34" r="3.5" fill="#F5C842"/>
-          </svg>
+          <img src="/logo-icon.png" alt="Edupongo" style={{ width: 56, height: 56, objectFit: 'contain' }} />
         </div>
         <span className="eco-arrow">→</span>
         <div className="eco-node">
