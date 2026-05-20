@@ -119,7 +119,7 @@ aside nav button {
 
 /* ─── TOOLBAR ───────────────────────────────────────────────── */
 .admin-toolbar {
-  display: flex; align-items: center; gap: 12px; margin-bottom: 40px;
+  display: flex; align-items: center; gap: 12px; margin-bottom: 24px;
 }
 .admin-search-wrap {
   position: relative; flex: 1; max-width: 500px;

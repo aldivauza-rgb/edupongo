@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { IconArrowLeft, IconCalendar, IconTag, IconHeart, IconShare } from '@tabler/icons-react';
+import { IconArrowLeft, IconTag, IconHeart, IconShare } from '@tabler/icons-react';
 import { getBlogs } from '../lib/api';
 import { toSlug, findBlogBySlug, updatePageSEO } from '../lib/seo';
+import { supabase } from '../lib/supabase';
 
 function formatDate(d) {
   if (!d) return '';
@@ -22,18 +23,38 @@ function excerpt(content, max = 180) {
 
 /* ─── Blog Detail ─────────────────────────────────────────── */
 function BlogDetail({ blog, onBack }) {
-  const [liked, setLiked] = useState(false);
+  const storageKey = `edp_liked_${blog.id}`;
+  const [liked, setLiked] = useState(() => !!localStorage.getItem(storageKey));
+  const [likeCount, setLikeCount] = useState(blog.likes || 0);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
-  }, [blog]);
+    // Fetch like count terbaru dari DB setiap kali artikel dibuka
+    supabase?.from('edp_blog').select('likes').eq('id', blog.id).single()
+      .then(({ data }) => { if (data?.likes != null) setLikeCount(data.likes); })
+      .catch(() => {});
+  }, [blog.id]);
 
+  /* Share ke WhatsApp — WA auto-preview thumbnail dari OG tag artikel */
   const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({ title: blog.title, url: window.location.href });
-    } else {
-      navigator.clipboard?.writeText(window.location.href);
-    }
+    const url = window.location.href;
+    const text = `*${blog.title}*\n\nBaca selengkapnya di Edupongo:\n${url}`;
+    window.open(
+      `https://wa.me/?text=${encodeURIComponent(text)}`,
+      '_blank',
+      'noopener,noreferrer',
+    );
+  };
+
+  /* Like — satu kali per browser (localStorage), count di-increment via RPC */
+  const handleLike = async () => {
+    if (liked) return;
+    setLiked(true);
+    setLikeCount(c => c + 1);
+    localStorage.setItem(storageKey, '1');
+    try {
+      await supabase?.rpc('increment_blog_likes', { blog_id: blog.id });
+    } catch { /* silent — UI sudah terupdate */ }
   };
 
   return (
@@ -81,33 +102,46 @@ function BlogDetail({ blog, onBack }) {
         dangerouslySetInnerHTML={{ __html: blog.content }}
       />
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 48 }}>
-        <button
-          onClick={() => setLiked(!liked)}
-          style={{
-            width: 44, height: 44, borderRadius: '50%', border: '1.5px solid #E5E7EB',
-            background: '#fff', display: 'inline-flex', alignItems: 'center',
-            justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s',
-            padding: 0, color: liked ? '#E74C3C' : '#6B7280',
-          }}
-          onMouseEnter={e => { e.currentTarget.style.borderColor = '#E74C3C'; e.currentTarget.style.color = '#E74C3C'; }}
-          onMouseLeave={e => { e.currentTarget.style.borderColor = '#E5E7EB'; e.currentTarget.style.color = liked ? '#E74C3C' : '#6B7280'; }}
-        >
-          <IconHeart size={18} stroke={liked ? 2 : 1.5} fill={liked ? '#E74C3C' : 'none'} />
-        </button>
+      {/* Action bar — urutan: Share (kiri), Like + count (kanan) */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 48 }}>
+
+        {/* Share → WhatsApp */}
         <button
           onClick={handleShare}
+          title="Bagikan ke WhatsApp"
           style={{
             width: 44, height: 44, borderRadius: '50%', border: '1.5px solid #E5E7EB',
             background: '#fff', display: 'inline-flex', alignItems: 'center',
             justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s',
             padding: 0, color: '#6B7280',
           }}
-          onMouseEnter={e => { e.currentTarget.style.borderColor = '#046CF2'; e.currentTarget.style.color = '#046CF2'; }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = '#25D366'; e.currentTarget.style.color = '#25D366'; }}
           onMouseLeave={e => { e.currentTarget.style.borderColor = '#E5E7EB'; e.currentTarget.style.color = '#6B7280'; }}
         >
           <IconShare size={18} stroke={1.5} />
         </button>
+
+        {/* Like + count */}
+        <button
+          onClick={handleLike}
+          title={liked ? 'Sudah disukai' : 'Suka artikel ini'}
+          style={{
+            width: 44, height: 44, borderRadius: '50%', border: `1.5px solid ${liked ? '#E74C3C' : '#E5E7EB'}`,
+            background: liked ? '#FFF5F5' : '#fff', display: 'inline-flex', alignItems: 'center',
+            justifyContent: 'center', cursor: liked ? 'default' : 'pointer', transition: 'all 0.2s',
+            padding: 0, color: liked ? '#E74C3C' : '#6B7280',
+          }}
+          onMouseEnter={e => { if (!liked) { e.currentTarget.style.borderColor = '#E74C3C'; e.currentTarget.style.color = '#E74C3C'; } }}
+          onMouseLeave={e => { if (!liked) { e.currentTarget.style.borderColor = '#E5E7EB'; e.currentTarget.style.color = '#6B7280'; } }}
+        >
+          <IconHeart size={18} stroke={liked ? 2 : 1.5} fill={liked ? '#E74C3C' : 'none'} />
+        </button>
+        {likeCount > 0 && (
+          <span style={{ fontSize: 13, fontWeight: 500, color: liked ? '#E74C3C' : '#6B7280', fontFamily: 'inherit', minWidth: 16 }}>
+            {likeCount}
+          </span>
+        )}
+
       </div>
     </div>
   );
@@ -263,6 +297,7 @@ export default function BlogPage() {
       image: blog.thumbnail || undefined,
       url: `https://edupongo.com/blog/${slug}`,
       type: 'article',
+      date: blog.date,
     });
     setSelected(blog);
   };

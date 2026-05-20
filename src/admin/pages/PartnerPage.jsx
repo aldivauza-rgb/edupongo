@@ -176,8 +176,8 @@ function PartnerForm({ editData, onBack, onSubmit }) {
       </div>
       {publishModal && (
         <ConfirmModal
-          title="Terbitkan Partner"
-          message="Partner akan langsung dapat diakses publik di website setelah diterbitkan."
+          title="Terbitkan Mitra Sekolah"
+          message="Mitra Sekolah akan langsung dapat diakses publik di website setelah diterbitkan."
           onClose={() => setPublishModal(false)}
           onConfirm={confirmPublish}
           confirmLabel="Ya, Terbitkan"
@@ -276,8 +276,8 @@ export default function PartnerPage({ showSnack, userName }) {
     <div className="admin-page-wrap">
       <div className="admin-page-header">
         <div className="admin-page-header-left">
-          <h1 className="admin-page-title">Partner Sekolah</h1>
-          <p className="admin-page-subtitle">Kelola daftar sekolah partner yang tampil di website. {total} total &middot; {items.filter((i) => i.status === 'terbit').length} terbit</p>
+          <h1 className="admin-page-title">Mitra Sekolah</h1>
+          <p className="admin-page-subtitle">Kelola daftar sekolah mitra yang tampil di website. {total} total &middot; {items.filter((i) => i.status === 'terbit').length} terbit</p>
         </div>
         <div className="admin-page-actions">
           <button className="admin-btn admin-btn-primary admin-btn-sm" onClick={() => { setEditItem(null); setShowForm(true); }}>
@@ -395,7 +395,7 @@ export default function PartnerPage({ showSnack, userName }) {
 
       {deleteModal.show && (
         <ConfirmModal
-          title="Hapus Partner"
+          title="Hapus Mitra Sekolah"
           message={`Apakah kamu yakin ingin menghapus "${deleteModal.item?.name}"? Tindakan ini tidak dapat dibatalkan.`}
           onClose={() => setDeleteModal({ show: false, item: null })}
           onConfirm={confirmDelete}

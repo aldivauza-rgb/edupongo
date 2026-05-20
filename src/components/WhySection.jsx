@@ -110,7 +110,7 @@ export default function WhySection() {
           <div className="why-pin-header">
             <div className="section-tag">Kenapa Edupongo</div>
             <h2 className="section-title">Kenapa sekolah memilih Edupongo?</h2>
-            <p className="section-sub">Bukan sekadar software: tapi partner digitalisasi sekolah yang memahami kebutuhan unik pendidikan Indonesia.</p>
+            <p className="section-sub">Bukan sekadar software: tapi mitra digitalisasi sekolah yang memahami kebutuhan unik pendidikan Indonesia.</p>
           </div>
           <div className="why-grid" ref={gridRef}>
             {cards.map((c, i) => (

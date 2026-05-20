@@ -237,3 +237,28 @@ create policy "anon_can_select_edp_partners" on edp_partners for select to anon 
 create policy "auth_can_insert_edp_partners" on edp_partners for insert to authenticated with check (true);
 create policy "auth_can_update_edp_partners" on edp_partners for update to authenticated using (true);
 create policy "auth_can_delete_edp_partners" on edp_partners for delete to authenticated using (true);
+
+-- =============================================================
+-- 8. BLOG LIKES — Kolom + RPC Function
+-- Jalankan di Supabase SQL Editor
+-- =============================================================
+
+-- Tambah kolom likes ke edp_blog
+alter table edp_blog add column if not exists likes integer not null default 0;
+
+-- RPC function: increment likes tanpa expose UPDATE ke anon
+-- SECURITY DEFINER = jalan dengan hak owner function, bukan caller
+create or replace function increment_blog_likes(blog_id bigint)
+returns void
+language plpgsql
+security definer
+as $$
+begin
+  update edp_blog
+  set likes = coalesce(likes, 0) + 1
+  where id = blog_id;
+end;
+$$;
+
+-- Izinkan user anon (pengunjung publik) panggil function ini
+grant execute on function increment_blog_likes(bigint) to anon;

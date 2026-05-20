@@ -3,6 +3,7 @@ const SITE = {
   url: 'https://edupongo.com',
   defaultDesc: 'Platform manajemen sekolah terintegrasi untuk sekolah, pesantren, dan yayasan pendidikan di Indonesia. Presensi, rapor, PPDB, CBT, dan lebih banyak lagi.',
   defaultImage: 'https://edupongo.com/hero-dashboard.jpg',
+  logo: 'https://edupongo.com/logo-color.png',
 };
 
 /* Generate URL-friendly slug dari judul artikel */
@@ -23,7 +24,7 @@ export function findBlogBySlug(blogs, slug) {
 }
 
 /* Update meta tags di <head> secara dinamis */
-export function updatePageSEO({ title, description, image, url, type = 'website' } = {}) {
+export function updatePageSEO({ title, description, image, url, type = 'website', date } = {}) {
   const fullTitle = title
     ? `${title} | ${SITE.name}`
     : `${SITE.name} — Platform Manajemen Sekolah Terintegrasi`;
@@ -62,4 +63,39 @@ export function updatePageSEO({ title, description, image, url, type = 'website'
     document.head.appendChild(link);
   }
   link.setAttribute('href', canonical);
+
+  if (type === 'article') {
+    const isoDate = date ? new Date(date).toISOString() : new Date().toISOString();
+    const jsonld = {
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: title,
+      description: desc,
+      image: img,
+      url: canonical,
+      datePublished: isoDate,
+      dateModified: isoDate,
+      author: {
+        '@type': 'Organization',
+        name: SITE.name,
+        url: SITE.url,
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: SITE.name,
+        logo: { '@type': 'ImageObject', url: SITE.logo },
+      },
+      mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
+    };
+    let el = document.getElementById('edp-article-jsonld');
+    if (!el) {
+      el = document.createElement('script');
+      el.type = 'application/ld+json';
+      el.id = 'edp-article-jsonld';
+      document.head.appendChild(el);
+    }
+    el.textContent = JSON.stringify(jsonld);
+  } else {
+    document.getElementById('edp-article-jsonld')?.remove();
+  }
 }
